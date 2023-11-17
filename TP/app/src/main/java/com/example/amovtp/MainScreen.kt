@@ -36,28 +36,28 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         //TODO: fazer as condições para alternar a topbar consoante o menu em que estamos (login)
         topBar = {
 
-            if(currentScreen != null && Screens.valueOf(currentScreen!!.destination.route!!)!= Screens.LOGIN) // !! para q?
-            TopAppBar(
-                title = {},
+            if (currentScreen != null && Screens.valueOf(currentScreen!!.destination.route!!) != Screens.LOGIN) // !! para q?
+                TopAppBar(
+                    title = {},
 
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(
-                            Icons.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.navigateUp() }) {
+                            Icon(
+                                Icons.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
+                    },
 
-                actions = {},
+                    actions = {},
 
-                colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.inversePrimary,
-                    navigationIconContentColor = Color.White,
-                    actionIconContentColor = Color.White
-                ),
-            )
+                    colors = topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.inversePrimary,
+                        navigationIconContentColor = Color.White,
+                        actionIconContentColor = Color.White
+                    ),
+                )
         },
         modifier = Modifier.fillMaxSize()
     ) {
@@ -69,15 +69,15 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                 .padding(it)
         ) {
 
-            composable(Screens.LOGIN.route){
-                Login(navController,Screens.REGISTER,Screens.HOME)
+            composable(Screens.LOGIN.route) {
+                Login(navController, Screens.REGISTER, Screens.HOME)
             }
 
-            composable(Screens.REGISTER.route){
-                Register(navController)
+            composable(Screens.REGISTER.route) {
+                Register(navController, Screens.LOGIN)
             }
 
-            composable(Screens.HOME.route){
+            composable(Screens.HOME.route) {
 
             }
 
