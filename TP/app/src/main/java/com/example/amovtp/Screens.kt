@@ -7,6 +7,6 @@ enum class Screens(val display: String) {
     ADD("Add"),
     CLASSIFY("Classify");
 
-    val route: String // colocar privada aqui?
+    val route: String // colocar privada aqui neste?
         get() = this.toString()
 }
