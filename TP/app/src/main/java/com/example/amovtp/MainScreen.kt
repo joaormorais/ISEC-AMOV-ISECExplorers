@@ -93,7 +93,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
             }
 
             composable(Screens.REGISTER.route) {
-                Register(navController)
+                Register(navController, Screens.LOGIN)
             }
 
             composable(Screens.HOME.route) {
