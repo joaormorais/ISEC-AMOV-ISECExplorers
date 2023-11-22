@@ -9,11 +9,19 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -21,41 +29,67 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun Login(
-    navController: NavHostController?,// ? para nullsafety?
+    navController: NavHostController?,
     vararg options: Screens
 ) {
+    var name by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
+            // Campo de texto para nome de usuário
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Nome") },
+                modifier = Modifier
+                    .widthIn(max = 300.dp) // Limita a largura máxima
+                    .fillMaxWidth()
 
-            for (i in options)
-                Button(
-                    onClick = { navController?.navigate(i.route) },
-                    modifier = Modifier
-                        .padding(horizontal = 4.dp)
-                ) {
-                    Text(
-                        text = if (i.display == "Home") "Login" else i.display, //TODO: alterar Login para uma string
-                        modifier = Modifier
-                            .padding(16.dp)
-                    )
+            )
+
+            // Campo de texto para senha
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                modifier = Modifier
+                    .widthIn(max = 300.dp) // Limita a largura máxima
+                    .fillMaxWidth()
+
+            )
+
+            // Row para os botões
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                for (i in options) {
+                    Button(
+                        onClick = { navController?.navigate(i.route) },
+                        modifier = Modifier.padding(4.dp)
+                    ) {
+                        Text(
+                            text = if (i.display == "Home") "Login" else i.display,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
                 }
-
+            }
         }
-
     }
-
 }
+
 
 @Preview
 @Composable
