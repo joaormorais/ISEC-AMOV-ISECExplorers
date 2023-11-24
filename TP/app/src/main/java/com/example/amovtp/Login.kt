@@ -80,20 +80,26 @@ fun Login(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                for (i in options) {
+                for (option in options) {
                     Button(
-                        onClick = {  if (isLoginValid(name,password){
-                            }) {
-                            navController?.navigate(i.route)
-                        } },
+                        onClick = {
+                            // Verifica se o texto do botão é "Login" e se o nome de usuário e a senha são válidos antes de navegar
+                            if (option.display == "Home" && isLoginValid(name, password)) {
+                                navController?.navigate(option.route)
+                            } else if (option.display != "Home") {
+                                // Para outros botões que não sejam o de login, navegue sem validação
+                                navController?.navigate(option.route)
+                            }
+                        },
                         modifier = Modifier.padding(4.dp)
                     ) {
                         Text(
-                            text = if (i.display == "Home") "Login" else i.display,
+                            text = if (option.display == "Home") "Login" else option.display,
                             modifier = Modifier.padding(16.dp)
                         )
                     }
                 }
+
             }
         }
     }
@@ -103,10 +109,8 @@ fun Login(
 fun isLoginValid(
     name: String,
     password: String,
-    errorMessage: (String) -> Unit
 ): Boolean {
     if (name.isBlank() || password.isBlank()) {
-        errorMessage("Todos os campos são obrigatórios.")
         return false
     }
     return true
