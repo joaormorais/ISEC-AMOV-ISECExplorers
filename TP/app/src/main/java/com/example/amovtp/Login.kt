@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardOptions
@@ -34,7 +36,6 @@ fun Login(
 ) {
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -46,16 +47,19 @@ fun Login(
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
+
             // Campo de texto para nome de usuário
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text("Nome") },
                 modifier = Modifier
-                    .widthIn(max = 300.dp) // Limita a largura máxima
+                    .widthIn(max = 300.dp)
                     .fillMaxWidth()
-
             )
+
+            // Espaçamento pequeno entre nome de usuário e senha
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Campo de texto para senha
             OutlinedTextField(
@@ -64,10 +68,12 @@ fun Login(
                 label = { Text("Password") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier
-                    .widthIn(max = 300.dp) // Limita a largura máxima
+                    .widthIn(max = 300.dp)
                     .fillMaxWidth()
-
             )
+
+            // Espaçamento maior antes dos botões
+            Spacer(modifier = Modifier.height(56.dp))
 
             // Row para os botões
             Row(
@@ -76,7 +82,10 @@ fun Login(
             ) {
                 for (i in options) {
                     Button(
-                        onClick = { navController?.navigate(i.route) },
+                        onClick = {  if (isLoginValid(name,password){
+                            }) {
+                            navController?.navigate(i.route)
+                        } },
                         modifier = Modifier.padding(4.dp)
                     ) {
                         Text(
@@ -90,6 +99,18 @@ fun Login(
     }
 }
 
+
+fun isLoginValid(
+    name: String,
+    password: String,
+    errorMessage: (String) -> Unit
+): Boolean {
+    if (name.isBlank() || password.isBlank()) {
+        errorMessage("Todos os campos são obrigatórios.")
+        return false
+    }
+    return true
+}
 
 @Preview
 @Composable
