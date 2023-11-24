@@ -1,11 +1,13 @@
 package com.example.amovtp
 
 import androidx.lifecycle.ViewModel
+import kotlin.random.Random
 
 /**
  * Represents a category of points of interest, that is going to have a name, and a description
  */
 data class Category(
+    val id: Int,
     val name: String,
     val description: String
 ) //TODO: receber uma imagem
@@ -14,6 +16,7 @@ data class Category(
  * Represents a location, that is going to have a name, a descriptions, coordinates, and N points of interest
  */
 data class Location(
+    val id: Int,
     val name: String,
     val description: String,
     val lat: Double,
@@ -25,6 +28,7 @@ data class Location(
  * Represents a point of interest from a location, that is going to have a name, a description, coordinates, and a category
  */
 data class PointsOfInterest(
+    val id: Int,
     val name: String,
     val description: String,
     val lat: Double,
@@ -36,7 +40,13 @@ data class PointsOfInterest(
 /**
  * Viewmodel with the informations abbout the categories, locations and points of interest
  */
-class InfoViewModel : ViewModel() {
+class GeoInfoViewModel : ViewModel() {
+
+    companion object {
+        private var _currentCategoryId = 0
+        private var _currentLocationId = 0
+        private var _currentPointsOfInterestId = 0
+    }
 
     private val _categories = mutableListOf<Category>()
     val categories: List<Category>
@@ -46,7 +56,7 @@ class InfoViewModel : ViewModel() {
     val locations: List<Location>
         get() = _locations
 
-    init {
+    init { // TODO: passar para o ficheiro strings.xml
         addCategory(
             "Museus",
             "Explore e descubra a rica herança artística em museus dedicados à arte e à cultura."
@@ -71,9 +81,17 @@ class InfoViewModel : ViewModel() {
             "Alojamento",
             "Encontre o conforto e a hospitalidade numa variedade de opções de alojamento, incluindo hotéis, pensões e outros estabelecimentos."
         )
-    }
 
-    //TODO: funções para subtrair categorias, localizações, e locais de interesse
+        repeat(20) {
+            val locationName = "Random Location $it"
+            val locationDescription = "Description for $locationName"
+            val latitude = Random.nextDouble(-90.0, 90.0)
+            val longitude = Random.nextDouble(-180.0, 180.0)
+
+            addLocation(locationName, locationDescription, latitude, longitude)
+        }
+
+    }
 
     fun addCategory(
         categoryName: String,
@@ -87,7 +105,13 @@ class InfoViewModel : ViewModel() {
                 return false
 
         // add category
-        _categories.add(Category(categoryName, categoryDescription)) //TODO: adicionar a imagem
+        _categories.add(
+            Category(
+                _currentCategoryId++,
+                categoryName,
+                categoryDescription
+            )
+        ) //TODO: adicionar a imagem
 
         return true
 
@@ -123,7 +147,15 @@ class InfoViewModel : ViewModel() {
         }
 
         // add location
-        _locations.add(Location(locationName, locationDescription, latitude, longitude))
+        _locations.add(
+            Location(
+                _currentLocationId++,
+                locationName,
+                locationDescription,
+                latitude,
+                longitude
+            )
+        )
 
         return true
 
@@ -166,6 +198,7 @@ class InfoViewModel : ViewModel() {
                         // if the point of interest doesn't exist, we add a new one
                         k.pointsOfInterest.add(
                             PointsOfInterest(
+                                _currentPointsOfInterestId++,
                                 pointOfInterestName,
                                 pointOfInterestDescription,
                                 latitude,

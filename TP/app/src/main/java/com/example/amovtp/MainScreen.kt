@@ -30,8 +30,8 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
 
-    var viewModel: InfoViewModel? = null
-    viewModel = InfoViewModel() //TODO: (temp) ver onde é que é melhor declarar isto
+    var viewModel: GeoInfoViewModel? = null
+    viewModel = GeoInfoViewModel() //TODO: (temp) ver onde é que é melhor declarar isto
     var addInfo by remember { mutableStateOf(false) }
 
     val currentScreen by navController.currentBackStackEntryAsState()
@@ -100,7 +100,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                 //viewModel = InfoViewModel()
                 // não queremos criar uma viewmodel cada vez que vamos para este ecrã
                 // queremos criar uma viewmodel apenas 1 vez
-                Home(navController, viewModel!!)
+                Locations(navController, viewModel!!){}
             }
 
         }
