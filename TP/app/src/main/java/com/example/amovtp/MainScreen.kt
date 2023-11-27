@@ -30,8 +30,9 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
 
-    var viewModel: GeoInfoViewModel? = null
-    viewModel = GeoInfoViewModel() //TODO: (temp) ver onde é que é melhor declarar isto
+    //var viewModel: GeoInfoViewModel? = null
+    //viewModel = GeoInfoViewModel()
+
     var addInfo by remember { mutableStateOf(false) }
 
     val currentScreen by navController.currentBackStackEntryAsState()
