@@ -1,4 +1,4 @@
-package com.example.amovtp
+package com.example.amovtp.ui.screens
 
 enum class Screens(val display: String) {
     LOGIN("Login"),

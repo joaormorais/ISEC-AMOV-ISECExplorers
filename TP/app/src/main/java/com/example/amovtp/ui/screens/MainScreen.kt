@@ -1,4 +1,4 @@
-package com.example.amovtp
+package com.example.amovtp.ui.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,6 +25,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.amovtp.ui.viewmodels.LocationsViewModel
+import com.example.amovtp.ui.viewmodels.PointsOfInterestViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,22 +92,22 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         ) {
 
             composable(Screens.LOGIN.route) {
-                Login(navController, Screens.REGISTER, Screens.LOCATIONS)
+                LoginScreen(navController, Screens.REGISTER, Screens.LOCATIONS)
             }
 
             composable(Screens.REGISTER.route) {
-                Register(navController, Screens.LOGIN)
+                RegisterScreen(navController, Screens.LOGIN)
             }
 
             composable(Screens.LOCATIONS.route) {
                 //TODO: ver repositórios e ter cuidado em declarar a viewmodel mais que uma vez
                 locationsViewModel = LocationsViewModel()
-                Locations(navController, locationsViewModel!!) {}
+                LocationsScreen(navController, locationsViewModel!!) {}
             }
 
             composable(Screens.POINTS_OF_INTEREST.route) {
                 pointsOfInterestViewModel = PointsOfInterestViewModel()
-                PointsOfInterest(navController, pointsOfInterestViewModel!!) {}
+                PointsOfInterestScreen(navController, pointsOfInterestViewModel!!) {}
             }
 
         }

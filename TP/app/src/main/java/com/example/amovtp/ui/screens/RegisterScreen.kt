@@ -1,4 +1,4 @@
-package com.example.amovtp
+package com.example.amovtp.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +28,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 
 @Composable
-fun Register(
+fun RegisterScreen(
     navController: NavHostController?,// ? para nullsafety?
     loginScreen: Screens
 ) {
@@ -132,5 +132,5 @@ fun isRegisterValid(
 @Preview
 @Composable
 fun RegisterPreview(navController: NavHostController = rememberNavController()) {
-    Register(navController, Screens.REGISTER)
+    RegisterScreen(navController, Screens.REGISTER)
 }

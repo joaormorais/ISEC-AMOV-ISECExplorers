@@ -1,6 +1,5 @@
-package com.example.amovtp
+package com.example.amovtp.ui.screens
 
-import android.widget.Button
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +29,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun Login(
+fun LoginScreen(
     navController: NavHostController?,
     vararg options: Screens
 ) {
@@ -119,5 +118,5 @@ fun isLoginValid(
 @Preview
 @Composable
 fun LoginPreview(navController: NavHostController = rememberNavController()) {
-    Login(navController, Screens.REGISTER, Screens.LOCATIONS)
+    LoginScreen(navController, Screens.REGISTER, Screens.LOCATIONS)
 }

@@ -1,12 +1,10 @@
-package com.example.amovtp
+package com.example.amovtp.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,7 +18,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,12 +33,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.amovtp.ui.viewmodels.LocationsViewModel
 
 //TODO: ordenar por ordem alfabética + ordenar de acordo com a distância da nossa localização atual
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Locations(
+fun LocationsScreen(
     navController: NavHostController?,
     viewModel: LocationsViewModel,
     modifier: Modifier = Modifier,
@@ -168,5 +166,5 @@ fun Locations(
 @Composable
 fun LocationsScreenPreview(navController: NavHostController = rememberNavController()) {
     var viewModel: LocationsViewModel? = LocationsViewModel()
-    Locations(navController, viewModel!!) {}
+    LocationsScreen(navController, viewModel!!) {}
 }
