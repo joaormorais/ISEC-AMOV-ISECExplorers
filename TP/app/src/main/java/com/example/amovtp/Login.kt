@@ -1,6 +1,5 @@
 package com.example.amovtp
 
-import android.widget.Button
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -89,7 +88,7 @@ fun Login(
                         modifier = Modifier.padding(4.dp)
                     ) {
                         Text(
-                            text = if (i.display == "Home") "Login" else i.display,
+                            text = if (i.display == "Locations") "Login" else i.display,
                             modifier = Modifier.padding(16.dp)
                         )
                     }
@@ -115,5 +114,5 @@ fun isLoginValid(
 @Preview
 @Composable
 fun LoginPreview(navController: NavHostController = rememberNavController()) {
-    Login(navController, Screens.REGISTER, Screens.HOME)
+    Login(navController, Screens.REGISTER, Screens.LOCATIONS)
 }
