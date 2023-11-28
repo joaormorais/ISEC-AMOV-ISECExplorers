@@ -43,7 +43,7 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun Locations(
     navController: NavHostController?,
-    viewModel: GeoInfoViewModel,
+    viewModel: LocationsViewModel,
     modifier: Modifier = Modifier,
     onSelected: (Int) -> Unit
     //TODO: adicionar mais screens?
@@ -167,6 +167,6 @@ fun Locations(
 @Preview
 @Composable
 fun LocationsScreenPreview(navController: NavHostController = rememberNavController()) {
-    var viewModel: GeoInfoViewModel? = GeoInfoViewModel()
+    var viewModel: LocationsViewModel? = LocationsViewModel()
     Locations(navController, viewModel!!) {}
 }

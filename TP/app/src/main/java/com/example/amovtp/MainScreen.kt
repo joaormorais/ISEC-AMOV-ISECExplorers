@@ -30,13 +30,14 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
 
-    var viewModel: GeoInfoViewModel? = null
-    viewModel = GeoInfoViewModel() //TODO: (temp) ver onde é que é melhor declarar isto
+    var locationsViewModel: LocationsViewModel? = null
+    var pointsOfInterestViewModel: PointsOfInterestViewModel? = null
+
     var addInfo by remember { mutableStateOf(false) }
 
     val currentScreen by navController.currentBackStackEntryAsState()
-    navController.addOnDestinationChangedListener { controller, destination, arguments -> // colocar os argumentos privados?
-        addInfo = (destination.route == Screens.HOME.route)
+    navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        addInfo = (destination.route == Screens.LOCATIONS.route)
     }
 
     Scaffold(
@@ -89,18 +90,22 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         ) {
 
             composable(Screens.LOGIN.route) {
-                Login(navController, Screens.REGISTER, Screens.HOME)
+                Login(navController, Screens.REGISTER, Screens.LOCATIONS)
             }
 
             composable(Screens.REGISTER.route) {
                 Register(navController, Screens.LOGIN)
             }
 
-            composable(Screens.HOME.route) {
-                //viewModel = InfoViewModel()
-                // não queremos criar uma viewmodel cada vez que vamos para este ecrã
-                // queremos criar uma viewmodel apenas 1 vez
-                Locations(navController, viewModel!!){}
+            composable(Screens.LOCATIONS.route) {
+                //TODO: ver repositórios e ter cuidado em declarar a viewmodel mais que uma vez
+                locationsViewModel = LocationsViewModel()
+                Locations(navController, locationsViewModel!!) {}
+            }
+
+            composable(Screens.POINTS_OF_INTEREST.route) {
+                pointsOfInterestViewModel = PointsOfInterestViewModel()
+                PointsOfInterest(navController, pointsOfInterestViewModel!!) {}
             }
 
         }
