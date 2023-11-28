@@ -1,5 +1,6 @@
 package com.example.amovtp
 
+import android.widget.Button
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -79,15 +80,15 @@ fun Login(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                for (option in options) {
+                for (i in options) {
                     Button(
                         onClick = {
                             // Verifica se o texto do botão é "Login" e se o nome de usuário e a senha são válidos antes de navegar
-                            if (option.display == "Home" && isLoginValid(name, password)) {
-                                navController?.navigate(option.route)
-                            } else if (option.display != "Home") {
+                            if (i.display == "Locations" && isLoginValid(name, password)) {
+                                navController?.navigate(i.route)
+                            } else if (i.display != "Locations") {
                                 // Para outros botões que não sejam o de login, navegue sem validação
-                                navController?.navigate(option.route)
+                                navController?.navigate(i.route)
                             }
                         },
                         modifier = Modifier.padding(4.dp)
