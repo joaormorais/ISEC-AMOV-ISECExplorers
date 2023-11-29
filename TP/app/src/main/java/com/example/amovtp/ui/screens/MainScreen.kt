@@ -25,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.amovtp.ui.viewmodels.Location
 import com.example.amovtp.ui.viewmodels.LocationsViewModel
 import com.example.amovtp.ui.viewmodels.PointsOfInterestViewModel
 
@@ -32,22 +33,23 @@ import com.example.amovtp.ui.viewmodels.PointsOfInterestViewModel
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
 
-    var locationsViewModel: LocationsViewModel? = null
-    var pointsOfInterestViewModel: PointsOfInterestViewModel? = null
+    //TODO: ver repositórios e ter cuidado em declarar a viewmodel mais que uma vez
+    var locationsViewModel = LocationsViewModel()
+    var pointsOfInterestViewModel = PointsOfInterestViewModel()
 
     var addInfo by remember { mutableStateOf(false) }
 
     val currentScreen by navController.currentBackStackEntryAsState()
     navController.addOnDestinationChangedListener { controller, destination, arguments ->
-        addInfo = (destination.route == Screens.LOCATIONS.route)
+        addInfo =
+            (destination.route == Screens.LOCATIONS.route || destination.route == Screens.POINTS_OF_INTEREST.route)
     }
 
     Scaffold(
 
-        //TODO: fazer as condições para alternar a topbar consoante o menu em que estamos (login)
         topBar = {
 
-            if (currentScreen != null && Screens.valueOf(currentScreen!!.destination.route!!) != Screens.LOGIN) // !! para q?
+            if (currentScreen != null && Screens.valueOf(currentScreen!!.destination.route!!) != Screens.LOGIN)
                 TopAppBar(
                     title = {},
 
@@ -100,13 +102,10 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
             }
 
             composable(Screens.LOCATIONS.route) {
-                //TODO: ver repositórios e ter cuidado em declarar a viewmodel mais que uma vez
-                locationsViewModel = LocationsViewModel()
                 LocationsScreen(navController, locationsViewModel!!) {}
             }
 
             composable(Screens.POINTS_OF_INTEREST.route) {
-                pointsOfInterestViewModel = PointsOfInterestViewModel()
                 PointsOfInterestScreen(navController, pointsOfInterestViewModel!!) {}
             }
 

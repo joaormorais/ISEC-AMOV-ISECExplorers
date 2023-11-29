@@ -15,7 +15,7 @@ data class Location(
     val pointsOfInterest: MutableList<PointsOfInterest> = mutableListOf()
 ) //TODO: receber um array de imagens
 
-class LocationsViewModel : ViewModel() {
+class LocationsViewModel : ViewModel() { // TODO: esta viewModel só vai ter funçoes para mostrar info
 
     companion object{
         private var _currentLocationId = 0

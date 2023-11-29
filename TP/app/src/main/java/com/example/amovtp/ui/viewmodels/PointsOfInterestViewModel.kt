@@ -24,7 +24,7 @@ data class PointsOfInterest(
     val category: Category
 ) //TODO: receber um array de imagens
 
-class PointsOfInterestViewModel : ViewModel() {
+class PointsOfInterestViewModel : ViewModel() { // TODO: esta viewModel só vai ter funçoes para mostrar info
 
     companion object {
         private var _currentCategoryId = 0
@@ -135,10 +135,6 @@ class PointsOfInterestViewModel : ViewModel() {
                     )
                 )
             }
-
-
-
-
 
         return false
 

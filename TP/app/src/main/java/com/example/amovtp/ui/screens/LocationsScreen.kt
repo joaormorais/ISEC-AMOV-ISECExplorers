@@ -44,7 +44,6 @@ fun LocationsScreen(
     viewModel: LocationsViewModel,
     modifier: Modifier = Modifier,
     onSelected: (Int) -> Unit
-    //TODO: adicionar mais screens?
 ) {
 
     var isExpanded by remember { mutableStateOf(false) }
@@ -104,6 +103,7 @@ fun LocationsScreen(
                     ),
                     onClick = {
                         onSelected(it.id)
+                        navController?.navigate(Screens.POINTS_OF_INTEREST.route + "?locationId=${it.id}")
                     }
                 ) {
 
@@ -114,7 +114,7 @@ fun LocationsScreen(
                             .padding(8.dp)
                     ) {
                         Text(
-                            text = "Location: ${it.name}",
+                            text = "Localização: ${it.name}",
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         )
@@ -128,37 +128,6 @@ fun LocationsScreen(
         }
 
     }
-
-    /*var search by remember { mutableStateOf("") }
-
-    Column(
-        modifier = modifier
-            .background(Color.Green)
-            .fillMaxSize()
-    ) {
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth()
-                .padding(16.dp)
-                .background(Color.Blue)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            // Conteúdo da Box
-
-            OutlinedTextField(
-                value = search,
-                onValueChange = { search = it },
-                label = { Text(text = "Pesquisar") }
-            )
-
-
-        }
-
-
-
-    }*/
 
 }
 

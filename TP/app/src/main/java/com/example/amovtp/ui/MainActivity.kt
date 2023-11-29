@@ -1,4 +1,4 @@
-package com.example.amovtp
+package com.example.amovtp.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
