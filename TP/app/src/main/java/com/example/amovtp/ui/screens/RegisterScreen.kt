@@ -26,6 +26,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+
 
 @Composable
 fun RegisterScreen(
@@ -69,6 +71,7 @@ fun RegisterScreen(
                 onValueChange = { password = it },
                 label = { Text("Password") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
@@ -76,6 +79,7 @@ fun RegisterScreen(
                 onValueChange = { confirmPassword = it },
                 label = { Text("Confirmar Password") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
