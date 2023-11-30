@@ -30,8 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
+
 import com.example.amovtp.R
+import com.example.amovtp.ui.composables.CameraImage
 import com.example.amovtp.ui.composables.GalleryImage
 import com.example.amovtp.ui.screens.LocationsScreen
 import com.example.amovtp.ui.viewmodels.AddViewModels.AddLocationViewModel
@@ -57,7 +58,7 @@ fun AddLocationScreen(
         GalleryImage()
         Spacer(modifier = Modifier.height(8.dp))
         //TODO: Meter aqui o composable com o botão para a câmera (Sandra)
-        //CameraImage()
+        CameraImage()
 
         //TODO: botao para criar
     }
