@@ -7,4 +7,10 @@
     <string name="point_of_interest">Point of interest: %1$s</string>
     <string name="name">Name</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="email">Email</string>
+    <string name="register">Register</string>
+    <string name="fill_every_field">Fill every field!</string>
+    <string name="invalid_email">Invalid email!</string>
+    <string name="pw_dont_match">The passowrds don\'t match!</string>
 </resources>

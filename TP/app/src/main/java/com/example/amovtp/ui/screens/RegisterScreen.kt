@@ -1,5 +1,7 @@
 package com.example.amovtp.ui.screens
 
+import android.content.Context //TODO: podemos usar este import?
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +28,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import com.example.amovtp.R
 
 
 @Composable
@@ -34,6 +39,7 @@ fun RegisterScreen(
     navController: NavHostController?,// ? para nullsafety?
     loginScreen: Screens
 ) {
+    val context = LocalContext.current
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -56,20 +62,20 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Nome") },
+                label = { Text(stringResource(R.string.name)) },
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
+                label = { Text(stringResource(R.string.email)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = { Text(stringResource(R.string.password)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -77,7 +83,7 @@ fun RegisterScreen(
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirmar Password") },
+                label = { Text(stringResource(R.string.confirm_password)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -85,7 +91,7 @@ fun RegisterScreen(
 
             Button(
                 onClick = {
-                    if (isRegisterValid(name, email, password, confirmPassword) { msg ->
+                    if (isRegisterValid(context,name, email, password, confirmPassword) { msg ->
                             errorMessage = msg
                         }) {
                         navController?.navigate(loginScreen.route)
@@ -95,7 +101,7 @@ fun RegisterScreen(
                 },
                 modifier = Modifier.padding(top = 16.dp)
             ) {
-                Text("Register")
+                Text(stringResource(R.string.register))
             }
         }
     }
@@ -109,24 +115,27 @@ fun RegisterScreen(
 }
 
 fun isRegisterValid(
+    context: Context,
     name: String,
     email: String,
     password: String,
     confirmPassword: String,
     errorMessage: (String) -> Unit
 ): Boolean {
+
+
     if (name.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-        errorMessage("Todos os campos são obrigatórios.")
+        errorMessage(context.getString(R.string.fill_every_field))
         return false
     }
 
     if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-        errorMessage("Formato de e-mail inválido.")
+        errorMessage(context.getString(R.string.invalid_email))
         return false
     }
 
     if (password != confirmPassword) {
-        errorMessage("As passwords não coincidem.")
+        errorMessage(context.getString(R.string.pw_dont_match))
         return false
     }
 

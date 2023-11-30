@@ -8,4 +8,10 @@
     <string name="point_of_interest">Ponto de interesse: %1$s</string>
     <string name="name">Nome</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Repetir password</string>
+    <string name="email">Email</string>
+    <string name="register">Criar conta</string>
+    <string name="fill_every_field">Preencha todos os campos!</string>
+    <string name="invalid_email">Formato de email inválido!</string>
+    <string name="pw_dont_match">As passwords não coincidem!</string>
 </resources>
