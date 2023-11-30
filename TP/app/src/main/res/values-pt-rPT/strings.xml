@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AMOVTP</string>
+    <string name="locattion">Localização: %1$s</string>
+    <string name="description">Descrição: %1$s</string>
+    <string name="latitude">Latitude: %1$s</string>
+    <string name="longitude">Longitude: %1$s</string>
+    <string name="point_of_interest">Ponto de interesse: %1$s</string>
+    <string name="name">Nome</string>
+    <string name="password">Password</string>
+</resources>

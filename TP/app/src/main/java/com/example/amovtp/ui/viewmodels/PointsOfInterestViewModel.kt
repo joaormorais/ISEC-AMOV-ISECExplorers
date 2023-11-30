@@ -20,11 +20,14 @@ data class PointsOfInterest(
     val description: String,
     val lat: Double,
     val long: Double,
-    val location: Location,
+    val location: Location, //TODO: transformar num array de localizações (um ponto poode ter por exemplo Coimbra e Montemor-o-Velho)
     val category: Category
-) //TODO: receber um array de imagens
+) //TODO: receber um array de imagens + classificação
 
-class PointsOfInterestViewModel : ViewModel() { // TODO: esta viewModel só vai ter funçoes para mostrar info
+
+class PointsOfInterestViewModel : ViewModel() {
+
+    //TODO: ir buscar informação ao GeoInfoRepository
 
     companion object {
         private var _currentCategoryId = 0
@@ -39,56 +42,18 @@ class PointsOfInterestViewModel : ViewModel() { // TODO: esta viewModel só vai 
     val categories: List<Category>
         get() = _categories
 
-    init { // TODO: passar para o ficheiro strings.xml
-        addCategory(
-            "Museus",
-            "Explore e descubra a rica herança artística em museus dedicados à arte e à cultura."
-        )
-        addCategory(
-            "Monumentos e locais de culto",
-            "Visite monumentos e locais sagrados que contam histórias de devoção e patrimônio."
-        )
-        addCategory(
-            "Jardins",
-            "Desfrute da beleza natural em jardins exuberantes, onde a serenidade se encontra com a paisagem."
-        )
-        addCategory(
-            "Miradouros",
-            "Contemple vistas panorâmicas deslumbrantes em miradouros estratégicamente posicionados."
-        )
-        addCategory(
-            "Restaurantes e bares",
-            "Saboreie experiências gastronómicas únicas em restaurantes e bares que oferecem uma variedade de pratos deliciosos."
-        )
-        addCategory(
-            "Alojamento",
-            "Encontre o conforto e a hospitalidade numa variedade de opções de alojamento, incluindo hotéis, pensões e outros estabelecimentos."
-        )
 
-    }
-
-    fun addCategory(
-        categoryName: String,
-        categoryDescription: String
-        //TODO: receber uma imagem
+    /*fun removePointOfInterest(
+        pointOfInterestName: String
     ): Boolean {
 
-        // check if the new category already exists
-        for (i in _categories)
-            if (i.name == categoryName)
-                return false
+        for (i in _pointsOfInterest)
+            if (i.name == pointOfInterestName) {
+                _pointsOfInterest.remove(i)
+                return true
+            }
 
-        // add category
-        _categories.add(
-            Category(
-                _currentCategoryId++,
-                categoryName,
-                categoryDescription
-            )
-        ) //TODO: adicionar a imagem
-
-        return true
-
+        return false
     }
 
     fun removeCategory(
@@ -104,54 +69,6 @@ class PointsOfInterestViewModel : ViewModel() { // TODO: esta viewModel só vai 
 
         return false
 
-    }
-
-    fun addPointOfInterest(
-        location: Location,
-        category: Category,
-        pointOfInterestName: String,
-        pointOfInterestDescription: String,
-        latitude: Double,
-        longitude: Double
-        //TODO: recebe pelo menos uma imagem
-    ): Boolean {
-
-        for (i in _categories)
-            if (i == category) {// if the category exists
-                for (k in _pointsOfInterest) {
-                    if (k.name == pointOfInterestName)
-                        return false
-                }
-
-                _pointsOfInterest.add(
-                    PointsOfInterest(
-                        _currentPointsOfInterestId++,
-                        pointOfInterestName,
-                        pointOfInterestDescription,
-                        latitude,
-                        longitude,
-                        location,
-                        category
-                    )
-                )
-            }
-
-        return false
-
-    }
-
-    fun removePointOfInterest(
-        pointOfInterestName: String
-    ): Boolean {
-
-        for (i in _pointsOfInterest)
-            if (i.name == pointOfInterestName) {
-                _pointsOfInterest.remove(i)
-                return true
-            }
-
-        return false
-    }
-
+    }*/
 
 }
