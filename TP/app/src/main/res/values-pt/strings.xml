@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AMOVTP</string>
-    <string name="locattion">Localização: %1$s</string>
+    <string name="location">Localização: %1$s</string>
     <string name="description">Descrição: %1$s</string>
     <string name="latitude">Latitude: %1$s</string>
     <string name="longitude">Longitude: %1$s</string>
@@ -14,4 +14,7 @@
     <string name="fill_every_field">Preencha todos os campos!</string>
     <string name="invalid_email">Formato de email inválido!</string>
     <string name="pw_dont_match">As passwords não coincidem!</string>
+    <string name="allLocations">Todas as localizações</string>
+    <string name="ordered_name">Ordem alfabética</string>
+    <string name="ordered_distance">Mais distanttes</string>
 </resources>

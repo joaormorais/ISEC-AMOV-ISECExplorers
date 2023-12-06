@@ -4,10 +4,10 @@ enum class Screens(val display: String) {
     LOGIN("Login"),
     REGISTER("Register"),
     LOCATIONS("Locations"),
-    POINTS_OF_INTEREST("Points of interest"),
-    ADD_LOCATION("Add location"),
-    ADD_POINT_OF_INTEREST("Add point of interest"),
-    ADD_CATEGORY("Add category");
+    POINTS_OF_INTEREST("PointsOfInterest?itemName={itemName}"),
+    ADD_LOCATION("AddLocation"),
+    ADD_POINT_OF_INTEREST("AddPointOfInterest"),
+    ADD_CATEGORY("AddCategory");
 
     val route: String
         get() = this.toString()

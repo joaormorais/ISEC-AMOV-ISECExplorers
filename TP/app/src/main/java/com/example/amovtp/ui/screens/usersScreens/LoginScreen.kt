@@ -1,4 +1,4 @@
-package com.example.amovtp.ui.screens
+package com.example.amovtp.ui.screens.usersScreens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,16 +22,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.amovtp.MyApplication
 import com.example.amovtp.R
+import com.example.amovtp.ui.screens.Screens
+import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModel
+import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModelFactory
 
 @Composable
 fun LoginScreen(
+    loginViewModel: LoginViewModel,
     navController: NavHostController?,
     vararg options: Screens
 ) {
@@ -120,5 +127,19 @@ fun isLoginValid(
 @Preview
 @Composable
 fun LoginPreview(navController: NavHostController = rememberNavController()) {
-    LoginScreen(navController, Screens.REGISTER, Screens.LOCATIONS)
+    val context = LocalContext.current
+    val app = context.applicationContext as MyApplication
+
+    // Specify the type parameter for viewModel explicitly
+    val loginViewModel = viewModel<LoginViewModel>(factory = LoginViewModelFactory(app.usersData))
+
+    // Create a preview of the LoginScreen
+    LoginScreen(
+        loginViewModel = loginViewModel,
+        navController = navController,
+        Screens.REGISTER,
+        Screens.LOCATIONS
+    )
 }
+
+

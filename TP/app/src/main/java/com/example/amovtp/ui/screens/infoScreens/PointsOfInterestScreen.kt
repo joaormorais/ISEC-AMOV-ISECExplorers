@@ -1,4 +1,4 @@
-package com.example.amovtp.ui.screens
+package com.example.amovtp.ui.screens.infoScreens
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -15,33 +15,44 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import com.example.amovtp.R
-import com.example.amovtp.ui.viewmodels.PointsOfInterest
-import com.example.amovtp.ui.viewmodels.PointsOfInterestViewModel
+import com.example.amovtp.data.PointOfInterest
+import com.example.amovtp.ui.viewmodels.infoViewModels.PointsOfInterestViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PointsOfInterestScreen(
+    pointsOfInterestViewModel: PointsOfInterestViewModel,
+    /*itemName: String? = null,*/
     navController: NavController,
-    viewModel: PointsOfInterestViewModel,
     modifier: Modifier = Modifier,
     onSelected: (Int) -> Unit
 ) {
 
-    val argID = navController.currentBackStackEntry?.arguments?.getString("locationId")?.toInt()
-    Log.d("PointsOfInterestScreen", "aquiiiiiiiiiii argID: $argID")
+    /*val argName = navController.currentBackStackEntry?.arguments?.getString("?locationName","Coimbra").toString()
+    Log.d("PointsOfInterestScreen", "aquiiiiiiiiiii argName: $argName")
+    val pointsOfInterest: List<PointOfInterest> = pointsOfInterestViewModel.getPointsForLocation(argName)*/
 
-    val pointsOfInterestFiltered: MutableList<PointsOfInterest> = mutableListOf()
-    for (i in viewModel.pointsOfInterest)
-        if (i.location.id == argID)
-            pointsOfInterestFiltered.add(i)
+    var pointsOfInterest by remember {
+        mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest())
+    }
+
+    /*if (itemName != null)
+        if (itemName != "default")
+            pointsOfInterest =
+                pointsOfInterestViewModel.getPointsForLocation(itemName)*/
 
     Column(
         modifier = modifier
@@ -52,7 +63,7 @@ fun PointsOfInterestScreen(
             modifier = modifier
                 .fillMaxSize()
         ) {
-            items(pointsOfInterestFiltered, key = { it.id }) {
+            items(pointsOfInterest, key = { it.id }) {
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
@@ -81,13 +92,19 @@ fun PointsOfInterestScreen(
                             fontSize = 20.sp
                         )
                         Spacer(modifier.height(16.dp))
-                        Text(text = stringResource(R.string.description, it.description), fontSize = 12.sp)
+                        Text(
+                            text = stringResource(R.string.description, it.description),
+                            fontSize = 12.sp
+                        )
                         Spacer(modifier.height(16.dp))
-                        Text(text = stringResource(R.string.locattion, it.location.name), fontSize = 12.sp)
+                        Text(text = "Localização: " + it.locations.toString(), fontSize = 12.sp)
                         Spacer(modifier.height(16.dp))
                         Text(text = stringResource(R.string.latitude, it.lat), fontSize = 12.sp)
                         Spacer(modifier.height(16.dp))
-                        Text(text = stringResource(R.string.longitude, it.long), fontSize = 12.sp)
+                        Text(
+                            text = stringResource(R.string.longitude, it.long),
+                            fontSize = 12.sp
+                        )
                     }
                 }
             }

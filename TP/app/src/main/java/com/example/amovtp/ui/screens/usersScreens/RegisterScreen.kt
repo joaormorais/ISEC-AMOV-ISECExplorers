@@ -1,4 +1,4 @@
-package com.example.amovtp.ui.screens
+package com.example.amovtp.ui.screens.usersScreens
 
 import android.content.Context //TODO: podemos usar este import?
 
@@ -31,12 +31,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.amovtp.MyApplication
 import com.example.amovtp.R
-
+import com.example.amovtp.ui.screens.Screens
+import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModel
+import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModelFactory
 
 @Composable
 fun RegisterScreen(
-    navController: NavHostController?,// ? para nullsafety?
+    registerViewModel: RegisterViewModel,
+    navController: NavHostController?,
     loginScreen: Screens
 ) {
     val context = LocalContext.current
@@ -145,5 +150,16 @@ fun isRegisterValid(
 @Preview
 @Composable
 fun RegisterPreview(navController: NavHostController = rememberNavController()) {
-    RegisterScreen(navController, Screens.REGISTER)
+    val context = LocalContext.current
+    val app = context.applicationContext as MyApplication
+
+    // Specify the type parameter for viewModel explicitly
+    val registerViewModel = viewModel<RegisterViewModel>(factory = RegisterViewModelFactory(app.usersData))
+
+    // Create a preview of the RegisterScreen
+    RegisterScreen(
+        registerViewModel = registerViewModel,
+        navController = navController,
+        Screens.LOGIN
+    )
 }
