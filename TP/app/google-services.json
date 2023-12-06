@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "750064164421",
+    "project_id": "amov-2324-isecexplorers",
+    "storage_bucket": "amov-2324-isecexplorers.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:750064164421:android:a05669bf86418bffbfcd2c",
+        "android_client_info": {
+          "package_name": "com.example.amovtp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDh7M4BfteuaFEjfvzSfj7Yzpmjul83yVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

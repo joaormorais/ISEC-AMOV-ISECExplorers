@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AMOVTP</string>
+    <string name="app_name">IsecExplorers</string>
     <string name="location">Location: %1$s</string>
     <string name="description">Description: %1$s</string>
     <string name="latitude">Latitude: %1$s</string>
@@ -16,4 +16,10 @@
     <string name="allLocations">All locations</string>
     <string name="ordered_name">Ordered by name</string>
     <string name="ordered_distance">Ordered by distance</string>
+    <string name="add_category">Add category</string>
+    <string name="add_loc">Add location</string>
+    <string name="add_point">Add point of interest</string>
+    <string name="camera_image">Add image with camera</string>
+    <string name="gallery_image">Add image with gallery</string>
+    <string name="description_solo">Description:</string>
 </resources>

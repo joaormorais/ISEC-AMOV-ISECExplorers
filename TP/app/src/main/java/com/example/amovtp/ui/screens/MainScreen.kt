@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -31,6 +32,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.amovtp.MyApplication
+import com.example.amovtp.R
 import com.example.amovtp.ui.screens.addScreens.AddCategoryScreen
 import com.example.amovtp.ui.screens.addScreens.AddLocationScreen
 import com.example.amovtp.ui.screens.addScreens.AddPointOfInterestScreen
@@ -60,6 +62,11 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
     val context = LocalContext.current
     val app = context.applicationContext as MyApplication
+
+    //TODO: finalizar
+    var isExpanded by remember { mutableStateOf(false) }
+    val addCategoryString = "Add category"
+    val addPointString = "Add point of interest"
 
     var loginViewModel: LoginViewModel? = null
     var registerViewModel: RegisterViewModel? = null
@@ -101,6 +108,10 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                                     navController?.navigate(Screens.ADD_LOCATION.route)
                                 else if (Screens.valueOf(currentScreen!!.destination.route!!) == Screens.POINTS_OF_INTEREST) {
                                     //TODO: fazer um dropdown button para escolher entre adicionar uma categoria ou um ponto de interesse
+                                    //TODO: fazer um dropdown menu com dois items para escolher
+
+
+
                                 }
                             }) {
                                 Icon(

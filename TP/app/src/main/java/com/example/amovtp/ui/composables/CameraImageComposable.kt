@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.example.amovtp.R
@@ -44,8 +46,8 @@ fun CameraImage(modifier: Modifier = Modifier){
     }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
+            .padding(16.dp)
     ) {
         Button(onClick = {
             tempFile = FileUtils.getTempFilename(context)
@@ -55,7 +57,7 @@ fun CameraImage(modifier: Modifier = Modifier){
             )
             cameraLauncher.launch(fileUri)
         }) {
-            Text(text = "TakePhoto")
+            Text(text = stringResource(R.string.camera_image))
         }
 
 //        Spacer(modifier = Modifier.height(8.dp))

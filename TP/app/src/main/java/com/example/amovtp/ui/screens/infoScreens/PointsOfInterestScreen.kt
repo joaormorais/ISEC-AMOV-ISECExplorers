@@ -59,6 +59,8 @@ fun PointsOfInterestScreen(
             .fillMaxSize()
     ) {
 
+        //TODO: (zé) box com o texto, dropdownMenu que quando se clica no texto a dizer categorias, mostra todas as categorias existentes
+
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()

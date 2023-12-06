@@ -128,6 +128,8 @@ fun LocationsScreen(
             }
         }
 
+        //TODO: (sandra) fazer um botao que avança para o PointsOfInterestScreen sem alterar a variavel setPointLocationSearch
+
         LazyColumn(
             state = listState,
             modifier = modifier
