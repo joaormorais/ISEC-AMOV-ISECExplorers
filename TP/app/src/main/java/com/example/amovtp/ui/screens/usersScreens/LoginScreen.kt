@@ -14,17 +14,21 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -35,6 +39,7 @@ import com.example.amovtp.R
 import com.example.amovtp.ui.screens.Screens
 import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModel
 import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModelFactory
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -44,6 +49,8 @@ fun LoginScreen(
 ) {
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -75,6 +82,7 @@ fun LoginScreen(
                 onValueChange = { password = it },
                 label = { Text(stringResource(R.string.password)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
                     .widthIn(max = 300.dp)
                     .fillMaxWidth()
@@ -91,11 +99,18 @@ fun LoginScreen(
                 for (i in options) {
                     Button(
                         onClick = {
-                            // Verifica se o texto do botão é "Login" e se o nome de usuário e a senha são válidos antes de navegar
-                            if (i.path == "Locations" && isLoginValid(name, password)) {
-                                navController?.navigate(i.route)
-                            } else if (i.path != "Locations") {
-                                // Para outros botões que não sejam o de login, navegue sem validação
+                            if (i.display == "Locations") {
+                                if (isLoginValid(name, password)) {
+                                    navController?.navigate(i.route)
+                                } else {
+                                    // Mostrar Snackbar se os campos não forem válidos
+                                    coroutineScope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            "Nome de utilizador e password são necessários."
+                                        )
+                                    }
+                                }
+                            } else {
                                 navController?.navigate(i.route)
                             }
                         },
@@ -110,6 +125,10 @@ fun LoginScreen(
 
             }
         }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 
