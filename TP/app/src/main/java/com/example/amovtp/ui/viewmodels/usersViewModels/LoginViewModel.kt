@@ -12,4 +12,6 @@ class LoginViewModelFactory(private val usersData: UsersData): ViewModelProvider
 
 class LoginViewModel(private val usersData: UsersData) : ViewModel() {
 
+
+
 }

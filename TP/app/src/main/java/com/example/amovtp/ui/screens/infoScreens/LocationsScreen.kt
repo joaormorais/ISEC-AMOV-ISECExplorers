@@ -114,7 +114,7 @@ fun LocationsScreen(
 
                                 distanceString -> {
                                     //TODO: fazer getLocationsOrderedByDistance()
-                                    locations = emptyList()
+                                    locations = locationsViewModel.getLocationsOrderedByDistance()
                                     coroutineScope.launch {
                                         listState.animateScrollToItem(index = 0)
                                     }
@@ -128,7 +128,6 @@ fun LocationsScreen(
             }
         }
 
-        //TODO: (sandra) fazer um botao que avança para o PointsOfInterestScreen sem alterar a variavel setPointLocationSearch
         Button(
             onClick = {
                 // Navegar para PointsOfInterestScreen sem alterar setPointLocationSearch
@@ -189,10 +188,3 @@ fun LocationsScreen(
         }
     }
 }
-
-/*@Preview
-@Composable
-fun LocationsScreenPreview(navController: NavHostController = rememberNavController()) {
-    var viewModel: LocationsViewModel? = LocationsViewModel()
-    LocationsScreen(navController, viewModel!!) {}
-}*/

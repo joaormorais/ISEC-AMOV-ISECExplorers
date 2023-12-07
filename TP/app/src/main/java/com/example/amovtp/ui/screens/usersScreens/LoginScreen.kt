@@ -102,8 +102,8 @@ fun LoginScreen(
                             if (i.path == "Locations") {
                                 if (isLoginValid(name, password)) {
                                     navController?.navigate(i.route)
+                                    //TODO: obter gps do telemovel
                                 } else {
-                                    // Mostrar Snackbar se os campos não forem válidos
                                     coroutineScope.launch {
                                         snackbarHostState.showSnackbar(
                                             "Nome de utilizador e password são necessários."

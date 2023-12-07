@@ -47,6 +47,7 @@ class GeoData(/*firestore*/) {
     private val _locations = mutableListOf<Location>()
     private val _pointsOfInterest = mutableListOf<PointOfInterest>()
     private val _categories = mutableListOf<Category>()
+    private var _currentLocation = mutableStateOf(android.location.Location(null))
 
     init { //TODO: apagar
 
@@ -159,138 +160,11 @@ class GeoData(/*firestore*/) {
         return _categories.toList()
     }
 
+    fun getCurrentLocation(): android.location.Location {
+
+        //TODO: calcular localização atual
+
+        return _currentLocation.value
+    }
+
 }
-
-/*
-
-    fun removeLocation(
-        locationName: String
-    ): Boolean {
-
-        // checks if the location already exists
-        for (i in _locations) {
-            if (i.name == locationName)
-                _locations.remove(i) // removes the location
-            return true
-        }
-
-        return false
-
-    }
-
-    fun removePointOfInterest(
-        pointOfInterestName: String
-    ): Boolean {
-
-        for (i in _pointsOfInterest)
-            if (i.name == pointOfInterestName) {
-                _pointsOfInterest.remove(i)
-                return true
-            }
-
-        return false
-    }
-
-    fun removeCategory(
-        categoryName: String
-    ): Boolean {
-
-        // check if the category in fact exists
-        for (i in _categories)
-            if (i.name == categoryName) {
-                _categories.remove(i) // removes the category
-                return true
-            }
-
-        return false
-
-    }
-
-    fun addCategory(
-        categoryName: String,
-        categoryDescription: String
-        //TODO: receber uma imagem
-    ): Boolean {
-
-        // check if the new category already exists
-        for (i in _categories)
-            if (i.name == categoryName)
-                return false
-
-        // add category
-        _categories.add(
-            Category(
-                _currentCategoryId++,
-                categoryName,
-                categoryDescription
-            )
-        ) //TODO: adicionar a imagem
-
-        return true
-
-    }
-
-    fun addLocation(
-        locationName: String,
-        locationDescription: String,
-        latitude: Double,
-        longitude: Double
-        //TODO: recebe pelo menos uma imagem
-    ): Boolean {
-
-        // checks if the location already exists
-        for (i in _locations) {
-            if (i.name == locationName)
-                return false
-        }
-
-        // add location
-        _locations.add(
-            Location(
-                _currentLocationId++,
-                locationName,
-                locationDescription,
-                latitude,
-                longitude
-            )
-        )
-
-        return true
-
-    }
-
-    fun addPointOfInterest(
-        location: Location,
-        category: Category,
-        pointOfInterestName: String,
-        pointOfInterestDescription: String,
-        latitude: Double,
-        longitude: Double
-        //TODO: recebe pelo menos uma imagem
-    ): Boolean {
-
-        for (i in _categories)
-            if (i == category) {// if the category exists
-                for (k in _pointsOfInterest) {
-                    if (k.name == pointOfInterestName)
-                        return false
-                }
-
-                _pointsOfInterest.add(
-                    PointsOfInterest(
-                        _currentPointsOfInterestId++,
-                        pointOfInterestName,
-                        pointOfInterestDescription,
-                        latitude,
-                        longitude,
-                        location,
-                        category
-                    )
-                )
-            }
-
-        return false
-
-    }
-
-*/
