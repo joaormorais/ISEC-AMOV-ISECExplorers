@@ -127,8 +127,6 @@ fun LocationsScreen(
             }
         }
 
-        //TODO: (sandra) fazer um botao que avança para o PointsOfInterestScreen sem alterar a variavel setPointLocationSearch
-
         LazyColumn(
             state = listState,
             modifier = modifier
@@ -147,14 +145,7 @@ fun LocationsScreen(
                     ),
                     onClick = {
                         onSelected(it.id)
-                        locationsViewModel.setPointLocationSearch(it.name)
-                        navController?.navigate(Screens.POINTS_OF_INTEREST.route)
-                        /*val tempName = it.name
-                        navController?.navigate("PointsOfInterest?itemName=$tempName")*/
-                        /*val teste = "?locationName=" + it.name
-                        Log.d("LocationsScreen","aquiiiiiiiiiii teste: $teste")
-                        navController?.navigate(Screens.POINTS_OF_INTEREST.route + teste)*/
-                        //navController?.navigate("pointsOfInterestScreen?locationName=${it.name}")
+                        navController?.navigate("PointsOfInterest?itemName=${it.name}")
                     }
                 ) {
 

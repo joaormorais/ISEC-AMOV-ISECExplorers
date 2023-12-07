@@ -17,15 +17,12 @@ class PointsOfInterestViewModel(private val geoData: GeoData) : ViewModel() {
 
     fun getPointsOfInterest(): List<PointOfInterest> {
 
-        if (geoData.getPointLocationSearch().isEmpty())
-            return geoData.getPointsOfInterest()
-        else {
-            val temp = geoData.getPointsOfInterest()
-                .filter { it.locations.contains(geoData.getPointLocationSearch()) }
-            geoData.setPointLocationSearch("")
-            return temp
-        }
+        return geoData.getPointsOfInterest()
 
+    }
+
+    fun getPointsFromLocation(locationName: String?): List<PointOfInterest> {
+        return geoData.getPointsOfInterest().filter { it.locations.contains(locationName) }
     }
 
     fun getCategories(): List<Category> {

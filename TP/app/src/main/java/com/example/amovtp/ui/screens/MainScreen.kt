@@ -67,6 +67,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
     val context = LocalContext.current
     val app = context.applicationContext as MyApplication
+    val defaultString = stringResource(R.string.defaultvalue)
 
     //TODO: finalizar
     var isExpanded by remember { mutableStateOf(false) }
@@ -200,26 +201,19 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                 LocationsScreen(locationsViewModel!!, navController) {}
             }
 
-            composable(Screens.POINTS_OF_INTEREST.route) {
-                pointsOfInterestViewModel =
-                    viewModel(factory = PointsOfInterestViewModelFactory(app.geoData))
-                PointsOfInterestScreen(pointsOfInterestViewModel!!, navController) {}
-            }
+            composable(Screens.POINTS_OF_INTEREST.route,
+                arguments=listOf(
+                    navArgument("itemName"){
+                        type= NavType.StringType
+                        defaultValue = defaultString
+                    }
+                )
+                ) {
 
-            /*Log.d("MainScreen","Screens.POINTS_OF_INTEREST.route = ${Screens.POINTS_OF_INTEREST.route}")
-
-            composable(
-                Screens.POINTS_OF_INTEREST.route,
-                arguments = listOf(navArgument("itemName") {
-                    type = NavType.StringType
-                    defaultValue = "default"
-                })
-            ) {
                 val itemName = it.arguments?.getString("itemName")
-                pointsOfInterestViewModel =
-                    viewModel(factory = PointsOfInterestViewModelFactory(app.geoData))
+                pointsOfInterestViewModel = viewModel(factory = PointsOfInterestViewModelFactory(app.geoData))
                 PointsOfInterestScreen(pointsOfInterestViewModel!!, itemName, navController) {}
-            }*/
+            }
 
             composable(Screens.ADD_LOCATION.route) {
                 addLocationViewModel = viewModel(factory = AddLocationViewModelFactory(app.geoData))
