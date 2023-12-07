@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.screens.infoScreens
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,7 +55,7 @@ fun LocationsScreen(
     }
 
     var isExpanded by remember { mutableStateOf(false) }
-    val allString = stringResource(R.string.allLocations)
+    val allString = stringResource(R.string.all_locations)
     val nameString = stringResource(R.string.ordered_name)
     val distanceString = stringResource(R.string.ordered_distance)
     val items = listOf(allString, nameString, distanceString)
@@ -144,7 +143,7 @@ fun LocationsScreen(
                         .padding(8.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = Color.DarkGray,
-                        contentColor = Color.Red
+                        contentColor = Color.White
                     ),
                     onClick = {
                         onSelected(it.id)

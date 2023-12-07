@@ -74,7 +74,7 @@ fun PointsOfInterestScreen(
                         .padding(8.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = Color.DarkGray,
-                        contentColor = Color.Red
+                        contentColor = Color.White
                     ),
                     onClick = {
 

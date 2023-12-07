@@ -13,8 +13,8 @@
     <string name="register">Criar conta</string>
     <string name="fill_every_field">Preencha todos os campos!</string>
     <string name="invalid_email">Formato de email inválido!</string>
-    <string name="pw_dont_match">As passwords não coincidem!</string>
-    <string name="allLocations">Todas as localizações</string>
+    <string name="pws_dont_match">As passwords não coincidem!</string>
+    <string name="all_locations">Todas as localizações</string>
     <string name="ordered_name">Ordem alfabética</string>
     <string name="ordered_distance">Mais distanttes</string>
     <string name="add_category">Adicionar categoria</string>

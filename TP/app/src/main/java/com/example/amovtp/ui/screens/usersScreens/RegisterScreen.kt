@@ -140,7 +140,7 @@ fun isRegisterValid(
     }
 
     if (password != confirmPassword) {
-        errorMessage(context.getString(R.string.pw_dont_match))
+        errorMessage(context.getString(R.string.pws_dont_match))
         return false
     }
 

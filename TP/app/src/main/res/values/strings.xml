@@ -12,8 +12,8 @@
     <string name="register">Register</string>
     <string name="fill_every_field">Fill every field!</string>
     <string name="invalid_email">Invalid email!</string>
-    <string name="pw_dont_match">The passowrds don\'t match!</string>
-    <string name="allLocations">All locations</string>
+    <string name="pws_dont_match">The passwords don\'t match!</string>
+    <string name="all_locations">All locations</string>
     <string name="ordered_name">Ordered by name</string>
     <string name="ordered_distance">Ordered by distance</string>
     <string name="add_category">Add category</string>

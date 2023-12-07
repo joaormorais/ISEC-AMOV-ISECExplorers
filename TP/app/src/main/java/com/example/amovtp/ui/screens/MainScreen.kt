@@ -3,14 +3,18 @@ package com.example.amovtp.ui.screens
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
@@ -54,6 +58,7 @@ import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModel
 import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModelFactory
 import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModel
 import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModelFactory
+import kotlinx.coroutines.launch
 import okhttp3.internal.concurrent.Task
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,8 +70,10 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
     //TODO: finalizar
     var isExpanded by remember { mutableStateOf(false) }
-    val addCategoryString = "Add category"
-    val addPointString = "Add point of interest"
+    val addCategoryString = stringResource(R.string.add_category)
+    val addPointString = stringResource(R.string.add_point)
+    val items = listOf(addCategoryString, addPointString)
+    var selectedIndex by remember { mutableStateOf(0) }
 
     var loginViewModel: LoginViewModel? = null
     var registerViewModel: RegisterViewModel? = null
@@ -76,12 +83,13 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
     var addPointOfInterestViewModel: AddPointOfInterestViewModel? = null
     var addCategoryViewModel: AddCategoryViewModel? = null
 
-    var addInfo by remember { mutableStateOf(false) }
+    var addLoc by remember { mutableStateOf(false) }
+    var addPointOrCategory by remember { mutableStateOf(false) }
 
     val currentScreen by navController.currentBackStackEntryAsState()
     navController.addOnDestinationChangedListener { controller, destination, arguments ->
-        addInfo =
-            (destination.route == Screens.LOCATIONS.route || destination.route == Screens.POINTS_OF_INTEREST.route)
+        addLoc = (destination.route == Screens.LOCATIONS.route)
+        addPointOrCategory = (destination.route == Screens.POINTS_OF_INTEREST.route)
     }
 
     Scaffold(
@@ -102,24 +110,60 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                     },
 
                     actions = {
-                        if (addInfo) {
+
+                        if (addLoc) {
                             IconButton(onClick = {
-                                if (Screens.valueOf(currentScreen!!.destination.route!!) == Screens.LOCATIONS)
-                                    navController?.navigate(Screens.ADD_LOCATION.route)
-                                else if (Screens.valueOf(currentScreen!!.destination.route!!) == Screens.POINTS_OF_INTEREST) {
-                                    //TODO: fazer um dropdown button para escolher entre adicionar uma categoria ou um ponto de interesse
-                                    //TODO: fazer um dropdown menu com dois items para escolher
-
-
-
-                                }
+                                navController?.navigate(Screens.ADD_LOCATION.route)
                             }) {
                                 Icon(
                                     Icons.Filled.AddCircle,
                                     contentDescription = "Add Information"
                                 )
                             }
+                        } else if (addPointOrCategory) {
+                            IconButton(onClick = {
+                                isExpanded = true
+                            }) {
+                                Icon(
+                                    Icons.Filled.AddCircle,
+                                    contentDescription = "Add Information"
+                                )
+                            }
+
+                            DropdownMenu(
+                                expanded = isExpanded,
+                                onDismissRequest = { isExpanded = false },
+                                modifier = Modifier
+                                    .wrapContentWidth()
+                            ) {
+
+                                items.forEachIndexed { index, s ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = s) },
+                                        onClick = {
+                                            selectedIndex = index
+                                            isExpanded = false
+
+                                            when (s) {
+
+                                                addCategoryString -> {
+                                                    navController?.navigate(Screens.ADD_CATEGORY.route)
+                                                }
+
+                                                addPointString -> {
+                                                    navController?.navigate(Screens.ADD_POINT_OF_INTEREST.route)
+                                                }
+
+                                            }
+
+                                        }
+                                    )
+                                }
+
+                            }
+
                         }
+
                     },
 
                     colors = topAppBarColors(
