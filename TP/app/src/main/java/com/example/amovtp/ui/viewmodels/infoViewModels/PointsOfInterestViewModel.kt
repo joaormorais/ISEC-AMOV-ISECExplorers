@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.Category
 import com.example.amovtp.data.GeoData
+import com.example.amovtp.data.Location
 import com.example.amovtp.data.PointOfInterest
 
 class PointsOfInterestViewModelFactory(private val geoData: GeoData) :
@@ -31,6 +32,10 @@ class PointsOfInterestViewModel(private val geoData: GeoData) : ViewModel() {
 
     fun getPointsFromCategory(categoryName: String): List<PointOfInterest> {
         return geoData.getPointsOfInterest().filter { it.category.contains(categoryName) }
+    }
+
+    fun getLocations(): List<Location>{
+        return geoData.getLocations()
     }
 
 
