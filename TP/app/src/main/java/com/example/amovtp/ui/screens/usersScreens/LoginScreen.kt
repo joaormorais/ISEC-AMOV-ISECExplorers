@@ -99,7 +99,7 @@ fun LoginScreen(
                 for (i in options) {
                     Button(
                         onClick = {
-                            if (i.display == "Locations") {
+                            if (i.path == "Locations") {
                                 if (isLoginValid(name, password)) {
                                     navController?.navigate(i.route)
                                 } else {
