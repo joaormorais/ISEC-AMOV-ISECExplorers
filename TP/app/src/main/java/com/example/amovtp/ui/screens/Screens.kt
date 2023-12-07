@@ -2,7 +2,7 @@ package com.example.amovtp.ui.screens
 
 //TODO: transformar este enum numa lista de paths?
 
-enum class Screens(val display: String) {
+enum class Screens(val path: String) {
     LOGIN("Login"),
     REGISTER("Register"),
     LOCATIONS("Locations"),
@@ -11,6 +11,9 @@ enum class Screens(val display: String) {
     ADD_POINT_OF_INTEREST("AddPointOfInterest"),
     ADD_CATEGORY("AddCategory");
 
+    /*val route: String
+        get() = this.toString()*/
+
     val route: String
-        get() = this.toString()
+        get() = this.path
 }

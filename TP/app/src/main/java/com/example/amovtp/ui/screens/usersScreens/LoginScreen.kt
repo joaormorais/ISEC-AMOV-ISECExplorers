@@ -92,9 +92,9 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             // Verifica se o texto do botão é "Login" e se o nome de usuário e a senha são válidos antes de navegar
-                            if (i.display == "Locations" && isLoginValid(name, password)) {
+                            if (i.path == "Locations" && isLoginValid(name, password)) {
                                 navController?.navigate(i.route)
-                            } else if (i.display != "Locations") {
+                            } else if (i.path != "Locations") {
                                 // Para outros botões que não sejam o de login, navegue sem validação
                                 navController?.navigate(i.route)
                             }
@@ -102,7 +102,7 @@ fun LoginScreen(
                         modifier = Modifier.padding(4.dp)
                     ) {
                         Text(
-                            text = if (i.display == "Locations") "Login" else i.display,
+                            text = if (i.path == "Locations") "Login" else i.path,
                             modifier = Modifier.padding(16.dp)
                         )
                     }

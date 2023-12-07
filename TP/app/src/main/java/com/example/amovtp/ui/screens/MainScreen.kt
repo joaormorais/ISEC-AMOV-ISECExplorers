@@ -96,7 +96,8 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
         topBar = {
 
-            if (currentScreen != null && Screens.valueOf(currentScreen!!.destination.route!!) != Screens.LOGIN)
+            //if (currentScreen != null && Screens.valueOf(currentScreen!!.destination.route!!) != Screens.LOGIN)
+            if (currentScreen != null && currentScreen.toString() != Screens.LOGIN.route)
                 TopAppBar(
                     title = {},
 
@@ -113,7 +114,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
                         if (addLoc) {
                             IconButton(onClick = {
-                                navController?.navigate(Screens.ADD_LOCATION.route)
+                                navController.navigate(Screens.ADD_LOCATION.route)
                             }) {
                                 Icon(
                                     Icons.Filled.AddCircle,
@@ -147,11 +148,11 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                                             when (s) {
 
                                                 addCategoryString -> {
-                                                    navController?.navigate(Screens.ADD_CATEGORY.route)
+                                                    navController.navigate(Screens.ADD_CATEGORY.route)
                                                 }
 
                                                 addPointString -> {
-                                                    navController?.navigate(Screens.ADD_POINT_OF_INTEREST.route)
+                                                    navController.navigate(Screens.ADD_POINT_OF_INTEREST.route)
                                                 }
 
                                             }
