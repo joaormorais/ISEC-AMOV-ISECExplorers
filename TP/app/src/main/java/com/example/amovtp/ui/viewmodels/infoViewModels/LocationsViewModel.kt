@@ -21,10 +21,6 @@ class LocationsViewModel(private val geoData: GeoData) : ViewModel() {
         return geoData.getLocations().sortedBy { it.name }
     }
 
-    fun setPointLocationSearch(name: String) {
-        geoData.setPointLocationSearch(name)
-    }
-
     //TODO: fazer getLocationsOrderedByDistance()
 
 }

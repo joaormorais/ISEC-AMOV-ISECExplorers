@@ -22,4 +22,5 @@
     <string name="camera_image">Add image with camera</string>
     <string name="gallery_image">Add image with gallery</string>
     <string name="description_solo">Description:</string>
+    <string name="defaultvalue">defaultValue</string>
 </resources>

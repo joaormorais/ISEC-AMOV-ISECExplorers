@@ -35,24 +35,19 @@ import com.example.amovtp.ui.viewmodels.infoViewModels.PointsOfInterestViewModel
 @Composable
 fun PointsOfInterestScreen(
     pointsOfInterestViewModel: PointsOfInterestViewModel,
-    /*itemName: String? = null,*/
+    itemName: String? = null,
     navController: NavController,
     modifier: Modifier = Modifier,
     onSelected: (Int) -> Unit
 ) {
 
-    /*val argName = navController.currentBackStackEntry?.arguments?.getString("?locationName","Coimbra").toString()
-    Log.d("PointsOfInterestScreen", "aquiiiiiiiiiii argName: $argName")
-    val pointsOfInterest: List<PointOfInterest> = pointsOfInterestViewModel.getPointsForLocation(argName)*/
-
     var pointsOfInterest by remember {
         mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest())
     }
 
-    /*if (itemName != null)
-        if (itemName != "default")
-            pointsOfInterest =
-                pointsOfInterestViewModel.getPointsForLocation(itemName)*/
+    if (itemName != null)
+        if (itemName != stringResource(R.string.defaultvalue))
+            pointsOfInterest = pointsOfInterestViewModel.getPointsFromLocation(itemName)
 
     Column(
         modifier = modifier

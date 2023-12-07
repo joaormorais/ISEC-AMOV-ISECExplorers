@@ -47,7 +47,6 @@ class GeoData(/*firestore*/) {
     private val _locations = mutableListOf<Location>()
     private val _pointsOfInterest = mutableListOf<PointOfInterest>()
     private val _categories = mutableListOf<Category>()
-    private var _pointLocationSearch = ""
 
     init { //TODO: apagar
 
@@ -158,14 +157,6 @@ class GeoData(/*firestore*/) {
 
     fun getCategories(): List<Category> {
         return _categories.toList()
-    }
-
-    fun getPointLocationSearch(): String {
-        return _pointLocationSearch
-    }
-
-    fun setPointLocationSearch(newValue: String) {
-        _pointLocationSearch = newValue
     }
 
 }
