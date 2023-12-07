@@ -15,6 +15,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,9 +46,12 @@ fun PointsOfInterestScreen(
         mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest())
     }
 
-    if (itemName != null)
-        if (itemName != stringResource(R.string.defaultvalue))
-            pointsOfInterest = pointsOfInterestViewModel.getPointsFromLocation(itemName)
+    val defaultString = stringResource(R.string.defaultvalue)
+    LaunchedEffect(key1 = itemName){
+        if (itemName != null)
+            if (itemName != defaultString)
+                pointsOfInterest = pointsOfInterestViewModel.getPointsFromLocation(itemName)
+    }
 
     Column(
         modifier = modifier
