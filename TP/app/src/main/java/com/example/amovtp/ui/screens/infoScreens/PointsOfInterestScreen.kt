@@ -53,16 +53,15 @@ fun PointsOfInterestScreen(
         mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest())
     }
 
-    //TODO SANDRA
     var isExpanded2 by remember { mutableStateOf(false) }
-    val locations = pointsOfInterestViewModel.getLocations()
     var selectedLocation by remember {
-        mutableStateOf(locations.firstOrNull()?.name ?: "")
+        mutableStateOf(pointsOfInterestViewModel.getLocations().find { it.name == itemName }?.name)
     }
+
     var selectedIndex by remember { mutableStateOf(0) }
 
     val defaultString = stringResource(R.string.defaultvalue)
-    LaunchedEffect(key1 = itemName){
+    LaunchedEffect(key1 = itemName) {
         if (itemName != null)
             if (itemName != defaultString)
                 pointsOfInterest = pointsOfInterestViewModel.getPointsFromLocation(itemName)
@@ -79,10 +78,10 @@ fun PointsOfInterestScreen(
                 .align(Alignment.CenterHorizontally)
         ) {
             Text(
-                selectedLocation,
+                selectedLocation!!,
                 modifier = Modifier
                     .wrapContentWidth()
-                    .clickable(onClick = {isExpanded2 = true})
+                    .clickable(onClick = { isExpanded2 = true })
             )
 
             DropdownMenu(
@@ -91,16 +90,17 @@ fun PointsOfInterestScreen(
                 modifier = Modifier
                     .wrapContentWidth()
             ) {
-                locations.forEachIndexed{ index, location->
-                        DropdownMenuItem(
-                            text = { Text(text = location.name)},
-                            onClick = {
-                                selectedLocation = location.name
-                                selectedIndex = index
-                                isExpanded2 = false
-                                pointsOfInterest = pointsOfInterestViewModel.getPointsFromLocation(location.name)
-                            }
-                        )
+                pointsOfInterestViewModel.getLocations().forEachIndexed { index, location ->
+                    DropdownMenuItem(
+                        text = { Text(text = location.name) },
+                        onClick = {
+                            selectedLocation = location.name
+                            selectedIndex = index
+                            isExpanded2 = false
+                            pointsOfInterest =
+                                pointsOfInterestViewModel.getPointsFromLocation(location.name)
+                        }
+                    )
                 }
             }
         }
