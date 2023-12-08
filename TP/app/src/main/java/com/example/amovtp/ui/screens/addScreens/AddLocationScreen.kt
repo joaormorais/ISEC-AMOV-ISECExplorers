@@ -40,7 +40,9 @@ fun AddLocationScreen(
 
         NameDescription()
         Spacer(modifier = Modifier.height(8.dp))
-        GalleryImage()
+        GalleryImage(imagesPathChanged = {
+            path ->
+        })
         Spacer(modifier = Modifier.height(8.dp))
         CameraImage()
 

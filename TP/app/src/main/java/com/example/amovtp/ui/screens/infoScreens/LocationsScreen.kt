@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.amovtp.R
+import com.example.amovtp.data.Location
 import com.example.amovtp.ui.screens.Screens
 import com.example.amovtp.ui.viewmodels.infoViewModels.LocationsViewModel
 import kotlinx.coroutines.launch
@@ -47,8 +48,7 @@ import kotlinx.coroutines.launch
 fun LocationsScreen(
     locationsViewModel: LocationsViewModel,
     navController: NavHostController?,
-    modifier: Modifier = Modifier,
-    onSelected: (Int) -> Unit
+    modifier: Modifier = Modifier
 ) {
 
     var locations by remember {
@@ -113,7 +113,6 @@ fun LocationsScreen(
                                 }
 
                                 distanceString -> {
-                                    //TODO: fazer getLocationsOrderedByDistance()
                                     locations = locationsViewModel.getLocationsOrderedByDistance()
                                     coroutineScope.launch {
                                         listState.animateScrollToItem(index = 0)
@@ -157,7 +156,6 @@ fun LocationsScreen(
                         contentColor = Color.White
                     ),
                     onClick = {
-                        onSelected(it.id)
                         navController?.navigate("PointsOfInterest?itemName=${it.name}")
                     }
                 ) {

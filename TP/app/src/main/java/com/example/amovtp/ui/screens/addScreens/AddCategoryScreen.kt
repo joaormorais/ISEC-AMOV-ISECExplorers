@@ -37,7 +37,7 @@ fun AddCategoryScreen(
 
         NameDescription()
         Spacer(modifier = Modifier.height(8.dp))
-        GalleryImage()
+        //GalleryImage()
         Spacer(modifier = Modifier.height(8.dp))
         CameraImage()
 

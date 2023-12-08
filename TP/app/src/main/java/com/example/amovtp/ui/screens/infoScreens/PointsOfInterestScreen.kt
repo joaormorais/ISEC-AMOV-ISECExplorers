@@ -45,8 +45,7 @@ fun PointsOfInterestScreen(
     pointsOfInterestViewModel: PointsOfInterestViewModel,
     itemName: String? = null,
     navController: NavController,
-    modifier: Modifier = Modifier,
-    onSelected: (Int) -> Unit
+    modifier: Modifier = Modifier
 ) {
 
     var pointsOfInterest by remember {

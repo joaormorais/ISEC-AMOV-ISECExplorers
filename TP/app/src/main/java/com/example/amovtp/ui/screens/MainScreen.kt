@@ -198,7 +198,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
             composable(Screens.LOCATIONS.route) {
                 locationsViewModel = viewModel(factory = LocationsViewModelFactory(app.geoData))
-                LocationsScreen(locationsViewModel!!, navController) {}
+                LocationsScreen(locationsViewModel!!, navController)
             }
 
             composable(Screens.POINTS_OF_INTEREST.route,
@@ -212,7 +212,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
                 val itemName = it.arguments?.getString("itemName")
                 pointsOfInterestViewModel = viewModel(factory = PointsOfInterestViewModelFactory(app.geoData))
-                PointsOfInterestScreen(pointsOfInterestViewModel!!, itemName, navController) {}
+                PointsOfInterestScreen(pointsOfInterestViewModel!!, itemName, navController)
             }
 
             composable(Screens.ADD_LOCATION.route) {

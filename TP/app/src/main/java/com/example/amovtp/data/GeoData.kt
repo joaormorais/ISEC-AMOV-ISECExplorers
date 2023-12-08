@@ -3,7 +3,7 @@ package com.example.amovtp.data
 import androidx.compose.runtime.mutableStateOf
 
 /**
- * Represents a location, that is going to have a name, a descriptions, coordinates, and N points of interest
+ * Represents a location with N points of interest
  */
 data class Location(
     val id: Int,
@@ -11,20 +11,26 @@ data class Location(
     val description: String,
     val lat: Double,
     val long: Double,
-    val pointsOfInterest: MutableList<String> = mutableListOf()
-) //TODO: receber um array de imagens + boolean a dizer se é um distrito
+    val pointsOfInterest: MutableList<String>,
+    val image: MutableList<String>,
+    val votes: Int,
+    val approved: Boolean
+)
 
 /**
- * Represents a category of points of interest, that is going to have a name, and a description
+ * Represents a category for points of interest
  */
 data class Category(
     val id: Int,
     val name: String,
-    val description: String
-) //TODO: receber uma imagem
+    val description: String,
+    val img: String,
+    val votes: Int,
+    val approved: Boolean
+)
 
 /**
- * Represents a point of interest from a location, that is going to have a name, a description, coordinates, and a category
+ * Represents a point of interest from a location or more, and has a category
  */
 data class PointOfInterest(
     val id: Int,
@@ -32,9 +38,12 @@ data class PointOfInterest(
     val description: String,
     val lat: Double,
     val long: Double,
-    val locations: MutableList<String> = mutableListOf(), //TODO: transformar num array de localizações (um ponto poode ter por exemplo Coimbra e Montemor-o-Velho)
-    val category: String
-) //TODO: receber um array de imagens + classificação
+    val locations: MutableList<String>,
+    val category: String,
+    val image: MutableList<String>,
+    val votes: Int,
+    val approved: Boolean
+)
 
 class GeoData(/*firestore*/) {
 
@@ -55,29 +64,52 @@ class GeoData(/*firestore*/) {
         val museumCategory = Category(
             _currentCategoryId++,
             "Museus",
-            "Locais dedicados à exposição e preservação de artefatos culturais."
+            "Locais dedicados à exposição e preservação de artefatos culturais.",
+            "",
+            2,
+            true
         )
         val monumentsCategory = Category(
             _currentCategoryId++,
             "Monumentos & Locais de Culto",
-            "Locais históricos e religiosos notáveis."
+            "Locais históricos e religiosos notáveis.",
+            "",
+            2,
+            true
         )
         val gardensCategory = Category(
             _currentCategoryId++,
             "Jardins",
-            "Áreas verdes planejadas para fins estéticos e de lazer."
+            "Áreas verdes planejadas para fins estéticos e de lazer.",
+            "",
+            2,
+            true
         )
         val viewpointsCategory =
-            Category(_currentCategoryId++, "Miradouros", "Locais com vistas panorâmicas.")
+            Category(
+                _currentCategoryId++,
+                "Miradouros",
+                "Locais com vistas panorâmicas.",
+                "",
+                2,
+                true
+            )
+
         val restaurantsBarsCategory = Category(
             _currentCategoryId++,
             "Restaurantes & Bares",
-            "Locais para refeições e entretenimento."
+            "Locais para refeições e entretenimento.",
+            "",
+            2,
+            true
         )
         val accommodationCategory = Category(
             _currentCategoryId++,
             "Alojamento",
-            "Hospedagem e acomodações para estadias temporárias."
+            "Hospedagem e acomodações para estadias temporárias.",
+            "",
+            2,
+            true
         )
 
         // Adição das categorias à lista _categories
@@ -123,7 +155,11 @@ class GeoData(/*firestore*/) {
                     locationNames[i],
                     locationDescriptions[i],
                     latitudes[i],
-                    longitudes[i]
+                    longitudes[i],
+                    mutableListOf(),
+                    mutableListOf(),
+                    2,
+                    true
                 )
             )
         }
@@ -140,7 +176,10 @@ class GeoData(/*firestore*/) {
                 333.111,
                 444.222,
                 mutableListOf(location.name),
-                _categories.random().name
+                _categories.random().name,
+                mutableListOf(),
+                2,
+                true
             )
 
             _pointsOfInterest.add(tempPointOfInterest)
