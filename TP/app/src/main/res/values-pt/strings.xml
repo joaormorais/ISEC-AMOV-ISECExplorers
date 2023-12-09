@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">IsecExplorers</string>
-    <string name="location">Localização: %1$s</string>
     <string name="description">Descrição: %1$s</string>
     <string name="latitude">Latitude: %1$s</string>
     <string name="longitude">Longitude: %1$s</string>
-    <string name="point_of_interest">Ponto de interesse: %1$s</string>
     <string name="name">Nome</string>
     <string name="password">Password</string>
     <string name="confirm_password">Repetir password</string>
@@ -24,4 +22,5 @@
     <string name="gallery_image">Adicionar imagem através da galeria</string>
     <string name="description_solo">Deescrição:</string>
     <string name="defaultvalue">defaultValue</string>
+    <string name="all">Tudo</string>
 </resources>

@@ -102,7 +102,6 @@ fun LoginScreen(
                             if (i.path == "Locations") {
                                 if (isLoginValid(name, password)) {
                                     navController?.navigate(i.route)
-                                    //TODO: obter gps do telemovel
                                 } else {
                                     coroutineScope.launch {
                                         snackbarHostState.showSnackbar(

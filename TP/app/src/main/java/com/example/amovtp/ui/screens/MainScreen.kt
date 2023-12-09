@@ -69,7 +69,6 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
     val app = context.applicationContext as MyApplication
     val defaultString = stringResource(R.string.defaultvalue)
 
-    //TODO: finalizar
     var isExpanded by remember { mutableStateOf(false) }
     val addCategoryString = stringResource(R.string.add_category)
     val addPointString = stringResource(R.string.add_point)

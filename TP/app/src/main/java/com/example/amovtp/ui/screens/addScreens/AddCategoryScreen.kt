@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +28,7 @@ fun AddCategoryScreen(
     modifier: Modifier = Modifier
 ) {
 
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
@@ -35,18 +36,26 @@ fun AddCategoryScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        NameDescription()
-        Spacer(modifier = Modifier.height(8.dp))
-        //GalleryImage()
-        Spacer(modifier = Modifier.height(8.dp))
-        CameraImage()
+        item{
 
-        Button(
-            onClick = {
-            },
-            modifier = Modifier.padding(top = 16.dp)
-        ) {
-            Text(stringResource(R.string.add_category))
+            NameDescription()
+            Spacer(modifier = Modifier.height(8.dp))
+            GalleryImage(imagesPathChanged = {
+                    path ->
+            })
+            Spacer(modifier = Modifier.height(8.dp))
+            CameraImage()
+
+            Button(
+                onClick = {
+                },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text(stringResource(R.string.add_category))
+            }
+
+            //TODO: botao para criar
+
         }
 
     }

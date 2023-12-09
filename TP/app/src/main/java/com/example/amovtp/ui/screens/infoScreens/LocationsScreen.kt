@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,8 +42,6 @@ import com.example.amovtp.data.Location
 import com.example.amovtp.ui.screens.Screens
 import com.example.amovtp.ui.viewmodels.infoViewModels.LocationsViewModel
 import kotlinx.coroutines.launch
-
-//TODO: ordenar por ordem alfabética + ordenar de acordo com a distância da nossa localização atual
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,6 +87,7 @@ fun LocationsScreen(
                 onDismissRequest = { isExpanded = false },
                 modifier = Modifier
                     .wrapContentWidth()
+                    .wrapContentHeight()
             ) {
 
                 items.forEachIndexed { index, s ->
@@ -166,10 +167,9 @@ fun LocationsScreen(
                             .fillMaxSize()
                             .padding(8.dp)
                     ) {
-
                         //TODO: caso esta informação pertença a um utilizador, deve aparecer o botão de editar
                         Text(
-                            text = stringResource(R.string.location, it.name),
+                            text = it.name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         )

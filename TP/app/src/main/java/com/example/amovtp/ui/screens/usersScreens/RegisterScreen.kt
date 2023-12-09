@@ -1,7 +1,6 @@
 package com.example.amovtp.ui.screens.usersScreens
 
-import android.content.Context //TODO: podemos usar este import?
-
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,7 +43,10 @@ fun RegisterScreen(
     navController: NavHostController?,
     loginScreen: Screens
 ) {
-    val context = LocalContext.current
+    val context = LocalContext.current //TODO: apagar esta varaivel
+    val randomstring = stringResource(R.string.name) // TODO: enviar as strings e substituir na função
+
+
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -96,7 +98,7 @@ fun RegisterScreen(
 
             Button(
                 onClick = {
-                    if (isRegisterValid(context,name, email, password, confirmPassword) { msg ->
+                    if (isRegisterValid(context,name, email, password, confirmPassword) { msg -> //TODO: enviar aqui as strings
                             errorMessage = msg
                         }) {
                         navController?.navigate(loginScreen.route)
@@ -119,7 +121,7 @@ fun RegisterScreen(
     }
 }
 
-fun isRegisterValid(
+fun isRegisterValid( //TODO: enviar 3 strings no cabeçalho
     context: Context,
     name: String,
     email: String,
@@ -130,17 +132,17 @@ fun isRegisterValid(
 
 
     if (name.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-        errorMessage(context.getString(R.string.fill_every_field))
+        errorMessage(context.getString(R.string.fill_every_field)) //TODO: substuituir aqui as strings
         return false
     }
 
     if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-        errorMessage(context.getString(R.string.invalid_email))
+        errorMessage(context.getString(R.string.invalid_email)) //TODO: substuituir aqui as strings
         return false
     }
 
     if (password != confirmPassword) {
-        errorMessage(context.getString(R.string.pws_dont_match))
+        errorMessage(context.getString(R.string.pws_dont_match)) //TODO: substuituir aqui as strings
         return false
     }
 
