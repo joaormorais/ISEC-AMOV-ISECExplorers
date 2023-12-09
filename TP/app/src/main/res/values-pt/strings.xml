@@ -22,5 +22,5 @@
     <string name="gallery_image">Adicionar imagem através da galeria</string>
     <string name="description_solo">Deescrição:</string>
     <string name="defaultvalue">defaultValue</string>
-    <string name="all">Tudo</string>
+    <string name="all_categories">Todas as categorias</string>
 </resources>

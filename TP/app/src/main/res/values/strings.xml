@@ -21,5 +21,5 @@
     <string name="gallery_image">Add image with gallery</string>
     <string name="description_solo">Description:</string>
     <string name="defaultvalue">defaultValue</string>
-    <string name="all">All</string>
+    <string name="all_categories">All categories</string>
 </resources>

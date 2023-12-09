@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.example.amovtp.R
+import com.example.amovtp.data.Category
 import com.example.amovtp.ui.viewmodels.infoViewModels.PointsOfInterestViewModel
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -53,56 +55,65 @@ fun PointsOfInterestScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    val allString = stringResource(R.string.all)
+    var isExpandedLocations by remember { mutableStateOf(false) }
+    var isExpandedCategories by remember { mutableStateOf(false) }
+    var selectedIndexLocations by remember { mutableStateOf(0) }
+    var selectedIndexCategories by remember { mutableStateOf(0) }
     val defaultString = stringResource(R.string.defaultvalue)
-    val latCenterPT = 39.694460831786216
-    val longCenterPT = -8.130543343335995
-
+    val allLocationsString = stringResource(R.string.all_locations)
+    val allCategoriesString = stringResource(R.string.all_categories)
+    val currentLat = 39.694460831786216 //TODO: trocar para a loc atual do dispositivo
+    val currentLong = -8.130543343335995 //TODO: trocar para a loc atual do dispositivo
+    val locations = pointsOfInterestViewModel.getLocations()
+    val categories = pointsOfInterestViewModel.getCategories()
     var pointsOfInterest by remember {
         mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest())
     }
-    val selectedLocation by remember {
-        mutableStateOf(
-
-            if (itemName != defaultString) {
-                pointsOfInterestViewModel.getLocations().find { it.name == itemName }
-            } else {
-                null
-            }
-
-        )
-    }
-
-
-    var isExpanded by remember { mutableStateOf(false) }
-    var selectedLocationName by remember {
-        mutableStateOf(
-
-            if (selectedLocation != null)
-                selectedLocation!!.name
-            else
-                allString
-        )
-    }
-    var selectedIndex by remember { mutableStateOf(0) }
-
-    var geoPoint by remember {
-        mutableStateOf(
-
-            if (itemName != defaultString)
-                GeoPoint(selectedLocation!!.lat, selectedLocation!!.long)
-            else
-                GeoPoint(latCenterPT, longCenterPT)
-
-        )
-    }
-
 
     LaunchedEffect(key1 = itemName) {
         if (itemName != null)
             if (itemName != defaultString)
                 pointsOfInterest = pointsOfInterestViewModel.getPointsFromLocation(itemName)
     }
+
+    val selectedLocation by remember {
+        mutableStateOf(
+            if (itemName != defaultString) {
+                locations.find { it.name == itemName }
+            } else {
+                null
+            }
+        )
+    }
+    val selectedCategory by remember {
+        mutableStateOf<Category?>(null)
+    }
+    var selectedLocationName by remember {
+        mutableStateOf(
+            if (selectedLocation != null)
+                selectedLocation!!.name
+            else
+                allLocationsString
+        )
+    }
+    var selectedCategoryName by remember {
+        mutableStateOf(
+            if (selectedCategory != null)
+                selectedCategory!!.name
+            else
+                allCategoriesString
+        )
+    }
+    var geoPoint by remember {
+        mutableStateOf(
+            if (itemName != defaultString)
+                GeoPoint(selectedLocation!!.lat, selectedLocation!!.long)
+            else
+                GeoPoint(currentLat, currentLong)
+
+        )
+    }
+
 
     Column(
         modifier = modifier
@@ -111,47 +122,94 @@ fun PointsOfInterestScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Box(
+        Row(
             modifier = Modifier
-                .wrapContentSize(Alignment.TopStart)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            Text(
-                selectedLocationName!!,
+        ){
+            Box(
                 modifier = Modifier
-                    .wrapContentWidth()
-                    .clickable(onClick = { isExpanded = true })
-            )
-
-            DropdownMenu(
-                expanded = isExpanded,
-                onDismissRequest = { isExpanded = false },
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .heightIn(max = 200.dp)
-                    .wrapContentHeight(Alignment.Top)
+                    .wrapContentSize(Alignment.TopStart)
+                    .padding(end = 8.dp)
             ) {
-                DropdownMenuItem(
-                    text = { Text(allString) },
-                    onClick = {
-                        selectedLocationName = allString
-                        selectedIndex = 0
-                        isExpanded = false
-                        pointsOfInterest =
-                            pointsOfInterestViewModel.getPointsOfInterest()
-                    }
+                Text(
+                    selectedLocationName!!,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .clickable(onClick = { isExpandedLocations = true })
                 )
-                pointsOfInterestViewModel.getLocations().forEachIndexed { index, location ->
+                DropdownMenu(
+                    expanded = isExpandedLocations,
+                    onDismissRequest = { isExpandedLocations = false },
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .heightIn(max = 200.dp)
+                        .wrapContentHeight(Alignment.Top)
+                ) {
                     DropdownMenuItem(
-                        text = { Text(text = location.name) },
+                        text = { Text(allLocationsString) },
                         onClick = {
-                            selectedLocationName = location.name
-                            selectedIndex = index + 1
-                            isExpanded = false
+                            selectedLocationName = allLocationsString
+                            selectedIndexLocations = 0
+                            isExpandedLocations = false
                             pointsOfInterest =
-                                pointsOfInterestViewModel.getPointsFromLocation(location.name)
+                                pointsOfInterestViewModel.getPointsOfInterest()
                         }
                     )
+                    pointsOfInterestViewModel.getLocations().forEachIndexed { index, location ->
+                        DropdownMenuItem(
+                            text = { Text(text = location.name) },
+                            onClick = {
+                                selectedLocationName = location.name
+                                selectedIndexLocations = index + 1
+                                isExpandedLocations = false
+                                pointsOfInterest =
+                                    pointsOfInterestViewModel.getPointsFromLocation(location.name)
+                            }
+                        )
+                    }
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .wrapContentSize(Alignment.TopStart)
+                    .padding(start = 8.dp)
+            ) {
+                Text(
+                    selectedCategoryName!!,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .clickable(onClick = { isExpandedCategories = true })
+                )
+
+                DropdownMenu(
+                    expanded = isExpandedCategories,
+                    onDismissRequest = { isExpandedCategories = false },
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .heightIn(max = 200.dp)
+                        .wrapContentHeight(Alignment.Top)
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(allCategoriesString) },
+                        onClick = {
+                            selectedCategoryName = allCategoriesString
+                            selectedIndexCategories = 0
+                            isExpandedCategories = false
+                            pointsOfInterest = pointsOfInterestViewModel.getPointsOfInterest()
+                        }
+                    )
+                    pointsOfInterestViewModel.getCategories().forEachIndexed { index, categories ->
+                        DropdownMenuItem(
+                            text = { Text(text = categories.name) },
+                            onClick = {
+                                selectedCategoryName = categories.name
+                                selectedIndexCategories = index + 1
+                                isExpandedCategories = false
+                                pointsOfInterest =
+                                    pointsOfInterestViewModel.getPointsFromCategory(categories.name)
+                            }
+                        )
+                    }
                 }
             }
         }
