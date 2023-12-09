@@ -43,9 +43,6 @@ fun RegisterScreen(
     navController: NavHostController?,
     loginScreen: Screens
 ) {
-    val context = LocalContext.current //TODO: apagar esta varaivel
-    val randomstring = stringResource(R.string.name) // TODO: enviar as strings e substituir na função
-
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -54,6 +51,9 @@ fun RegisterScreen(
     var errorMessage by remember { mutableStateOf<String?>(null) }
     val snackbarHostState = remember {SnackbarHostState()} //para mostrar as mensagens de erro
     var showSnackBar by remember { mutableStateOf(false) }
+    val fillEveryFieldError = stringResource(R.string.fill_every_field)
+    val invalidEmailError = stringResource(R.string.invalid_email)
+    val passwordsDontMatchError = stringResource(R.string.pws_dont_match)
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
@@ -98,7 +98,9 @@ fun RegisterScreen(
 
             Button(
                 onClick = {
-                    if (isRegisterValid(context,name, email, password, confirmPassword) { msg -> //TODO: enviar aqui as strings
+                    if (isRegisterValid(name, email, password, confirmPassword, fillEveryFieldError
+                            , invalidEmailError, passwordsDontMatchError)
+                        { msg ->
                             errorMessage = msg
                         }) {
                         navController?.navigate(loginScreen.route)
@@ -121,28 +123,30 @@ fun RegisterScreen(
     }
 }
 
-fun isRegisterValid( //TODO: enviar 3 strings no cabeçalho
-    context: Context,
+fun isRegisterValid(
     name: String,
     email: String,
     password: String,
     confirmPassword: String,
+    fillEveryFieldError: String,
+    invalidEmailError: String,
+    passwordsDontMatchError: String,
     errorMessage: (String) -> Unit
 ): Boolean {
 
 
     if (name.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-        errorMessage(context.getString(R.string.fill_every_field)) //TODO: substuituir aqui as strings
+        errorMessage(fillEveryFieldError)
         return false
     }
 
     if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-        errorMessage(context.getString(R.string.invalid_email)) //TODO: substuituir aqui as strings
+        errorMessage(invalidEmailError)
         return false
     }
 
     if (password != confirmPassword) {
-        errorMessage(context.getString(R.string.pws_dont_match)) //TODO: substuituir aqui as strings
+        errorMessage(passwordsDontMatchError)
         return false
     }
 

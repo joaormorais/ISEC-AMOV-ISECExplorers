@@ -44,7 +44,9 @@ fun AddCategoryScreen(
                     path ->
             })
             Spacer(modifier = Modifier.height(8.dp))
-            CameraImage()
+            CameraImage(imagesPathChanged = {
+                    path ->
+            })
 
             Button(
                 onClick = {
