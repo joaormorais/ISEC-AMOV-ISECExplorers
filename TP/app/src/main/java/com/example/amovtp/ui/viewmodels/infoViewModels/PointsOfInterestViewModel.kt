@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.viewmodels.infoViewModels
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -131,6 +130,46 @@ class PointsOfInterestViewModel(
             filteredPoints
         else
             getPointsFromCategory(_categoryNameFilter.value,filteredPoints)
+
+    }
+
+    fun getPointsOfInterestOrderedByDistance(pointsOfInterest: List<PointOfInterest>): List<PointOfInterest>{
+
+        val currentLocation = usersData.getCurrentLocation()
+
+        currentLocation.value?.latitude = usersData.getCurrentLocation().value!!.latitude
+        currentLocation.value?.longitude = usersData.getCurrentLocation().value!!.longitude
+
+        return pointsOfInterest.sortedBy { pointOfInterest ->
+
+            calculateDistance(
+                currentLocation.value!!.latitude,
+                currentLocation.value!!.longitude,
+                pointOfInterest.lat,
+                pointOfInterest.long
+            )
+
+        }
+    }
+
+    fun calculateDistance(
+        currLat: Double, // lat1
+        currLong: Double, // long1
+        locLat: Double, // lat2
+        locLong: Double // long2
+    ): Double {
+
+        val earthRadius = 6371
+        var latDistance = Math.toRadians(locLat - currLat)
+        var longDistance = Math.toRadians(locLong - currLong)
+
+        val a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
+                Math.cos(Math.toRadians(currLat)) * Math.cos(Math.toRadians(locLat)) *
+                Math.sin(longDistance / 2) * Math.sin(longDistance / 2)
+
+        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+        return earthRadius * c
 
     }
 
