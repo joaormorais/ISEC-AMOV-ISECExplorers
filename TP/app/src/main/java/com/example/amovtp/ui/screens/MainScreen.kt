@@ -206,14 +206,20 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                     navArgument("itemName") {
                         type = NavType.StringType
                         defaultValue = defaultString
+                        nullable = false
                     }
                 )
             ) {
 
                 val itemName = it.arguments?.getString("itemName")
                 pointsOfInterestViewModel =
-                    viewModel(factory = PointsOfInterestViewModelFactory(app.geoData))
-                PointsOfInterestScreen(pointsOfInterestViewModel!!, itemName, navController)
+                    viewModel(
+                        factory = PointsOfInterestViewModelFactory(
+                            app.geoData,
+                            app.usersData
+                        )
+                    )
+                PointsOfInterestScreen(pointsOfInterestViewModel!!, itemName!!)
             }
 
             composable(Screens.ADD_LOCATION.route) {
@@ -236,10 +242,4 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
     }
 
-}
-
-@Preview
-@Composable
-fun MainScreenPreview() {
-    MainScreen()
 }

@@ -1,5 +1,6 @@
 package com.example.amovtp.ui.screens.infoScreens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,7 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavController
 import com.example.amovtp.R
 import com.example.amovtp.data.Category
 import com.example.amovtp.ui.viewmodels.infoViewModels.PointsOfInterestViewModel
@@ -51,40 +52,21 @@ import org.osmdroid.views.overlay.Marker
 @Composable
 fun PointsOfInterestScreen(
     pointsOfInterestViewModel: PointsOfInterestViewModel,
-    itemName: String? = null,
-    navController: NavController,
+    itemName: String,
     modifier: Modifier = Modifier
 ) {
-    var isExpandedLocations by remember { mutableStateOf(false) }
-    var isExpandedCategories by remember { mutableStateOf(false) }
-    var selectedIndexLocations by remember { mutableStateOf(0) }
-    var selectedIndexCategories by remember { mutableStateOf(0) }
-    val defaultString = stringResource(R.string.defaultvalue)
-    val allLocationsString = stringResource(R.string.all_locations)
-    pointsOfInterestViewModel.setAllLocationsString(allLocationsString)
-    val allCategoriesString = stringResource(R.string.all_categories)
-    pointsOfInterestViewModel.setAllCategoriesStringAndFilter(allCategoriesString)
-    val currentLat = 39.694460831786216 //TODO: trocar para a loc atual do dispositivo
-    val currentLong = -8.130543343335995 //TODO: trocar para a loc atual do dispositivo
-    val locations by remember {
-        mutableStateOf(pointsOfInterestViewModel.getLocations())
-    }
-    val categories by remember {
-        mutableStateOf(pointsOfInterestViewModel.getCategories())
-    }
-    var pointsOfInterest by remember {
-        mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest())
-    }
+    var isExpandedLocations by remember { mutableStateOf(false) } // boolean for the dropdown menu
+    var isExpandedCategories by remember { mutableStateOf(false) } // boolean for the dropdown menu
+    val defaultString = stringResource(R.string.defaultvalue) // string for the composable
+    val allLocationsString = stringResource(R.string.all_locations) // string for the composable
+    val allCategoriesString = stringResource(R.string.all_categories) // string for the composable
+    pointsOfInterestViewModel.setAllLocationsString(allLocationsString) // save the strings in the VM
+    pointsOfInterestViewModel.setAllCategoriesStringAndCategoryName(allCategoriesString) // save the strings in the VM
+    val currentLocation by remember { mutableStateOf(pointsOfInterestViewModel.getCurrentLocation()) } // current location (being updated)
+    val locations by remember { mutableStateOf(pointsOfInterestViewModel.getLocations()) } // locations being shown to the user (with or without filters)
+    var pointsOfInterest by remember { mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest()) } // points of interest being shown to the user (with or without filters)
+    val categories = pointsOfInterestViewModel.getCategories() // every category
 
-    LaunchedEffect(key1 = itemName) {
-        if (itemName != null) {
-            if (itemName != defaultString) {
-                pointsOfInterest = pointsOfInterestViewModel.getPointsFromLocation(itemName)
-                pointsOfInterestViewModel.setLocationNameFilter(itemName)
-            }
-        } else
-            pointsOfInterestViewModel.setLocationNameFilter(allLocationsString)
-    }
 
     val selectedLocation by remember {
         mutableStateOf(
@@ -114,14 +96,20 @@ fun PointsOfInterestScreen(
                 allCategoriesString
         )
     }
-    var geoPoint by remember {
-        mutableStateOf(
-            if (itemName != defaultString)
-                GeoPoint(selectedLocation!!.lat, selectedLocation!!.long)
-            else
-                GeoPoint(currentLat, currentLong)
 
-        )
+    var geoPoint by remember { mutableStateOf(GeoPoint(0.0, 0.0)) }
+
+    LaunchedEffect(key1 = currentLocation) {
+        geoPoint = GeoPoint(currentLocation.value!!.latitude, currentLocation.value!!.longitude)
+    }
+
+    LaunchedEffect(key1 = itemName) {
+        if (itemName != defaultString) {
+            pointsOfInterest = pointsOfInterestViewModel.getPointsFromLocation(itemName)
+            pointsOfInterestViewModel.setLocationNameFilter(itemName)
+            geoPoint = GeoPoint(selectedLocation!!.lat, selectedLocation!!.long)
+        } else
+            pointsOfInterestViewModel.setLocationNameFilter(allLocationsString)
     }
 
 
@@ -158,7 +146,6 @@ fun PointsOfInterestScreen(
                         text = { Text(allLocationsString) },
                         onClick = {
                             selectedLocationName = allLocationsString
-                            selectedIndexLocations = 0
                             isExpandedLocations = false
                             pointsOfInterest =
                                 pointsOfInterestViewModel.getPointsWithFilters(
@@ -172,7 +159,6 @@ fun PointsOfInterestScreen(
                             text = { Text(text = location.name) },
                             onClick = {
                                 selectedLocationName = location.name
-                                selectedIndexLocations = index + 1
                                 isExpandedLocations = false
                                 pointsOfInterest =
                                     pointsOfInterestViewModel.getPointsWithFilters(
@@ -196,7 +182,6 @@ fun PointsOfInterestScreen(
                         .wrapContentWidth()
                         .clickable(onClick = { isExpandedCategories = true })
                 )
-
                 DropdownMenu(
                     expanded = isExpandedCategories,
                     onDismissRequest = { isExpandedCategories = false },
@@ -209,7 +194,6 @@ fun PointsOfInterestScreen(
                         text = { Text(allCategoriesString) },
                         onClick = {
                             selectedCategoryName = allCategoriesString
-                            selectedIndexCategories = 0
                             isExpandedCategories = false
                             pointsOfInterest = pointsOfInterestViewModel.getPointsWithFilters(
                                 "",
@@ -222,7 +206,6 @@ fun PointsOfInterestScreen(
                             text = { Text(text = categories.name) },
                             onClick = {
                                 selectedCategoryName = categories.name
-                                selectedIndexCategories = index + 1
                                 isExpandedCategories = false
                                 pointsOfInterest =
                                     pointsOfInterestViewModel.getPointsWithFilters(

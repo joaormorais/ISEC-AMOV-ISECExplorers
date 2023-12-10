@@ -57,7 +57,7 @@ fun LoginScreen(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
@@ -123,6 +123,17 @@ fun LoginScreen(
                 }
 
             }
+            Button(
+                onClick = {
+                    navController?.navigate(Screens.LOCATIONS.route)
+                },
+                modifier = Modifier.padding(4.dp)
+            ) {
+                Text(
+                    text = "debug",
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
         SnackbarHost(
             hostState = snackbarHostState,
@@ -141,23 +152,3 @@ fun isLoginValid(
     }
     return true
 }
-
-@Preview
-@Composable
-fun LoginPreview(navController: NavHostController = rememberNavController()) {
-    val context = LocalContext.current
-    val app = context.applicationContext as MyApplication
-
-    // Specify the type parameter for viewModel explicitly
-    val loginViewModel = viewModel<LoginViewModel>(factory = LoginViewModelFactory(app.usersData))
-
-    // Create a preview of the LoginScreen
-    LoginScreen(
-        loginViewModel = loginViewModel,
-        navController = navController,
-        Screens.REGISTER,
-        Screens.LOCATIONS
-    )
-}
-
-

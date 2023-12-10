@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.viewmodels.infoViewModels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.GeoData
@@ -32,16 +31,16 @@ class LocationsViewModel(
 
     fun getLocationsOrderedByDistance(): List<Location> {
 
-        val currentLocation = geoData.getCurrentLocation()
+        val currentLocation = usersData.getCurrentLocation()
 
-        currentLocation.latitude = usersData.getCurrentLocation().value!!.latitude
-        currentLocation.longitude = usersData.getCurrentLocation().value!!.longitude
+        currentLocation.value?.latitude = usersData.getCurrentLocation().value!!.latitude
+        currentLocation.value?.longitude = usersData.getCurrentLocation().value!!.longitude
 
         return geoData.getLocations().sortedBy { location ->
 
             calculateDistance(
-                currentLocation.latitude,
-                currentLocation.longitude,
+                currentLocation.value!!.latitude,
+                currentLocation.value!!.longitude,
                 location.lat,
                 location.long
             )

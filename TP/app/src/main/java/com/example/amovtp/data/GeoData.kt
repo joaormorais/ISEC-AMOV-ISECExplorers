@@ -56,7 +56,6 @@ class GeoData(/*firestore*/) {
     private val _locations = mutableListOf<Location>()
     private val _pointsOfInterest = mutableListOf<PointOfInterest>()
     private val _categories = mutableListOf<Category>()
-    private var _currentLocation = mutableStateOf(android.location.Location(null))
 
     init { //TODO: apagar
 
@@ -197,13 +196,6 @@ class GeoData(/*firestore*/) {
 
     fun getCategories(): List<Category> {
         return _categories.toList()
-    }
-
-    fun getCurrentLocation(): android.location.Location {
-
-        //TODO: calcular localização atual
-
-        return _currentLocation.value
     }
 
 }
