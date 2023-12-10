@@ -11,12 +11,12 @@ class MyApplication : Application() {
 
     //TODO: inicializar o fiirestore
 
-    val geoData by lazy { GeoData(/*firestore*/) }
-    val usersData by lazy { UsersData(/*firestore*/) }
-
     val locationHandler: LocationHandler by lazy {
         val locationProvider = LocationServices.getFusedLocationProviderClient(this)
         FusedLocationHandler(locationProvider)
     }
+
+    val geoData by lazy { GeoData(/*firestore*/) }
+    val usersData by lazy { UsersData(/*firestore*/) }
 
 }

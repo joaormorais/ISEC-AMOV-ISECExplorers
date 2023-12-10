@@ -1,18 +1,26 @@
 package com.example.amovtp.ui.viewmodels.infoViewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.GeoData
 import com.example.amovtp.data.Location
+import com.example.amovtp.data.UsersData
 
-class LocationsViewModelFactory(private val geoData: GeoData) :
+class LocationsViewModelFactory(
+    private val geoData: GeoData,
+    private val usersData: UsersData
+) :
     ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return LocationsViewModel(geoData) as T
+        return LocationsViewModel(geoData, usersData) as T
     }
 }
 
-class LocationsViewModel(private val geoData: GeoData) : ViewModel() {
+class LocationsViewModel(
+    private val geoData: GeoData,
+    private val usersData: UsersData
+) : ViewModel() {
 
     fun getLocations(): List<Location> {
         return geoData.getLocations()
@@ -26,9 +34,8 @@ class LocationsViewModel(private val geoData: GeoData) : ViewModel() {
 
         val currentLocation = geoData.getCurrentLocation()
 
-        //temp
-        currentLocation.latitude = 40.176068569348324
-        currentLocation.longitude = -8.680650875229537
+        currentLocation.latitude = usersData.getCurrentLocation().value!!.latitude
+        currentLocation.longitude = usersData.getCurrentLocation().value!!.longitude
 
         return geoData.getLocations().sortedBy { location ->
 

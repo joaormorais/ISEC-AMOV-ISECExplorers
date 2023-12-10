@@ -70,7 +70,9 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     implementation("org.osmdroid:osmdroid-android:6.1.17")
+    implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
     testImplementation("junit:junit:4.13.2")
 
@@ -81,4 +83,5 @@ dependencies {
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
 }

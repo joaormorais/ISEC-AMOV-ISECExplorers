@@ -5,25 +5,35 @@ import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceManager
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import com.example.amovtp.MyApplication
 import com.example.amovtp.ui.screens.MainScreen
-import com.example.amovtp.ui.viewmodels.LocationViewModel
-import com.example.amovtp.ui.viewmodels.LocationViewModelFactory
+import com.example.amovtp.ui.viewmodels.GPSViewModel
+import com.example.amovtp.ui.viewmodels.GPSViewModelFactory
 import org.osmdroid.config.Configuration
 
 class MainActivity : ComponentActivity() {
 
     private val app by lazy { application as MyApplication }
-    private val viewModel: LocationViewModel by viewModels() {
-        LocationViewModelFactory(app.locationHandler)
+    private val viewModel: GPSViewModel by viewModels() {
+        GPSViewModelFactory(app.locationHandler, app.usersData)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,52 +47,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             MainScreen()
         }
-        verifyCameraPermissions()
         verifyGeoPermissions()
+        verifyCameraPermissions()
     }
 
-    private fun verifyCameraPermissions() {
-
-        val verifiyMultiplePermissions = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) {
-            //TODO
-        }
-        val verifiyOnePermission = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) {
-            //TODO
-        }
-
-        if (ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-        )
-            verifiyMultiplePermissions.launch(
-                arrayOf(
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                    android.Manifest.permission.CAMERA
-
-                )
-            )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.READ_MEDIA_IMAGES
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            verifiyOnePermission.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
-        }
-
+    override fun onResume() {
+        super.onResume()
+        viewModel.startLocationUpdates()
     }
 
     private fun verifyGeoPermissions(): Boolean {
@@ -166,5 +137,47 @@ class MainActivity : ComponentActivity() {
         Toast.makeText(this, "Background location enabled: $result", Toast.LENGTH_LONG).show()
     }
 
-}
+    private fun verifyCameraPermissions() {
 
+        val verifiyMultiplePermissions = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {
+            //TODO
+        }
+        val verifiyOnePermission = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) {
+            //TODO
+        }
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        )
+            verifiyMultiplePermissions.launch(
+                arrayOf(
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                    android.Manifest.permission.CAMERA
+
+                )
+            )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.READ_MEDIA_IMAGES
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            verifiyOnePermission.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
+        }
+
+    }
+}

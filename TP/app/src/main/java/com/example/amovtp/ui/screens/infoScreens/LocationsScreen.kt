@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -38,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.amovtp.R
-import com.example.amovtp.data.Location
 import com.example.amovtp.ui.screens.Screens
 import com.example.amovtp.ui.viewmodels.infoViewModels.LocationsViewModel
 import kotlinx.coroutines.launch
@@ -56,10 +54,10 @@ fun LocationsScreen(
     }
 
     var isExpanded by remember { mutableStateOf(false) }
-    val allString = stringResource(R.string.all_locations)
-    val nameString = stringResource(R.string.ordered_name)
-    val distanceString = stringResource(R.string.ordered_distance)
-    val items = listOf(allString, nameString, distanceString)
+    val orderAllString = stringResource(R.string.all_locations)
+    val orderNameString = stringResource(R.string.ordered_name)
+    val orderDistanceString = stringResource(R.string.ordered_distance)
+    val items = listOf(orderAllString, orderNameString, orderDistanceString)
     var selectedIndex by remember { mutableStateOf(0) }
 
     val listState = rememberLazyListState()
@@ -99,21 +97,21 @@ fun LocationsScreen(
 
                             when (s) {
 
-                                allString -> {
+                                orderAllString -> {
                                     locations = locationsViewModel.getLocations()
                                     coroutineScope.launch {
                                         listState.animateScrollToItem(index = 0)
                                     }
                                 }
 
-                                nameString -> {
+                                orderNameString -> {
                                     locations = locationsViewModel.getLocationsOrderedByName()
                                     coroutineScope.launch {
                                         listState.animateScrollToItem(index = 0)
                                     }
                                 }
 
-                                distanceString -> {
+                                orderDistanceString -> {
                                     locations = locationsViewModel.getLocationsOrderedByDistance()
                                     coroutineScope.launch {
                                         listState.animateScrollToItem(index = 0)

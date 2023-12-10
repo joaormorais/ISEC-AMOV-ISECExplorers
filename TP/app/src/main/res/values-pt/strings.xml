@@ -13,8 +13,8 @@
     <string name="invalid_email">Formato de email inválido!</string>
     <string name="pws_dont_match">As passwords não coincidem!</string>
     <string name="all_locations">Todas as localizações</string>
-    <string name="ordered_name">Ordem alfabética</string>
-    <string name="ordered_distance">Mais distanttes</string>
+    <string name="ordered_name">Ordenar alfabeticamente</string>
+    <string name="ordered_distance">Ordenar por distância</string>
     <string name="add_category">Adicionar categoria</string>
     <string name="add_loc">Adicionar localização</string>
     <string name="add_point">Adicionar ponto de interesse</string>

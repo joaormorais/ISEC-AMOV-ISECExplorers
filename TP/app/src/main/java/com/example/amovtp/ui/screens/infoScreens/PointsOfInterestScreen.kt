@@ -61,19 +61,29 @@ fun PointsOfInterestScreen(
     var selectedIndexCategories by remember { mutableStateOf(0) }
     val defaultString = stringResource(R.string.defaultvalue)
     val allLocationsString = stringResource(R.string.all_locations)
+    pointsOfInterestViewModel.setAllLocationsString(allLocationsString)
     val allCategoriesString = stringResource(R.string.all_categories)
+    pointsOfInterestViewModel.setAllCategoriesStringAndFilter(allCategoriesString)
     val currentLat = 39.694460831786216 //TODO: trocar para a loc atual do dispositivo
     val currentLong = -8.130543343335995 //TODO: trocar para a loc atual do dispositivo
-    val locations = pointsOfInterestViewModel.getLocations()
-    val categories = pointsOfInterestViewModel.getCategories()
+    val locations by remember {
+        mutableStateOf(pointsOfInterestViewModel.getLocations())
+    }
+    val categories by remember {
+        mutableStateOf(pointsOfInterestViewModel.getCategories())
+    }
     var pointsOfInterest by remember {
         mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest())
     }
 
     LaunchedEffect(key1 = itemName) {
-        if (itemName != null)
-            if (itemName != defaultString)
+        if (itemName != null) {
+            if (itemName != defaultString) {
                 pointsOfInterest = pointsOfInterestViewModel.getPointsFromLocation(itemName)
+                pointsOfInterestViewModel.setLocationNameFilter(itemName)
+            }
+        } else
+            pointsOfInterestViewModel.setLocationNameFilter(allLocationsString)
     }
 
     val selectedLocation by remember {
@@ -124,7 +134,7 @@ fun PointsOfInterestScreen(
 
         Row(
             modifier = Modifier
-        ){
+        ) {
             Box(
                 modifier = Modifier
                     .wrapContentSize(Alignment.TopStart)
@@ -151,10 +161,13 @@ fun PointsOfInterestScreen(
                             selectedIndexLocations = 0
                             isExpandedLocations = false
                             pointsOfInterest =
-                                pointsOfInterestViewModel.getPointsOfInterest()
+                                pointsOfInterestViewModel.getPointsWithFilters(
+                                    allLocationsString,
+                                    ""
+                                )
                         }
                     )
-                    pointsOfInterestViewModel.getLocations().forEachIndexed { index, location ->
+                    locations.forEachIndexed { index, location ->
                         DropdownMenuItem(
                             text = { Text(text = location.name) },
                             onClick = {
@@ -162,7 +175,10 @@ fun PointsOfInterestScreen(
                                 selectedIndexLocations = index + 1
                                 isExpandedLocations = false
                                 pointsOfInterest =
-                                    pointsOfInterestViewModel.getPointsFromLocation(location.name)
+                                    pointsOfInterestViewModel.getPointsWithFilters(
+                                        location.name,
+                                        ""
+                                    )
                             }
                         )
                     }
@@ -195,10 +211,13 @@ fun PointsOfInterestScreen(
                             selectedCategoryName = allCategoriesString
                             selectedIndexCategories = 0
                             isExpandedCategories = false
-                            pointsOfInterest = pointsOfInterestViewModel.getPointsOfInterest()
+                            pointsOfInterest = pointsOfInterestViewModel.getPointsWithFilters(
+                                "",
+                                allCategoriesString
+                            )
                         }
                     )
-                    pointsOfInterestViewModel.getCategories().forEachIndexed { index, categories ->
+                    categories.forEachIndexed { index, categories ->
                         DropdownMenuItem(
                             text = { Text(text = categories.name) },
                             onClick = {
@@ -206,7 +225,10 @@ fun PointsOfInterestScreen(
                                 selectedIndexCategories = index + 1
                                 isExpandedCategories = false
                                 pointsOfInterest =
-                                    pointsOfInterestViewModel.getPointsFromCategory(categories.name)
+                                    pointsOfInterestViewModel.getPointsWithFilters(
+                                        "",
+                                        categories.name
+                                    )
                             }
                         )
                     }
