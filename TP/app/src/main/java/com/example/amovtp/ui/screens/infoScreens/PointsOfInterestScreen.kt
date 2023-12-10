@@ -165,6 +165,7 @@ fun PointsOfInterestScreen(
                                         location.name,
                                         ""
                                     )
+                                geoPoint = GeoPoint(location.lat, location.long)
                             }
                         )
                     }
@@ -283,6 +284,11 @@ fun PointsOfInterestScreen(
                             text = it.name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
+                        )
+                        Spacer(modifier.height(16.dp))
+                        Text(
+                            text = "Category: " + it.category,
+                            fontSize = 12.sp
                         )
                         Spacer(modifier.height(16.dp))
                         Text(

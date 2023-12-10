@@ -115,15 +115,11 @@ class PointsOfInterestViewModel(
      */
     fun getPointsWithFilters(locationName: String, categoryName: String): List<PointOfInterest> {
 
-        if (locationName.isNotEmpty())
+        if (locationName.isNotBlank())
             _locationNameFilter.value = locationName
-        else
-            _locationNameFilter.value = _allLocationsString.value
 
-        if (!categoryName.isNotEmpty())
+        if (categoryName.isNotBlank())
             _categoryNameFilter.value = categoryName
-        else
-            _categoryNameFilter.value = _allCategoriesString.value
 
         val filteredPoints: List<PointOfInterest> = if (_locationNameFilter.value == _allLocationsString.value)
             geoData.getPointsOfInterest()
