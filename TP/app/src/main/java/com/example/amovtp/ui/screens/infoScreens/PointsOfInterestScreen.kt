@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.screens.infoScreens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +17,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -27,9 +27,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +42,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.amovtp.R
 import com.example.amovtp.data.Category
+import com.example.amovtp.data.PointOfInterest
 import com.example.amovtp.ui.viewmodels.infoViewModels.PointsOfInterestViewModel
+import kotlinx.coroutines.launch
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -67,6 +69,13 @@ fun PointsOfInterestScreen(
     var pointsOfInterest by remember { mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest()) } // points of interest being shown to the user (with or without filters)
     val categories = pointsOfInterestViewModel.getCategories() // every category
 
+    val orderNameString = stringResource(R.string.ordered_name)
+    val orderDistanceString = stringResource(R.string.ordered_distance)
+    val items = listOf(orderNameString, orderDistanceString)
+    var selectedIndex by remember { mutableStateOf(0) }
+    var isExpandedOrder by remember { mutableStateOf(false) }
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
     val selectedLocation by remember {
         mutableStateOf(
@@ -123,6 +132,7 @@ fun PointsOfInterestScreen(
         Row(
             modifier = Modifier
         ) {
+
             Box(
                 modifier = Modifier
                     .wrapContentSize(Alignment.TopStart)
@@ -175,6 +185,7 @@ fun PointsOfInterestScreen(
                 modifier = Modifier
                     .wrapContentSize(Alignment.TopStart)
                     .padding(start = 8.dp)
+                    .padding(end = 8.dp)
             ) {
                 Text(
                     selectedCategoryName!!,
@@ -214,6 +225,54 @@ fun PointsOfInterestScreen(
                                     )
                             }
                         )
+                    }
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .wrapContentSize(Alignment.TopStart)
+                    .padding(start = 8.dp)
+                    .padding(end = 8.dp)
+            ){
+                Text(
+                    items[selectedIndex],
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .clickable(onClick = { isExpandedOrder = true })
+                )
+
+                DropdownMenu(
+                    expanded = isExpandedOrder,
+                    onDismissRequest = { isExpandedOrder = false},
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .wrapContentHeight()
+                ) {
+                    items.forEachIndexed{
+                            index, s ->
+                        DropdownMenuItem(
+                            text = { Text(text = s) },
+                            onClick = {
+                                selectedIndex = index
+                                isExpandedOrder = false
+
+                                when(s){
+                                    orderNameString -> {
+                                        pointsOfInterest = pointsOfInterest.sortedBy { it.name }
+                                        coroutineScope.launch {
+                                            listState.animateScrollToItem(0)
+                                        }
+                                    }
+
+                                    orderDistanceString -> {
+                                        pointsOfInterest = pointsOfInterestViewModel.getPointsOfInterestOrderedByDistance(pointsOfInterest)
+                                        coroutineScope.launch {
+                                            listState.animateScrollToItem(index = 0)
+                                        }
+                                    }
+                                }
+                            })
                     }
                 }
             }
@@ -295,3 +354,4 @@ fun PointsOfInterestScreen(
         }
     }
 }
+
