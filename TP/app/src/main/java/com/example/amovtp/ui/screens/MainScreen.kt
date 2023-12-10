@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -26,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -58,8 +56,6 @@ import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModel
 import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModelFactory
 import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModel
 import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModelFactory
-import kotlinx.coroutines.launch
-import okhttp3.internal.concurrent.Task
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,13 +71,13 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
     val items = listOf(addCategoryString, addPointString)
     var selectedIndex by remember { mutableStateOf(0) }
 
-    var loginViewModel: LoginViewModel? = null
-    var registerViewModel: RegisterViewModel? = null
-    var locationsViewModel: LocationsViewModel? = null
-    var pointsOfInterestViewModel: PointsOfInterestViewModel? = null
-    var addLocationViewModel: AddLocationViewModel? = null
-    var addPointOfInterestViewModel: AddPointOfInterestViewModel? = null
-    var addCategoryViewModel: AddCategoryViewModel? = null
+    var loginViewModel: LoginViewModel?
+    var registerViewModel: RegisterViewModel?
+    var locationsViewModel: LocationsViewModel?
+    var pointsOfInterestViewModel: PointsOfInterestViewModel?
+    var addLocationViewModel: AddLocationViewModel?
+    var addPointOfInterestViewModel: AddPointOfInterestViewModel?
+    var addCategoryViewModel: AddCategoryViewModel?
 
     var addLoc by remember { mutableStateOf(false) }
     var addPointOrCategory by remember { mutableStateOf(false) }
@@ -99,7 +95,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
             //if (currentScreen != null && Screens.valueOf(currentScreen!!.destination.route!!) != Screens.LOGIN)
             if (currentScreen != null && currentScreen.toString() != Screens.LOGIN.route)
                 TopAppBar(
-                    title = {},
+                    title = {/*TODO: pegar numa viewmodel e fazer as funções para tirar o nome certo*/},
 
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {
@@ -224,18 +220,18 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
             composable(Screens.ADD_LOCATION.route) {
                 addLocationViewModel = viewModel(factory = AddLocationViewModelFactory(app.geoData))
-                AddLocationScreen(addLocationViewModel!!, navController)
+                AddLocationScreen(addLocationViewModel!!)
             }
 
             composable(Screens.ADD_POINT_OF_INTEREST.route) {
                 addPointOfInterestViewModel =
                     viewModel(factory = AddPointOfInterestViewModelFactory(app.geoData))
-                AddPointOfInterestScreen(addPointOfInterestViewModel!!, navController)
+                AddPointOfInterestScreen(addPointOfInterestViewModel!!)
             }
 
             composable(Screens.ADD_CATEGORY.route) {
                 addCategoryViewModel = viewModel(factory = AddCategoryViewModelFactory(app.geoData))
-                AddCategoryScreen(addCategoryViewModel!!, navController)
+                AddCategoryScreen(addCategoryViewModel!!)
             }
 
         }

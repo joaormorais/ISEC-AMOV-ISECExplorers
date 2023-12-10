@@ -69,13 +69,13 @@ fun LocationsScreen(
     ) {
 
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .wrapContentSize(Alignment.TopStart)
                 .align(Alignment.CenterHorizontally)
         ) {
             Text(
                 items[selectedIndex],
-                modifier = Modifier
+                modifier = modifier
                     .wrapContentWidth()
                     .clickable(onClick = { isExpanded = true })
             )
@@ -83,7 +83,7 @@ fun LocationsScreen(
             DropdownMenu(
                 expanded = isExpanded,
                 onDismissRequest = { isExpanded = false },
-                modifier = Modifier
+                modifier = modifier
                     .wrapContentWidth()
                     .wrapContentHeight()
             ) {
@@ -124,7 +124,7 @@ fun LocationsScreen(
                 // Navegar para PointsOfInterestScreen sem alterar setPointLocationSearch
                 navController?.navigate(Screens.POINTS_OF_INTEREST.route)
             },
-            modifier = Modifier
+            modifier = modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 16.dp)
         ) {
@@ -140,7 +140,7 @@ fun LocationsScreen(
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     colors = CardDefaults.cardColors(
@@ -154,7 +154,7 @@ fun LocationsScreen(
 
                     Column(
                         verticalArrangement = Arrangement.Center,
-                        modifier = Modifier
+                        modifier = modifier
                             .fillMaxSize()
                             .padding(8.dp)
                     ) {

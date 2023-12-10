@@ -1,7 +1,5 @@
 package com.example.amovtp.data
 
-import androidx.compose.runtime.mutableStateOf
-
 /**
  * Represents a location with N points of interest
  */
@@ -12,7 +10,7 @@ data class Location(
     val lat: Double,
     val long: Double,
     val pointsOfInterest: MutableList<String>,
-    val image: MutableList<String>,
+    val imgs: MutableList<String>,
     val votes: Int,
     val approved: Boolean
 )
@@ -40,7 +38,7 @@ data class PointOfInterest(
     val long: Double,
     val locations: MutableList<String>,
     val category: String,
-    val image: MutableList<String>,
+    val imgs: MutableList<String>,
     val votes: Int,
     val approved: Boolean
 )
@@ -172,8 +170,8 @@ class GeoData(/*firestore*/) {
                 _currentPointsOfInterestId++,
                 "Ponto de Interesse em ${location.name}",
                 "Descrição do ponto de interesse em ${location.name}",
-                0.0 + _currentPointsOfInterestId,
-                0.0 + _currentPointsOfInterestId,
+                location.lat,
+                location.long,
                 mutableListOf(location.name),
                 _categories.random().name,
                 mutableListOf(),
@@ -196,6 +194,67 @@ class GeoData(/*firestore*/) {
 
     fun getCategories(): List<Category> {
         return _categories.toList()
+    }
+
+    fun addLocation(
+        name: String,
+        description: String,
+        lat: Double,
+        long: Double,
+        imgs: MutableList<String>
+    ) {
+
+        _locations.add(
+            Location(
+                _currentLocationId++,
+                name,
+                description,
+                lat,
+                long,
+                mutableListOf(),
+                mutableListOf(),
+                0,
+                false
+            )
+        )
+
+    }
+
+    fun addPointOfInterest(
+        name: String,
+        description: String,
+        lat: Double,
+        long: Double,
+        locations: MutableList<String>,
+        category: String,
+        imgs: MutableList<String>
+    ) {
+
+        _pointsOfInterest.add(
+            PointOfInterest(
+                _currentPointsOfInterestId++,
+                name,
+                description,
+                lat,
+                long,
+                locations,
+                category,
+                imgs,
+                0,
+                false
+            )
+        )
+
+    }
+
+    fun addCategory(
+        name: String,
+        description: String,
+        img: String,
+    ) {
+
+        _categories.add(Category(_currentCategoryId++, name, description, img, 0, false))
+
     }
 
 }

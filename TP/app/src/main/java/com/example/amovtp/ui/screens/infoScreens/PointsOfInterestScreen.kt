@@ -136,25 +136,23 @@ fun PointsOfInterestScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Row(
-            modifier = Modifier
-        ) {
+        Row{
 
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .wrapContentSize(Alignment.TopStart)
                     .padding(end = 8.dp)
             ) {
                 Text(
                     selectedLocationName!!,
-                    modifier = Modifier
+                    modifier = modifier
                         .wrapContentWidth()
                         .clickable(onClick = { isExpandedLocations = true })
                 )
                 DropdownMenu(
                     expanded = isExpandedLocations,
                     onDismissRequest = { isExpandedLocations = false },
-                    modifier = Modifier
+                    modifier = modifier
                         .wrapContentWidth()
                         .heightIn(max = 200.dp)
                         .wrapContentHeight(Alignment.Top)
@@ -190,21 +188,21 @@ fun PointsOfInterestScreen(
             }
 
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .wrapContentSize(Alignment.TopStart)
                     .padding(start = 8.dp)
                     .padding(end = 8.dp)
             ) {
                 Text(
                     selectedCategoryName!!,
-                    modifier = Modifier
+                    modifier = modifier
                         .wrapContentWidth()
                         .clickable(onClick = { isExpandedCategories = true })
                 )
                 DropdownMenu(
                     expanded = isExpandedCategories,
                     onDismissRequest = { isExpandedCategories = false },
-                    modifier = Modifier
+                    modifier = modifier
                         .wrapContentWidth()
                         .heightIn(max = 200.dp)
                         .wrapContentHeight(Alignment.Top)
@@ -238,14 +236,14 @@ fun PointsOfInterestScreen(
             }
 
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .wrapContentSize(Alignment.TopStart)
                     .padding(start = 8.dp)
                     .padding(end = 8.dp)
             ) {
                 Text(
                     itemsOrderList[selectedIndex],
-                    modifier = Modifier
+                    modifier = modifier
                         .wrapContentWidth()
                         .clickable(onClick = { isExpandedOrder = true })
                 )
@@ -253,7 +251,7 @@ fun PointsOfInterestScreen(
                 DropdownMenu(
                     expanded = isExpandedOrder,
                     onDismissRequest = { isExpandedOrder = false },
-                    modifier = Modifier
+                    modifier = modifier
                         .wrapContentWidth()
                         .wrapContentHeight()
                 ) {
@@ -293,7 +291,7 @@ fun PointsOfInterestScreen(
         }
 
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .padding(8.dp)
                 .fillMaxWidth()
                 .fillMaxSize(0.5f)
@@ -334,7 +332,7 @@ fun PointsOfInterestScreen(
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     colors = CardDefaults.cardColors(
@@ -347,7 +345,7 @@ fun PointsOfInterestScreen(
                 ) {
 
                     Column(
-                        modifier = Modifier
+                        modifier = modifier
                             .fillMaxSize()
                             .padding(8.dp)
                     ) {
@@ -373,4 +371,3 @@ fun PointsOfInterestScreen(
         }
     }
 }
-

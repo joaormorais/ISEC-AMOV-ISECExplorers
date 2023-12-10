@@ -45,20 +45,21 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     loginViewModel: LoginViewModel,
     navController: NavHostController?,
-    vararg options: Screens
+    vararg options: Screens,
+    modifier: Modifier = Modifier
 ) {
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
@@ -68,13 +69,13 @@ fun LoginScreen(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text(stringResource(R.string.name)) },
-                modifier = Modifier
+                modifier = modifier
                     .widthIn(max = 300.dp)
                     .fillMaxWidth()
             )
 
             // Espaçamento pequeno entre nome de usuário e senha
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = modifier.height(8.dp))
 
             // Campo de texto para senha
             OutlinedTextField(
@@ -83,18 +84,18 @@ fun LoginScreen(
                 label = { Text(stringResource(R.string.password)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier
+                modifier = modifier
                     .widthIn(max = 300.dp)
                     .fillMaxWidth()
             )
 
             // Espaçamento maior antes dos botões
-            Spacer(modifier = Modifier.height(56.dp))
+            Spacer(modifier = modifier.height(56.dp))
 
             // Row para os botões
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
+                modifier = modifier.fillMaxWidth()
             ) {
                 for (i in options) {
                     Button(
@@ -113,11 +114,11 @@ fun LoginScreen(
                                 navController?.navigate(i.route)
                             }
                         },
-                        modifier = Modifier.padding(4.dp)
+                        modifier = modifier.padding(4.dp)
                     ) {
                         Text(
                             text = if (i.path == "Locations") "Login" else i.path,
-                            modifier = Modifier.padding(16.dp)
+                            modifier = modifier.padding(16.dp)
                         )
                     }
                 }
@@ -127,21 +128,20 @@ fun LoginScreen(
                 onClick = {
                     navController?.navigate(Screens.LOCATIONS.route)
                 },
-                modifier = Modifier.padding(4.dp)
+                modifier = modifier.padding(4.dp)
             ) {
                 Text(
                     text = "debug",
-                    modifier = Modifier.padding(16.dp)
+                    modifier = modifier.padding(16.dp)
                 )
             }
         }
         SnackbarHost(
             hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = modifier.align(Alignment.BottomCenter)
         )
     }
 }
-
 
 fun isLoginValid(
     name: String,

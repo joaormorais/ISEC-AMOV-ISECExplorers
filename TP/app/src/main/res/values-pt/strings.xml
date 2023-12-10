@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">IsecExplorers</string>
     <string name="description">Descrição: %1$s</string>
-    <string name="latitude">Latitude: %1$s</string>
-    <string name="longitude">Longitude: %1$s</string>
+    <string name="latitude_description">Latitude: %1$s</string>
+    <string name="longitude_description">Longitude: %1$s</string>
     <string name="name">Nome</string>
     <string name="password">Password</string>
     <string name="confirm_password">Repetir password</string>
@@ -24,4 +24,8 @@
     <string name="defaultvalue">defaultValue</string>
     <string name="all_categories">Todas as categorias</string>
     <string name="all_locations">Todas as localizações</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="manual_lat_long">Coordenadas manuais</string>
+    <string name="automatic_lat_long">Escolher localização atual</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.example.amovtp.ui.screens.addScreens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -13,21 +12,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 
 import com.example.amovtp.R
 import com.example.amovtp.ui.composables.CameraImage
 import com.example.amovtp.ui.composables.GalleryImage
+import com.example.amovtp.ui.composables.GeoDescription
 import com.example.amovtp.ui.composables.NameDescription
 import com.example.amovtp.ui.viewmodels.addViewModels.AddLocationViewModel
 
 @Composable
 fun AddLocationScreen(
     addLocationViewModel: AddLocationViewModel,
-    navController: NavHostController?,
     modifier: Modifier = Modifier
 ) {
 
@@ -42,11 +38,13 @@ fun AddLocationScreen(
         item{
 
             NameDescription()
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = modifier.height(8.dp))
+            GeoDescription()
+            Spacer(modifier = modifier.height(8.dp))
             GalleryImage(imagesPathChanged = {
                     path ->
             })
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = modifier.height(8.dp))
             CameraImage(imagesPathChanged = {
                     path ->
             })
@@ -54,12 +52,10 @@ fun AddLocationScreen(
             Button(
                 onClick = {
                 },
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = modifier.padding(top = 16.dp)
             ) {
                 Text(stringResource(R.string.add_loc))
             }
-
-            //TODO: botao para criar
 
         }
 

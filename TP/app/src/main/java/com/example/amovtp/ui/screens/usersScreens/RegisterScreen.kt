@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.screens.usersScreens
 
-import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,7 +40,8 @@ import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModelFactory
 fun RegisterScreen(
     registerViewModel: RegisterViewModel,
     navController: NavHostController?,
-    loginScreen: Screens
+    loginScreen: Screens,
+    modifier: Modifier = Modifier
 ) {
 
     var name by remember { mutableStateOf("") }
@@ -59,7 +59,7 @@ fun RegisterScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { innerPadding ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
@@ -70,14 +70,14 @@ fun RegisterScreen(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text(stringResource(R.string.name)) },
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text(stringResource(R.string.email)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
                 value = password,
@@ -85,7 +85,7 @@ fun RegisterScreen(
                 label = { Text(stringResource(R.string.password)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = modifier.padding(bottom = 8.dp)
             )
             OutlinedTextField(
                 value = confirmPassword,
@@ -93,7 +93,7 @@ fun RegisterScreen(
                 label = { Text(stringResource(R.string.confirm_password)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = modifier.padding(bottom = 8.dp)
             )
 
             Button(
@@ -108,7 +108,7 @@ fun RegisterScreen(
                         showSnackBar = true
                     }
                 },
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = modifier.padding(top = 16.dp)
             ) {
                 Text(stringResource(R.string.register))
             }
