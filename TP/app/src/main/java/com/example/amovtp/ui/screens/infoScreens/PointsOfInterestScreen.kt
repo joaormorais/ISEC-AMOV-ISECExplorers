@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.amovtp.R
 import com.example.amovtp.data.Category
-import com.example.amovtp.data.PointOfInterest
 import com.example.amovtp.ui.viewmodels.infoViewModels.PointsOfInterestViewModel
 import kotlinx.coroutines.launch
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -57,26 +56,23 @@ fun PointsOfInterestScreen(
     itemName: String,
     modifier: Modifier = Modifier
 ) {
-    var isExpandedLocations by remember { mutableStateOf(false) } // boolean for the dropdown menu
-    var isExpandedCategories by remember { mutableStateOf(false) } // boolean for the dropdown menu
-    val defaultString = stringResource(R.string.defaultvalue) // string for the composable
-    val allLocationsString = stringResource(R.string.all_locations) // string for the composable
-    val allCategoriesString = stringResource(R.string.all_categories) // string for the composable
-    pointsOfInterestViewModel.setAllLocationsString(allLocationsString) // save the strings in the VM
-    pointsOfInterestViewModel.setAllCategoriesStringAndCategoryName(allCategoriesString) // save the strings in the VM
-    val currentLocation by remember { mutableStateOf(pointsOfInterestViewModel.getCurrentLocation()) } // current location (being updated)
-    val locations by remember { mutableStateOf(pointsOfInterestViewModel.getLocations()) } // locations being shown to the user (with or without filters)
-    var pointsOfInterest by remember { mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest()) } // points of interest being shown to the user (with or without filters)
-    val categories = pointsOfInterestViewModel.getCategories() // every category
 
-    val orderNameString = stringResource(R.string.ordered_name)
-    val orderDistanceString = stringResource(R.string.ordered_distance)
-    val items = listOf(orderNameString, orderDistanceString)
-    var selectedIndex by remember { mutableStateOf(0) }
-    var isExpandedOrder by remember { mutableStateOf(false) }
+    // Common
+    val defaultString = stringResource(R.string.defaultvalue) // string for the composable
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
+    // Main vars and vals
+    val currentLocation by remember { mutableStateOf(pointsOfInterestViewModel.getCurrentLocation()) } // current location (being updated)
+    var geoPoint by remember { mutableStateOf(GeoPoint(0.0, 0.0)) } // used to mark a location on tthe map
+    val categories = pointsOfInterestViewModel.getCategories() // every category
+    val locations by remember { mutableStateOf(pointsOfInterestViewModel.getLocations()) } // locations used to filter the points of interest
+    var pointsOfInterest by remember { mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest()) } // points of interest being shown to the user (with or without filters)
+
+    // Dropdown menu for locations
+    var isExpandedLocations by remember { mutableStateOf(false) } // boolean for the dropdown menu
+    val allLocationsString = stringResource(R.string.all_locations) // string for the composable
+    pointsOfInterestViewModel.setAllLocationsString(allLocationsString) // save the strings in the VM
     val selectedLocation by remember {
         mutableStateOf(
             if (itemName != defaultString) {
@@ -86,9 +82,6 @@ fun PointsOfInterestScreen(
             }
         )
     }
-    val selectedCategory by remember {
-        mutableStateOf<Category?>(null)
-    }
     var selectedLocationName by remember {
         mutableStateOf(
             if (selectedLocation != null)
@@ -96,6 +89,14 @@ fun PointsOfInterestScreen(
             else
                 allLocationsString
         )
+    }
+
+    // Dropdown menu for categories
+    var isExpandedCategories by remember { mutableStateOf(false) } // boolean for the dropdown menu
+    val allCategoriesString = stringResource(R.string.all_categories) // string for the composable
+    pointsOfInterestViewModel.setAllCategoriesStringAndCategoryName(allCategoriesString) // save the strings in the VM
+    val selectedCategory by remember {
+        mutableStateOf<Category?>(null)
     }
     var selectedCategoryName by remember {
         mutableStateOf(
@@ -106,7 +107,14 @@ fun PointsOfInterestScreen(
         )
     }
 
-    var geoPoint by remember { mutableStateOf(GeoPoint(0.0, 0.0)) }
+    // Dropdown menu for orders
+    var isExpandedOrder by remember { mutableStateOf(false) } // boolean for the dropdown menu
+    val orderVotesString = stringResource(R.string.ordered_by_votes) // string for the composable
+    val orderNameString = stringResource(R.string.ordered_by_name) // string for the composable
+    val orderDistanceString = stringResource(R.string.ordered_by_distance) // string for the composable
+    val itemsOrderList = listOf(orderVotesString, orderNameString, orderDistanceString)
+    var selectedIndex by remember { mutableStateOf(0) } // index of the dropdown menu
+
 
     LaunchedEffect(key1 = currentLocation) {
         geoPoint = GeoPoint(currentLocation.value!!.latitude, currentLocation.value!!.longitude)
@@ -120,7 +128,6 @@ fun PointsOfInterestScreen(
         } else
             pointsOfInterestViewModel.setLocationNameFilter(allLocationsString)
     }
-
 
     Column(
         modifier = modifier
@@ -235,9 +242,9 @@ fun PointsOfInterestScreen(
                     .wrapContentSize(Alignment.TopStart)
                     .padding(start = 8.dp)
                     .padding(end = 8.dp)
-            ){
+            ) {
                 Text(
-                    items[selectedIndex],
+                    itemsOrderList[selectedIndex],
                     modifier = Modifier
                         .wrapContentWidth()
                         .clickable(onClick = { isExpandedOrder = true })
@@ -245,34 +252,40 @@ fun PointsOfInterestScreen(
 
                 DropdownMenu(
                     expanded = isExpandedOrder,
-                    onDismissRequest = { isExpandedOrder = false},
+                    onDismissRequest = { isExpandedOrder = false },
                     modifier = Modifier
                         .wrapContentWidth()
                         .wrapContentHeight()
                 ) {
-                    items.forEachIndexed{
-                            index, s ->
+                    itemsOrderList.forEachIndexed { index, s ->
                         DropdownMenuItem(
                             text = { Text(text = s) },
                             onClick = {
                                 selectedIndex = index
                                 isExpandedOrder = false
 
-                                when(s){
+                                when (s) {
+                                    orderVotesString -> {
+                                        pointsOfInterest = pointsOfInterest.sortedBy { it.votes }
+
+                                    }
+
                                     orderNameString -> {
                                         pointsOfInterest = pointsOfInterest.sortedBy { it.name }
-                                        coroutineScope.launch {
-                                            listState.animateScrollToItem(0)
-                                        }
                                     }
 
                                     orderDistanceString -> {
-                                        pointsOfInterest = pointsOfInterestViewModel.getPointsOfInterestOrderedByDistance(pointsOfInterest)
-                                        coroutineScope.launch {
-                                            listState.animateScrollToItem(index = 0)
-                                        }
+                                        pointsOfInterest =
+                                            pointsOfInterestViewModel.getPointsOfInterestOrderedByDistance(
+                                                pointsOfInterest
+                                            )
                                     }
                                 }
+
+                                coroutineScope.launch {
+                                    listState.animateScrollToItem(index = 0)
+                                }
+
                             })
                     }
                 }

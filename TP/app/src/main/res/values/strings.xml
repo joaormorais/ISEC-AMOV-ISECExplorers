@@ -11,9 +11,9 @@
     <string name="fill_every_field">Fill every field!</string>
     <string name="invalid_email">Invalid email!</string>
     <string name="pws_dont_match">The passwords don\'t match!</string>
-    <string name="all_locations">All locations</string>
-    <string name="ordered_name">Ordered by name</string>
-    <string name="ordered_distance">Ordered by distance</string>
+    <string name="ordered_by_votes">Ordered by votes</string>
+    <string name="ordered_by_name">Ordered by name</string>
+    <string name="ordered_by_distance">Ordered by distance</string>
     <string name="add_category">Add category</string>
     <string name="add_loc">Add location</string>
     <string name="add_point">Add point of interest</string>
@@ -22,4 +22,5 @@
     <string name="description_solo">Description:</string>
     <string name="defaultvalue">defaultValue</string>
     <string name="all_categories">All categories</string>
+    <string name="all_locations">All Locations</string>
 </resources>

@@ -54,10 +54,10 @@ fun LocationsScreen(
     }
 
     var isExpanded by remember { mutableStateOf(false) }
-    val orderAllString = stringResource(R.string.all_locations)
-    val orderNameString = stringResource(R.string.ordered_name)
-    val orderDistanceString = stringResource(R.string.ordered_distance)
-    val items = listOf(orderAllString, orderNameString, orderDistanceString)
+    val orderVotesString = stringResource(R.string.ordered_by_votes)
+    val orderNameString = stringResource(R.string.ordered_by_name)
+    val orderDistanceString = stringResource(R.string.ordered_by_distance)
+    val items = listOf(orderVotesString, orderNameString, orderDistanceString)
     var selectedIndex by remember { mutableStateOf(0) }
 
     val listState = rememberLazyListState()
@@ -96,28 +96,21 @@ fun LocationsScreen(
                             isExpanded = false
 
                             when (s) {
-
-                                orderAllString -> {
-                                    locations = locationsViewModel.getLocations()
-                                    coroutineScope.launch {
-                                        listState.animateScrollToItem(index = 0)
-                                    }
+                                orderVotesString -> {
+                                    locations = locationsViewModel.getLocations().sortedBy { it.votes }
                                 }
 
                                 orderNameString -> {
                                     locations = locationsViewModel.getLocationsOrderedByName()
-                                    coroutineScope.launch {
-                                        listState.animateScrollToItem(index = 0)
-                                    }
                                 }
 
                                 orderDistanceString -> {
                                     locations = locationsViewModel.getLocationsOrderedByDistance()
-                                    coroutineScope.launch {
-                                        listState.animateScrollToItem(index = 0)
-                                    }
                                 }
+                            }
 
+                            coroutineScope.launch {
+                                listState.animateScrollToItem(index = 0)
                             }
 
                         })

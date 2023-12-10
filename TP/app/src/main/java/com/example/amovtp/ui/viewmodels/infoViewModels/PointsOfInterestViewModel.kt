@@ -133,6 +133,9 @@ class PointsOfInterestViewModel(
 
     }
 
+    /**
+     * Gets points ordered by distance
+     */
     fun getPointsOfInterestOrderedByDistance(pointsOfInterest: List<PointOfInterest>): List<PointOfInterest>{
 
         val currentLocation = usersData.getCurrentLocation()
@@ -152,6 +155,9 @@ class PointsOfInterestViewModel(
         }
     }
 
+    /**
+     * Calculates the distance between a point and the current location of the device
+     */
     fun calculateDistance(
         currLat: Double, // lat1
         currLong: Double, // long1

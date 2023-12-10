@@ -29,6 +29,9 @@ class LocationsViewModel(
         return geoData.getLocations().sortedBy { it.name }
     }
 
+    /**
+     * Gets locations ordered by distance
+     */
     fun getLocationsOrderedByDistance(): List<Location> {
 
         val currentLocation = usersData.getCurrentLocation()
@@ -48,6 +51,9 @@ class LocationsViewModel(
         }
     }
 
+    /**
+     * Calculates the distance between a point and the current location of the device
+     */
     fun calculateDistance(
         currLat: Double, // lat1
         currLong: Double, // long1

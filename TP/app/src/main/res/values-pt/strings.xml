@@ -12,9 +12,9 @@
     <string name="fill_every_field">Preencha todos os campos!</string>
     <string name="invalid_email">Formato de email inválido!</string>
     <string name="pws_dont_match">As passwords não coincidem!</string>
-    <string name="all_locations">Todas as localizações</string>
-    <string name="ordered_name">Ordenar alfabeticamente</string>
-    <string name="ordered_distance">Ordenar por distância</string>
+    <string name="ordered_by_votes">Ordenar por popularidade</string>
+    <string name="ordered_by_name">Ordenar alfabeticamente</string>
+    <string name="ordered_by_distance">Ordenar por distância</string>
     <string name="add_category">Adicionar categoria</string>
     <string name="add_loc">Adicionar localização</string>
     <string name="add_point">Adicionar ponto de interesse</string>
@@ -23,4 +23,5 @@
     <string name="description_solo">Deescrição:</string>
     <string name="defaultvalue">defaultValue</string>
     <string name="all_categories">Todas as categorias</string>
+    <string name="all_locations">Todas as localizações</string>
 </resources>
