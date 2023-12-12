@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.screens.infoScreens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,17 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,8 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.amovtp.R
+import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuOrders
 import com.example.amovtp.ui.screens.Screens
 import com.example.amovtp.ui.viewmodels.infoViewModels.LocationsViewModel
+import com.example.amovtp.utils.codes.Codes
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,14 +49,6 @@ fun LocationsScreen(
     var locations by remember {
         mutableStateOf(locationsViewModel.getLocations())
     }
-
-    var isExpanded by remember { mutableStateOf(false) }
-    val orderVotesString = stringResource(R.string.ordered_by_votes)
-    val orderNameString = stringResource(R.string.ordered_by_name)
-    val orderDistanceString = stringResource(R.string.ordered_by_distance)
-    val items = listOf(orderVotesString, orderNameString, orderDistanceString)
-    var selectedIndex by remember { mutableStateOf(0) }
-
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -73,62 +62,37 @@ fun LocationsScreen(
                 .wrapContentSize(Alignment.TopStart)
                 .align(Alignment.CenterHorizontally)
         ) {
-            Text(
-                items[selectedIndex],
-                modifier = modifier
-                    .wrapContentWidth()
-                    .clickable(onClick = { isExpanded = true })
-            )
+            DropdownMenuOrders(itemPicked = { codeReceived ->
+                when (codeReceived) {
+                    Codes.ORDER_BY_VOTES -> {
+                        locations = locationsViewModel.getLocations().sortedBy { it.votes }
+                    }
 
-            DropdownMenu(
-                expanded = isExpanded,
-                onDismissRequest = { isExpanded = false },
-                modifier = modifier
-                    .wrapContentWidth()
-                    .wrapContentHeight()
-            ) {
+                    Codes.ORDER_BY_NAME -> {
+                        locations = locationsViewModel.getLocationsOrderedByName()
+                    }
 
-                items.forEachIndexed { index, s ->
-                    DropdownMenuItem(
-                        text = { Text(text = s) },
-                        onClick = {
-                            selectedIndex = index
-                            isExpanded = false
+                    Codes.ORDER_BY_DISTANCE -> {
+                        locations = locationsViewModel.getLocationsOrderedByDistance()
+                    }
 
-                            when (s) {
-                                orderVotesString -> {
-                                    locations = locationsViewModel.getLocations().sortedBy { it.votes }
-                                }
-
-                                orderNameString -> {
-                                    locations = locationsViewModel.getLocationsOrderedByName()
-                                }
-
-                                orderDistanceString -> {
-                                    locations = locationsViewModel.getLocationsOrderedByDistance()
-                                }
-                            }
-
-                            coroutineScope.launch {
-                                listState.animateScrollToItem(index = 0)
-                            }
-
-                        })
+                    else -> {}
                 }
-
-            }
+                coroutineScope.launch {
+                    listState.animateScrollToItem(index = 0)
+                }
+            })
         }
 
         Button(
             onClick = {
-                // Navegar para PointsOfInterestScreen sem alterar setPointLocationSearch
                 navController?.navigate(Screens.POINTS_OF_INTEREST.route)
             },
             modifier = modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 16.dp)
         ) {
-            Text("Ver Todos os Pontos de Interesse")
+            Text(stringResource(R.string.go_to_points_of_interest))
         }
 
         LazyColumn(

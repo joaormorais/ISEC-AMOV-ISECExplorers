@@ -27,4 +27,5 @@
     <string name="all_locations">All Locations</string>
     <string name="manual_lat_long">Manual Coordinates:</string>
     <string name="automatic_lat_long">Choose current position</string>
+    <string name="go_to_points_of_interest">Points Of Interest</string>
 </resources>

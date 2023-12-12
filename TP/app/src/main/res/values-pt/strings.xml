@@ -28,4 +28,5 @@
     <string name="longitude">Longitude</string>
     <string name="manual_lat_long">Coordenadas manuais</string>
     <string name="automatic_lat_long">Escolher localização atual</string>
+    <string name="go_to_points_of_interest">Pontos De Interesse</string>
 </resources>

@@ -54,7 +54,7 @@ class LocationsViewModel(
     /**
      * Calculates the distance between a point and the current location of the device
      */
-    fun calculateDistance(
+    private fun calculateDistance(
         currLat: Double, // lat1
         currLong: Double, // long1
         locLat: Double, // lat2

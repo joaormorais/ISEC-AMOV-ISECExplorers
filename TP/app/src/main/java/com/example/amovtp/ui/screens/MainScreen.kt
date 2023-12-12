@@ -56,6 +56,7 @@ import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModel
 import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModelFactory
 import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModel
 import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModelFactory
+import com.example.amovtp.utils.codes.Codes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +64,6 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
     val context = LocalContext.current
     val app = context.applicationContext as MyApplication
-    val defaultString = stringResource(R.string.defaultvalue)
 
     var isExpanded by remember { mutableStateOf(false) }
     val addCategoryString = stringResource(R.string.add_category)
@@ -201,7 +201,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                 arguments = listOf(
                     navArgument("itemName") {
                         type = NavType.StringType
-                        defaultValue = defaultString
+                        defaultValue = Codes.DEFAULT_VALUE.toString()
                         nullable = false
                     }
                 )

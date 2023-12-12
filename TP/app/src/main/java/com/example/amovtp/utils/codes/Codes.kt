@@ -2,8 +2,14 @@ package com.example.amovtp.utils.codes
 
 enum class Codes {
     DEFAULT_VALUE,
+    KEEP_VALUE,
+    ALL_LOCATIONS,
+    ALL_CATEGORIES,
     SUCCESS,
     ERROR_EXISTING_NAME,
     ERROR_EXISTING_LAT,
-    ERROR_EXISTING_LONG
+    ERROR_EXISTING_LONG,
+    ORDER_BY_VOTES,
+    ORDER_BY_NAME,
+    ORDER_BY_DISTANCE
 }

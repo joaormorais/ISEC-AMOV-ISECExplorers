@@ -9,6 +9,7 @@ import com.example.amovtp.data.GeoData
 import com.example.amovtp.data.Location
 import com.example.amovtp.data.PointOfInterest
 import com.example.amovtp.data.UsersData
+import com.example.amovtp.utils.codes.Codes
 
 class PointsOfInterestViewModelFactory(
     private val geoData: GeoData,
@@ -25,47 +26,6 @@ class PointsOfInterestViewModel(
     private val usersData: UsersData
 ) : ViewModel() {
 
-    /**
-     * Holds the filter used to get locations by the name
-     */
-    private var _locationNameFilter = mutableStateOf("")
-
-    /**
-     * Holds the filter used to get categories by the name
-     */
-    private var _categoryNameFilter = mutableStateOf("")
-
-    /**
-     * Holds the string used to ask for every location
-     */
-    private var _allLocationsString = mutableStateOf("")
-
-    /**
-     * Holds the string used to ask for every category
-     */
-    private var _allCategoriesString = mutableStateOf("")
-
-    /**
-     * Set for the string used to ask for every location
-     */
-    fun setAllLocationsString(value: String) {
-        _allLocationsString.value = value
-    }
-
-    /**
-     * Set for the filter used to get locations by the name
-     */
-    fun setLocationNameFilter(value: String) {
-        _locationNameFilter.value = value
-    }
-
-    /**
-     * Set for the string used to ask for every category and the filter used to get categories by the name
-     */
-    fun setAllCategoriesStringAndCategoryName(value: String) {
-        _allCategoriesString.value = value
-        _categoryNameFilter.value = value
-    }
 
     /**
      * Gets the current location of the android device
@@ -105,38 +65,47 @@ class PointsOfInterestViewModel(
     /**
      * Gets every point of interest with a specific category
      */
-    private fun getPointsFromCategory(categoryName: String, listOfCurrentPoints:List<PointOfInterest>): List<PointOfInterest> {
+    private fun getPointsFromCategory(
+        categoryName: String,
+        listOfCurrentPoints: List<PointOfInterest>
+    ): List<PointOfInterest> {
         return listOfCurrentPoints.filter { it.category == categoryName }
     }
+
+
+
+
+    private var _filterLocationName = mutableStateOf(Codes.ALL_LOCATIONS.toString())
+    private var _filterCategoryName = mutableStateOf(Codes.ALL_CATEGORIES.toString())
 
     /**
      * Gets every point of interest with a specific location and a specific category
      */
-    fun getPointsWithFilters(locationName: String, categoryName: String): List<PointOfInterest> {
+    fun tempFiltering(locationName: String?, categoryName: String?): List<PointOfInterest> {
 
-        if (locationName.isNotBlank())
-            _locationNameFilter.value = locationName
+        if (locationName == null)
+            _filterCategoryName.value = categoryName!!
+        else if (categoryName == null)
+            _filterLocationName.value = locationName
 
-        if (categoryName.isNotBlank())
-            _categoryNameFilter.value = categoryName
+        var filteredPoints: List<PointOfInterest>
 
-        val filteredPoints: List<PointOfInterest> = if (_locationNameFilter.value == _allLocationsString.value)
-            geoData.getPointsOfInterest()
+        if (_filterLocationName.value == Codes.ALL_LOCATIONS.toString())
+            filteredPoints = geoData.getPointsOfInterest()
         else
-            getPointsFromLocation(_locationNameFilter.value)
+            filteredPoints = getPointsFromLocation(_filterLocationName.value)
 
-
-        return if (_categoryNameFilter.value == _allCategoriesString.value)
-            filteredPoints
+        if (_filterCategoryName.value == Codes.ALL_CATEGORIES.toString())
+            return filteredPoints
         else
-            getPointsFromCategory(_categoryNameFilter.value,filteredPoints)
+            return getPointsFromCategory(_filterCategoryName.value, filteredPoints)
 
     }
 
     /**
      * Gets points ordered by distance
      */
-    fun getPointsOfInterestOrderedByDistance(pointsOfInterest: List<PointOfInterest>): List<PointOfInterest>{
+    fun getPointsOfInterestOrderedByDistance(pointsOfInterest: List<PointOfInterest>): List<PointOfInterest> {
 
         val currentLocation = usersData.getCurrentLocation()
 
@@ -158,7 +127,7 @@ class PointsOfInterestViewModel(
     /**
      * Calculates the distance between a point and the current location of the device
      */
-    fun calculateDistance(
+    private fun calculateDistance(
         currLat: Double, // lat1
         currLong: Double, // long1
         locLat: Double, // lat2
