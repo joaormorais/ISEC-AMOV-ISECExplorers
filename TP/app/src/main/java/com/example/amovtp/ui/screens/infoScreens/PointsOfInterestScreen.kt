@@ -67,7 +67,7 @@ fun PointsOfInterestScreen(
             )
         )
     } // used to mark a location on the map
-    val categories = pointsOfInterestViewModel.getCategories() // every category
+    //val categories = pointsOfInterestViewModel.getCategories() // every category
     val locations by remember { mutableStateOf(pointsOfInterestViewModel.getLocations()) } // locations used to filter the points of interest
     var pointsOfInterest by remember { mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest()) } // points of interest being shown to the user (with or without filters)
 
@@ -103,7 +103,6 @@ fun PointsOfInterestScreen(
                     pointsOfInterestViewModel = pointsOfInterestViewModel,
                     itemNameForLocation = itemName,
                     itemsLocations = locations,
-                    itemsCategory = null,
                     itemPicked = { itemPicked ->
                         pointsOfInterest = pointsOfInterestViewModel.getPointsWithFilters(itemPicked, null)
                     },
@@ -124,7 +123,6 @@ fun PointsOfInterestScreen(
                     pointsOfInterestViewModel = pointsOfInterestViewModel,
                     itemNameForLocation = null,
                     itemsLocations = null,
-                    itemsCategory = categories,
                     itemPicked = { itemPicked ->
                         pointsOfInterest = pointsOfInterestViewModel.getPointsWithFilters(null, itemPicked)
                     },

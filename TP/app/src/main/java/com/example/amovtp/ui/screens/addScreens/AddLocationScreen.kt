@@ -1,5 +1,6 @@
 package com.example.amovtp.ui.screens.addScreens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,18 +36,23 @@ fun AddLocationScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        item{
+        item {
 
-            NameDescription()
+            NameDescription(
+                nameChanged = { newName ->
+                    Log.d("AddLocationScreen", "newName = " + newName)
+                },
+                descriptionChanged = {
+
+                }
+            )
             Spacer(modifier = modifier.height(8.dp))
             GeoDescription()
             Spacer(modifier = modifier.height(8.dp))
-            GalleryImage(imagesPathChanged = {
-                    path ->
+            GalleryImage(imagesPathChanged = { path ->
             })
             Spacer(modifier = modifier.height(8.dp))
-            CameraImage(imagesPathChanged = {
-                    path ->
+            CameraImage(imagesPathChanged = { path ->
             })
 
             Button(

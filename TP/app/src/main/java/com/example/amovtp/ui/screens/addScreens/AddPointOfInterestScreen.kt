@@ -36,7 +36,7 @@ fun AddPointOfInterestScreen(
 
         item{
 
-            NameDescription()
+            NameDescription(nameChanged = {}, descriptionChanged = {})
             Spacer(modifier = modifier.height(8.dp))
             GeoDescription()
             Spacer(modifier = modifier.height(8.dp))

@@ -28,7 +28,6 @@ fun DropdownMenuFilters(
     pointsOfInterestViewModel: PointsOfInterestViewModel,
     itemNameForLocation: String?,
     itemsLocations: List<Location>?,
-    itemsCategory: List<Category>?,
     itemPicked: (String) -> Unit,
     newGeoPoint: (GeoPoint) -> Unit,
     modifier: Modifier = Modifier
@@ -94,9 +93,10 @@ fun DropdownMenuFilters(
         }
 
 
-    } else if (itemsCategory != null) {
+    } else {
 
         val allCategoriesString = stringResource(R.string.all_categories)
+        val categories by remember { mutableStateOf(pointsOfInterestViewModel.getCategories()) } // every category
         var selectedItem by remember { mutableStateOf(allCategoriesString) }
 
         Text(
@@ -123,7 +123,7 @@ fun DropdownMenuFilters(
                 }
             )
 
-            itemsCategory.sortedBy { it.name }.forEachIndexed { index, category ->
+            categories.sortedBy { it.name }.forEachIndexed { index, category ->
                 DropdownMenuItem(
                     text = { Text(text = category.name) },
                     onClick = {

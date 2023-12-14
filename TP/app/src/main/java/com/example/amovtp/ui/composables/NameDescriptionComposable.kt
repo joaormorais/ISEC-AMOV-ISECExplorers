@@ -16,24 +16,30 @@ import androidx.compose.ui.unit.dp
 import com.example.amovtp.R
 
 @Composable
-fun NameDescription(modifier: Modifier = Modifier){
+fun NameDescription(
+    nameChanged: (String) -> Unit,
+    descriptionChanged: (String) -> Unit,
+    modifier: Modifier = Modifier){
 
-    var categoryName by remember { mutableStateOf("") }
-    var categoryDescription by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
             .padding(16.dp)
     ) {
         OutlinedTextField(
-            value = categoryName,
-            onValueChange = { categoryName = it },
+            value = name,
+            onValueChange = { newName->
+                name=newName
+                nameChanged(newName)
+            },
             label = { Text(stringResource(R.string.name)) },
             modifier = Modifier.padding(bottom = 16.dp)
         )
         OutlinedTextField(
-            value = categoryDescription,
-            onValueChange = { categoryDescription = it },
+            value = description,
+            onValueChange = { descriptionChanged(it) },
             label = { Text(stringResource(R.string.description_solo)) },
             modifier = Modifier
                 .padding(bottom = 16.dp)
