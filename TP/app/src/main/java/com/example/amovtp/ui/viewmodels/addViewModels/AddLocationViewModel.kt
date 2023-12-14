@@ -27,10 +27,8 @@ class AddLocationViewModel(private val geoData: GeoData) : ViewModel() {
 
         if (tempLocations.any { it.name == name })
             return Codes.ERROR_EXISTING_NAME
-        else if (tempLocations.any { it.lat == lat })
-            return Codes.ERROR_EXISTING_LAT
-        else if (tempLocations.any { it.long == long })
-            return Codes.ERROR_EXISTING_LONG
+        else if(tempLocations.any{it.lat == lat && it.long == long})
+            return Codes.ERROR_EXISTING_LOCATION
 
         geoData.addLocation(name, description, lat, long, imgs)
 
