@@ -34,17 +34,19 @@ fun DropdownMenuFilters(
     modifier: Modifier = Modifier
 ) {
 
-    val allLocationsString = stringResource(R.string.all_locations)
-    val allCategoriesString = stringResource(R.string.all_categories)
     var isExpanded by remember { mutableStateOf(false) } // boolean for the dropdown menu
-    var selectedItem by remember { mutableStateOf("") }
 
     if (itemsLocations != null) {
 
-        if (itemNameForLocation != Codes.DEFAULT_VALUE.toString())
-            selectedItem = itemNameForLocation!!
-        else
-            selectedItem = allLocationsString
+        val allLocationsString = stringResource(R.string.all_locations)
+        var selectedItem by remember {
+            mutableStateOf(
+                if (itemNameForLocation != Codes.DEFAULT_VALUE.toString())
+                    itemNameForLocation!!
+                else
+                    allLocationsString
+            )
+        }
 
         Text(
             selectedItem,
@@ -77,7 +79,7 @@ fun DropdownMenuFilters(
                 }
             )
 
-            itemsLocations.forEachIndexed { index, location ->
+            itemsLocations.sortedBy { it.name }.forEachIndexed { index, location ->
                 DropdownMenuItem(
                     text = { Text(text = location.name) },
                     onClick = {
@@ -93,7 +95,9 @@ fun DropdownMenuFilters(
 
 
     } else if (itemsCategory != null) {
-        selectedItem = stringResource(R.string.all_categories)
+
+        val allCategoriesString = stringResource(R.string.all_categories)
+        var selectedItem by remember { mutableStateOf(allCategoriesString) }
 
         Text(
             selectedItem,
@@ -119,7 +123,7 @@ fun DropdownMenuFilters(
                 }
             )
 
-            itemsCategory.forEachIndexed { index, category ->
+            itemsCategory.sortedBy { it.name }.forEachIndexed { index, category ->
                 DropdownMenuItem(
                     text = { Text(text = category.name) },
                     onClick = {

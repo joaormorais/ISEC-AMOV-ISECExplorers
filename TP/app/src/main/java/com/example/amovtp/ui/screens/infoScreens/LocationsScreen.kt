@@ -62,8 +62,8 @@ fun LocationsScreen(
                 .wrapContentSize(Alignment.TopStart)
                 .align(Alignment.CenterHorizontally)
         ) {
-            DropdownMenuOrders(itemPicked = { codeReceived ->
-                when (codeReceived) {
+            DropdownMenuOrders(itemPicked = { itemPicked ->
+                when (itemPicked) {
                     Codes.ORDER_BY_VOTES -> {
                         locations = locationsViewModel.getLocations().sortedBy { it.votes }
                     }

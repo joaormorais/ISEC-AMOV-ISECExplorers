@@ -105,7 +105,7 @@ fun PointsOfInterestScreen(
                     itemsLocations = locations,
                     itemsCategory = null,
                     itemPicked = { itemPicked ->
-                        pointsOfInterest = pointsOfInterestViewModel.tempFiltering(itemPicked, null)
+                        pointsOfInterest = pointsOfInterestViewModel.getPointsWithFilters(itemPicked, null)
                     },
                     newGeoPoint = { newGeoPoint ->
                         geoPoint = newGeoPoint
@@ -126,7 +126,7 @@ fun PointsOfInterestScreen(
                     itemsLocations = null,
                     itemsCategory = categories,
                     itemPicked = { itemPicked ->
-                        pointsOfInterest = pointsOfInterestViewModel.tempFiltering(null, itemPicked)
+                        pointsOfInterest = pointsOfInterestViewModel.getPointsWithFilters(null, itemPicked)
                     },
                     newGeoPoint = {}
                 )
@@ -138,8 +138,8 @@ fun PointsOfInterestScreen(
                     .padding(start = 8.dp)
                     .padding(end = 8.dp)
             ) {
-                DropdownMenuOrders(itemPicked = { codeReceived ->
-                    when (codeReceived) {
+                DropdownMenuOrders(itemPicked = { itemPicked ->
+                    when (itemPicked) {
                         Codes.ORDER_BY_VOTES -> {
                             pointsOfInterest = pointsOfInterest.sortedBy { it.votes }
                         }

@@ -26,6 +26,8 @@ class PointsOfInterestViewModel(
     private val usersData: UsersData
 ) : ViewModel() {
 
+    private var _filterLocationName = mutableStateOf(Codes.ALL_LOCATIONS.toString())
+    private var _filterCategoryName = mutableStateOf(Codes.ALL_CATEGORIES.toString())
 
     /**
      * Gets the current location of the android device
@@ -72,16 +74,10 @@ class PointsOfInterestViewModel(
         return listOfCurrentPoints.filter { it.category == categoryName }
     }
 
-
-
-
-    private var _filterLocationName = mutableStateOf(Codes.ALL_LOCATIONS.toString())
-    private var _filterCategoryName = mutableStateOf(Codes.ALL_CATEGORIES.toString())
-
     /**
      * Gets every point of interest with a specific location and a specific category
      */
-    fun tempFiltering(locationName: String?, categoryName: String?): List<PointOfInterest> {
+    fun getPointsWithFilters(locationName: String?, categoryName: String?): List<PointOfInterest> {
 
         if (locationName == null)
             _filterCategoryName.value = categoryName!!
