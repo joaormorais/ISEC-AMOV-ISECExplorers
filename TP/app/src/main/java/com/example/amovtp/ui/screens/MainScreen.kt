@@ -221,7 +221,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
             composable(Screens.ADD_LOCATION.route) {
                 addLocationViewModel =
                     viewModel(factory = AddLocationViewModelFactory(app.geoData, app.usersData))
-                AddLocationScreen(addLocationViewModel!!)
+                AddLocationScreen(addLocationViewModel!!, navController)
             }
 
             composable(Screens.ADD_POINT_OF_INTEREST.route) {

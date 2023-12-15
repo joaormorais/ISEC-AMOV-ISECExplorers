@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 
 import com.example.amovtp.R
 import com.example.amovtp.ui.composables.CameraImage
@@ -24,6 +25,7 @@ import com.example.amovtp.ui.viewmodels.addViewModels.AddLocationViewModel
 @Composable
 fun AddLocationScreen(
     addLocationViewModel: AddLocationViewModel,
+    navController: NavHostController?,
     modifier: Modifier = Modifier
 ) {
 
@@ -107,6 +109,9 @@ fun AddLocationScreen(
                             isManual,
                             mixedImgs
                         )
+
+                        navController!!.navigateUp()
+
                     }
 
                 },
