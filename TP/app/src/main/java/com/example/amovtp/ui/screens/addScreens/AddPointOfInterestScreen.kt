@@ -36,17 +36,15 @@ fun AddPointOfInterestScreen(
 
         item{
 
-            NameDescription(nameChanged = {}, descriptionChanged = {})
+            //NameDescription()
             Spacer(modifier = modifier.height(8.dp))
-            GeoDescription()
+            //GeoDescription()
             Spacer(modifier = modifier.height(8.dp))
-            GalleryImage(imagesPathChanged = {
-                    path ->
-            })
+            //TODO: fazer um dropdown menu com todas as localizações e quando o utilizador escolhe uma, manda para a função de adicionar ponto de interesse
             Spacer(modifier = modifier.height(8.dp))
-            CameraImage(imagesPathChanged = {
-                    path ->
-            })
+            //GalleryImage()
+            Spacer(modifier = modifier.height(8.dp))
+            //CameraImage()
 
             Button(
                 onClick = {

@@ -20,13 +20,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-
 import com.example.amovtp.R
 import com.example.amovtp.utils.file.FileUtils
 
 @Composable
 fun GalleryImage(
-    imagesPathChanged: (List<String?>) -> Unit,
+    imagesPathChanged: (List<String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 

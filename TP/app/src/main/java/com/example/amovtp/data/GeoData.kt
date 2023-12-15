@@ -9,10 +9,11 @@ data class Location(
     val description: String,
     val lat: Double,
     val long: Double,
+    val isManualCoords:Boolean,
     val pointsOfInterest: MutableList<String>,
-    val imgs: MutableList<String>,
+    val imgs: List<String>,
     val votes: Int,
-    val approved: Boolean
+    val isApproved: Boolean
 )
 
 /**
@@ -24,7 +25,7 @@ data class Category(
     val description: String,
     val img: String,
     val votes: Int,
-    val approved: Boolean
+    val isApproved: Boolean
 )
 
 /**
@@ -36,11 +37,12 @@ data class PointOfInterest(
     val description: String,
     val lat: Double,
     val long: Double,
+    val isManualCoords:Boolean,
     val locations: MutableList<String>,
     val category: String,
-    val imgs: MutableList<String>,
+    val imgs: List<String>,
     val votes: Int,
-    val approved: Boolean
+    val isApproved: Boolean
 )
 
 class GeoData(/*firestore*/) {
@@ -153,6 +155,7 @@ class GeoData(/*firestore*/) {
                     locationDescriptions[i],
                     latitudes[i],
                     longitudes[i],
+                    false,
                     mutableListOf(),
                     mutableListOf(),
                     2,
@@ -172,6 +175,7 @@ class GeoData(/*firestore*/) {
                 "Descrição do ponto de interesse em ${location.name}",
                 location.lat,
                 location.long,
+                false,
                 mutableListOf(location.name),
                 _categories.random().name,
                 mutableListOf(),
@@ -201,7 +205,8 @@ class GeoData(/*firestore*/) {
         description: String,
         lat: Double,
         long: Double,
-        imgs: MutableList<String>
+        isManualCoords: Boolean,
+        imgs: List<String>
     ) {
 
         _locations.add(
@@ -211,8 +216,9 @@ class GeoData(/*firestore*/) {
                 description,
                 lat,
                 long,
+                isManualCoords,
                 mutableListOf(),
-                mutableListOf(),
+                imgs,
                 0,
                 false
             )
@@ -225,9 +231,10 @@ class GeoData(/*firestore*/) {
         description: String,
         lat: Double,
         long: Double,
+        isManualCoords: Boolean,
         locations: MutableList<String>,
         category: String,
-        imgs: MutableList<String>
+        imgs: List<String>
     ) {
 
         _pointsOfInterest.add(
@@ -237,6 +244,7 @@ class GeoData(/*firestore*/) {
                 description,
                 lat,
                 long,
+                isManualCoords,
                 locations,
                 category,
                 imgs,

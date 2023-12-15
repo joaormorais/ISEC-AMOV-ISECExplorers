@@ -95,7 +95,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
             //if (currentScreen != null && Screens.valueOf(currentScreen!!.destination.route!!) != Screens.LOGIN)
             if (currentScreen != null && currentScreen.toString() != Screens.LOGIN.route)
                 TopAppBar(
-                    title = {/*TODO: pegar numa viewmodel e fazer as funções para tirar o nome certo*/},
+                    title = {/*TODO: pegar numa viewmodel e fazer as funções para tirar o nome certo*/ },
 
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {
@@ -219,13 +219,14 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
             }
 
             composable(Screens.ADD_LOCATION.route) {
-                addLocationViewModel = viewModel(factory = AddLocationViewModelFactory(app.geoData))
+                addLocationViewModel =
+                    viewModel(factory = AddLocationViewModelFactory(app.geoData, app.usersData))
                 AddLocationScreen(addLocationViewModel!!)
             }
 
             composable(Screens.ADD_POINT_OF_INTEREST.route) {
                 addPointOfInterestViewModel =
-                    viewModel(factory = AddPointOfInterestViewModelFactory(app.geoData))
+                    viewModel(factory = AddPointOfInterestViewModelFactory(app.geoData, app.usersData))
                 AddPointOfInterestScreen(addPointOfInterestViewModel!!)
             }
 

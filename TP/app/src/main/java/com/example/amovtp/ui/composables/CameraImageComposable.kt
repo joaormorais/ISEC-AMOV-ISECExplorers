@@ -30,7 +30,7 @@ import java.io.File
 
 @Composable
 fun CameraImage(
-    imagesPathChanged: (List<String?>) -> Unit,
+    imagesPathChanged: (List<String>) -> Unit,
     modifier: Modifier = Modifier)
 {
     var tempFile by remember { mutableStateOf("") }
@@ -84,24 +84,5 @@ fun CameraImage(
 
             }
         }
-//        Spacer(modifier = Modifier.height(8.dp))
-//        Box(modifier = Modifier.fillMaxSize()) {
-//            //a box vai ocupar todo o espaço existente
-//            if(imagePath != null){
-//                AsyncImage(
-//                    model = imagePath,
-//                    modifier = Modifier.matchParentSize(),
-//                    contentDescription = "Background Image")
-//            }
-//            else{
-//                Image(
-//                    painter = painterResource(id = R.drawable.coimbra),
-//                    contentDescription = "Image Default",
-//                    contentScale = ContentScale.Fit,
-//                    modifier = Modifier.matchParentSize()
-//                )
-//            }
-//
-//        }
     }
 }

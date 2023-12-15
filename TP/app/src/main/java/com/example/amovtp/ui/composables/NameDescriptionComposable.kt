@@ -19,7 +19,8 @@ import com.example.amovtp.R
 fun NameDescription(
     nameChanged: (String) -> Unit,
     descriptionChanged: (String) -> Unit,
-    modifier: Modifier = Modifier){
+    modifier: Modifier = Modifier
+) {
 
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -30,8 +31,8 @@ fun NameDescription(
     ) {
         OutlinedTextField(
             value = name,
-            onValueChange = { newName->
-                name=newName
+            onValueChange = { newName ->
+                name = newName
                 nameChanged(newName)
             },
             label = { Text(stringResource(R.string.name)) },
@@ -39,7 +40,10 @@ fun NameDescription(
         )
         OutlinedTextField(
             value = description,
-            onValueChange = { descriptionChanged(it) },
+            onValueChange = { newDescription ->
+                description = newDescription
+                descriptionChanged(newDescription)
+            },
             label = { Text(stringResource(R.string.description_solo)) },
             modifier = Modifier
                 .padding(bottom = 16.dp)

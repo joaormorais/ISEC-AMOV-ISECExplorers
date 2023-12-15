@@ -35,15 +35,11 @@ fun AddCategoryScreen(
 
         item{
 
-            NameDescription(nameChanged = {}, descriptionChanged = {})
+            //NameDescription()
             Spacer(modifier = modifier.height(8.dp))
-            GalleryImage(imagesPathChanged = {
-                    path ->
-            })
+            //GalleryImage()
             Spacer(modifier = modifier.height(8.dp))
-            CameraImage(imagesPathChanged = {
-                    path ->
-            })
+            //CameraImage()
 
             Button(
                 onClick = {

@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.screens.addScreens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +27,15 @@ fun AddLocationScreen(
     modifier: Modifier = Modifier
 ) {
 
+    var name = ""
+    var description = ""
+    var lat: Double? = null
+    var long: Double? = null
+    var isManual: Boolean = true
+    var imgsGallery: List<String> = emptyList()
+    var imgsCamera: List<String> = emptyList()
+
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -40,23 +48,67 @@ fun AddLocationScreen(
 
             NameDescription(
                 nameChanged = { newName ->
-                    Log.d("AddLocationScreen", "newName = " + newName)
+                    name = newName
                 },
-                descriptionChanged = {
-
+                descriptionChanged = { newDescription ->
+                    description = newDescription
                 }
             )
             Spacer(modifier = modifier.height(8.dp))
-            GeoDescription()
+            GeoDescription(
+                latChanged = { newLat ->
+                    lat = newLat
+                },
+                longChanged = { newLong ->
+                    long = newLong
+                },
+                manualChanged = { newManual ->
+                    isManual = newManual
+                    if (!newManual) {
+                        val tempLocation = addLocationViewModel.getCurrentLocation()
+                        lat = tempLocation.value!!.latitude
+                        long = tempLocation.value!!.longitude
+                    }
+                }
+            )
             Spacer(modifier = modifier.height(8.dp))
-            GalleryImage(imagesPathChanged = { path ->
+            GalleryImage(imagesPathChanged = { newImgs ->
+                val uniqueImgs = newImgs.filter { !imgsGallery.contains(it) }
+                imgsGallery = uniqueImgs
             })
             Spacer(modifier = modifier.height(8.dp))
-            CameraImage(imagesPathChanged = { path ->
+            CameraImage(imagesPathChanged = { newImgs ->
+                val uniqueImgs = newImgs.filter { !imgsCamera.contains(it) }
+                imgsCamera = uniqueImgs
             })
 
             Button(
                 onClick = {
+
+                    if (name.isBlank()) {
+                        //TODO: pop up de erro a dizer name em falta
+                    } else if (description.isBlank()) {
+                        //TODO: pop up de erro a dizer description em falta
+                    } else if (lat == null) {
+                        //TODO: pop up de erro a dizer lat em falta
+                    } else if (long == null) {
+                        //TODO: pop up de erro a dizer long em falta
+                    } else if (imgsGallery.isEmpty() && imgsCamera.isEmpty()) {
+                        //TODO: pop up de erro a dizer que é preciso pelo menos uma imagem
+                    } else {
+
+                        val mixedImgs = imgsGallery + imgsCamera
+
+                        addLocationViewModel.addLocation(
+                            name,
+                            description,
+                            lat!!,
+                            long!!,
+                            isManual,
+                            mixedImgs
+                        )
+                    }
+
                 },
                 modifier = modifier.padding(top = 16.dp)
             ) {
