@@ -38,7 +38,7 @@ data class PointOfInterest(
     val lat: Double,
     val long: Double,
     val isManualCoords:Boolean,
-    val locations: String,
+    val locations: String, //TODO: alterar para um array de localizações
     val category: String,
     val imgs: List<String>,
     val votes: Int,

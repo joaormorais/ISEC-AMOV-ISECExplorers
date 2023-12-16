@@ -61,7 +61,8 @@ class PointsOfInterestViewModel(
      * Gets every point of interest with a specific location
      */
     fun getPointsFromLocation(locationName: String): List<PointOfInterest> {
-        return geoData.getPointsOfInterest().filter { it.locations.contains(locationName) }
+        //return geoData.getPointsOfInterest().filter { it.locations.contains(Regex("\\b${Regex.escape(locationName)}\\b"))}
+        return geoData.getPointsOfInterest().filter { it.locations == locationName }
     }
 
     /**
