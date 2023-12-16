@@ -124,6 +124,8 @@ fun DropdownMenuFilters(
             )
 
             categories.sortedBy { it.name }.forEachIndexed { index, category ->
+
+                //TODO FAZER UMA ROW DENTRO DA ROW TEM UMA ASYNC IMAGE E DEPOIS DO ASYNC IMAGE TEM O DROPDOWN MENU ITEM
                 DropdownMenuItem(
                     text = { Text(text = category.name) },
                     onClick = {
