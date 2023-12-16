@@ -4,6 +4,7 @@ import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.amovtp.data.Category
 import com.example.amovtp.data.GeoData
 import com.example.amovtp.data.UsersData
 import com.example.amovtp.utils.codes.Codes
@@ -27,13 +28,21 @@ class AddPointOfInterestViewModel(
         return usersData.getCurrentLocation()
     }
 
+    fun getLocations(): List<com.example.amovtp.data.Location> {
+        return geoData.getLocations()
+    }
+
+    fun getCategories() : List<Category>{
+        return geoData.getCategories()
+    }
+
     fun addPointOfInterest(
         name: String,
         description: String,
         lat: Double,
         long: Double,
         isManualCoords: Boolean,
-        locations: MutableList<String>,
+        location: String,
         category: String,
         imgs: List<String>
     ): Codes {
@@ -50,7 +59,7 @@ class AddPointOfInterestViewModel(
             lat,
             long,
             isManualCoords,
-            locations,
+            location,
             category,
             imgs
         )

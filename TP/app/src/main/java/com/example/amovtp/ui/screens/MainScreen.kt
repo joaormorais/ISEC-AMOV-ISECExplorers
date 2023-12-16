@@ -227,7 +227,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
             composable(Screens.ADD_POINT_OF_INTEREST.route) {
                 addPointOfInterestViewModel =
                     viewModel(factory = AddPointOfInterestViewModelFactory(app.geoData, app.usersData))
-                AddPointOfInterestScreen(addPointOfInterestViewModel!!)
+                AddPointOfInterestScreen(addPointOfInterestViewModel!!, navController)
             }
 
             composable(Screens.ADD_CATEGORY.route) {

@@ -38,7 +38,7 @@ data class PointOfInterest(
     val lat: Double,
     val long: Double,
     val isManualCoords:Boolean,
-    val locations: MutableList<String>,
+    val locations: String,
     val category: String,
     val imgs: List<String>,
     val votes: Int,
@@ -176,7 +176,7 @@ class GeoData(/*firestore*/) {
                 location.lat,
                 location.long,
                 false,
-                mutableListOf(location.name),
+               location.name,
                 _categories.random().name,
                 mutableListOf(),
                 2,
@@ -232,7 +232,7 @@ class GeoData(/*firestore*/) {
         lat: Double,
         long: Double,
         isManualCoords: Boolean,
-        locations: MutableList<String>,
+        locations: String,
         category: String,
         imgs: List<String>
     ) {
