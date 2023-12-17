@@ -22,11 +22,11 @@ class LocationsViewModel(
 ) : ViewModel() {
 
     fun getLocations(): List<Location> {
-        return geoData.getLocations()
+        return geoData.locations
     }
 
     fun getLocationsOrderedByName(): List<Location> {
-        return geoData.getLocations().sortedBy { it.name }
+        return geoData.locations.sortedBy { it.name }
     }
 
     /**
@@ -34,12 +34,9 @@ class LocationsViewModel(
      */
     fun getLocationsOrderedByDistance(): List<Location> {
 
-        val currentLocation = usersData.getCurrentLocation()
+        val currentLocation = usersData.currentLocation
 
-        currentLocation.value?.latitude = usersData.getCurrentLocation().value!!.latitude
-        currentLocation.value?.longitude = usersData.getCurrentLocation().value!!.longitude
-
-        return geoData.getLocations().sortedBy { location ->
+        return geoData.locations.sortedBy { location ->
 
             calculateDistance(
                 currentLocation.value!!.latitude,

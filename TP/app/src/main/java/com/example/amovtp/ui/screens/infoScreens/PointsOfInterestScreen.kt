@@ -90,51 +90,14 @@ fun PointsOfInterestScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Row {
-
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(stringResource(R.string.order_by), modifier = modifier.padding(top = 8.dp))
             Box(
                 modifier = modifier
                     .wrapContentSize(Alignment.TopStart)
-                    .padding(end = 8.dp)
-            ) {
-
-                DropdownMenuFilters(
-                    pointsOfInterestViewModel = pointsOfInterestViewModel,
-                    itemNameForLocation = itemName,
-                    itemsLocations = locations,
-                    itemPicked = { itemPicked ->
-                        pointsOfInterest = pointsOfInterestViewModel.getPointsWithFilters(itemPicked, null)
-                    },
-                    newGeoPoint = { newGeoPoint ->
-                        geoPoint = newGeoPoint
-                    }
-                )
-            }
-
-            Box(
-                modifier = modifier
-                    .wrapContentSize(Alignment.TopStart)
-                    .padding(start = 8.dp)
-                    .padding(end = 8.dp)
-            ) {
-
-                DropdownMenuFilters(
-                    pointsOfInterestViewModel = pointsOfInterestViewModel,
-                    itemNameForLocation = null,
-                    itemsLocations = null,
-                    itemPicked = { itemPicked ->
-                        pointsOfInterest = pointsOfInterestViewModel.getPointsWithFilters(null, itemPicked)
-                    },
-                    newGeoPoint = {}
-                )
-            }
-
-            Box(
-                modifier = modifier
-                    .wrapContentSize(Alignment.TopStart)
-                    .padding(start = 8.dp)
-                    .padding(end = 8.dp)
             ) {
                 DropdownMenuOrders(itemPicked = { itemPicked ->
                     when (itemPicked) {
@@ -160,13 +123,47 @@ fun PointsOfInterestScreen(
                     }
                 })
             }
+            Text(stringResource(R.string.filters), modifier = modifier.padding(top = 8.dp))
+            Box(
+                modifier = modifier
+                    .wrapContentSize(Alignment.TopStart)
+            ) {
+
+                DropdownMenuFilters(
+                    pointsOfInterestViewModel = pointsOfInterestViewModel,
+                    itemNameForLocation = itemName,
+                    itemsLocations = locations,
+                    itemPicked = { itemPicked ->
+                        pointsOfInterest =
+                            pointsOfInterestViewModel.getPointsWithFilters(itemPicked, null)
+                    },
+                    newGeoPoint = { newGeoPoint ->
+                        geoPoint = newGeoPoint
+                    }
+                )
+            }
+            Box(
+                modifier = modifier
+                    .wrapContentSize(Alignment.TopStart)
+            ) {
+                DropdownMenuFilters(
+                    pointsOfInterestViewModel = pointsOfInterestViewModel,
+                    itemNameForLocation = null,
+                    itemsLocations = null,
+                    itemPicked = { itemPicked ->
+                        pointsOfInterest =
+                            pointsOfInterestViewModel.getPointsWithFilters(null, itemPicked)
+                    },
+                    newGeoPoint = {}
+                )
+            }
         }
 
         Box(
             modifier = modifier
-                .padding(8.dp)
                 .fillMaxWidth()
                 .fillMaxSize(0.5f)
+                .padding(8.dp)
                 .clipToBounds()
                 .background(
                     Color(255, 240, 128)
@@ -197,6 +194,7 @@ fun PointsOfInterestScreen(
         }
 
         LazyColumn(
+            state = listState,
             modifier = modifier
                 .fillMaxSize()
         ) {

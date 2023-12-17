@@ -9,7 +9,7 @@ data class Location(
     val description: String,
     val lat: Double,
     val long: Double,
-    val isManualCoords:Boolean,
+    val isManualCoords: Boolean,
     val pointsOfInterest: MutableList<String>,
     val imgs: List<String>,
     val votes: Int,
@@ -37,7 +37,7 @@ data class PointOfInterest(
     val description: String,
     val lat: Double,
     val long: Double,
-    val isManualCoords:Boolean,
+    val isManualCoords: Boolean,
     val locations: String, //TODO: alterar para um array de localizações
     val category: String,
     val imgs: List<String>,
@@ -176,7 +176,7 @@ class GeoData(/*firestore*/) {
                 location.lat,
                 location.long,
                 false,
-               location.name,
+                location.name,
                 _categories.random().name,
                 mutableListOf(),
                 2,
@@ -188,17 +188,14 @@ class GeoData(/*firestore*/) {
         }
     }
 
-    fun getLocations(): List<Location> {
-        return _locations.toList()
-    }
+    val locations: List<Location>
+        get() = _locations.toList()
 
-    fun getPointsOfInterest(): List<PointOfInterest> {
-        return _pointsOfInterest.toList()
-    }
+    val pointsOfInterest: List<PointOfInterest>
+        get() = _pointsOfInterest.toList()
 
-    fun getCategories(): List<Category> {
-        return _categories.toList()
-    }
+    val categories: List<Category>
+        get() = _categories.toList()
 
     fun addLocation(
         name: String,

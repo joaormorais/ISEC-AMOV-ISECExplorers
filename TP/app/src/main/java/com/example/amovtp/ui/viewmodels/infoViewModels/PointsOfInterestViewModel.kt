@@ -33,36 +33,36 @@ class PointsOfInterestViewModel(
      * Gets the current location of the android device
      */
     fun getCurrentLocation(): MutableLiveData<android.location.Location> {
-        return usersData.getCurrentLocation()
+        return usersData.currentLocation
     }
 
     /**
      * Gets every location
      */
     fun getLocations(): List<Location> {
-        return geoData.getLocations()
+        return geoData.locations
     }
 
     /**
      * Gets every category
      */
     fun getCategories(): List<Category> {
-        return geoData.getCategories()
+        return geoData.categories
     }
 
     /**
      * Gets every point of interest
      */
     fun getPointsOfInterest(): List<PointOfInterest> {
-        return geoData.getPointsOfInterest()
+        return geoData.pointsOfInterest
     }
 
     /**
      * Gets every point of interest with a specific location
      */
     fun getPointsFromLocation(locationName: String): List<PointOfInterest> {
-        //return geoData.getPointsOfInterest().filter { it.locations.contains(Regex("\\b${Regex.escape(locationName)}\\b"))}
-        return geoData.getPointsOfInterest().filter { it.locations == locationName }
+        //return geoData.pointsOfInterest.filter { it.locations.contains(Regex("\\b${Regex.escape(locationName)}\\b"))}
+        return geoData.pointsOfInterest.filter { it.locations == locationName }
     }
 
     /**
@@ -88,7 +88,7 @@ class PointsOfInterestViewModel(
         var filteredPoints: List<PointOfInterest>
 
         if (_filterLocationName.value == Codes.ALL_LOCATIONS.toString())
-            filteredPoints = geoData.getPointsOfInterest()
+            filteredPoints = geoData.pointsOfInterest
         else
             filteredPoints = getPointsFromLocation(_filterLocationName.value)
 
@@ -104,10 +104,7 @@ class PointsOfInterestViewModel(
      */
     fun getPointsOfInterestOrderedByDistance(pointsOfInterest: List<PointOfInterest>): List<PointOfInterest> {
 
-        val currentLocation = usersData.getCurrentLocation()
-
-        currentLocation.value?.latitude = usersData.getCurrentLocation().value!!.latitude
-        currentLocation.value?.longitude = usersData.getCurrentLocation().value!!.longitude
+        val currentLocation = usersData.currentLocation
 
         return pointsOfInterest.sortedBy { pointOfInterest ->
 

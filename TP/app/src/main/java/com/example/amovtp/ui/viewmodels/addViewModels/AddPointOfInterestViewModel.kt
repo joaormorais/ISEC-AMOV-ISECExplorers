@@ -25,15 +25,15 @@ class AddPointOfInterestViewModel(
 ) : ViewModel() {
 
     fun getCurrentLocation(): MutableLiveData<Location> {
-        return usersData.getCurrentLocation()
+        return usersData.currentLocation
     }
 
     fun getLocations(): List<com.example.amovtp.data.Location> {
-        return geoData.getLocations()
+        return geoData.locations
     }
 
     fun getCategories() : List<Category>{
-        return geoData.getCategories()
+        return geoData.categories
     }
 
     fun addPointOfInterest(
@@ -46,7 +46,7 @@ class AddPointOfInterestViewModel(
         category: String,
         imgs: List<String>
     ): Codes {
-        val tempPointsOfInterest = geoData.getPointsOfInterest()
+        val tempPointsOfInterest = geoData.pointsOfInterest
 
         if (tempPointsOfInterest.any { it.name == name })
             return Codes.ERROR_EXISTING_NAME

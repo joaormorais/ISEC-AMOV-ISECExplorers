@@ -61,7 +61,6 @@ fun GalleryImage(
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
             ) {
 
                 items(imagesPath) { img ->

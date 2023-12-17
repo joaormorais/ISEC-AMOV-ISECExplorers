@@ -25,7 +25,7 @@ class AddLocationViewModel(
 ) : ViewModel() {
 
     fun getCurrentLocation(): MutableLiveData<Location> {
-        return usersData.getCurrentLocation()
+        return usersData.currentLocation
     }
 
     fun addLocation(
@@ -37,7 +37,7 @@ class AddLocationViewModel(
         imgs: List<String>
     ): Codes {
 
-        val tempLocations = geoData.getLocations()
+        val tempLocations = geoData.locations
 
         if (tempLocations.any { it.name == name })
             return Codes.ERROR_EXISTING_NAME

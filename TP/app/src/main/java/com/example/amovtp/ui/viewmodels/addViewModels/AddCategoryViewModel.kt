@@ -18,7 +18,7 @@ class AddCategoryViewModel(private val geoData: GeoData) : ViewModel() {
         description: String,
         img: String,
     ):Codes{
-        val tempCategories = geoData.getCategories()
+        val tempCategories = geoData.categories
 
         if(tempCategories.any{it.name == name})
             return Codes.ERROR_EXISTING_NAME

@@ -1,11 +1,16 @@
 package com.example.amovtp.ui.composables.DropDownMenus
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,12 +52,18 @@ fun DropdownMenuFilters(
             )
         }
 
-        Text(
-            selectedItem,
+        Button(
+            onClick = {
+                isExpanded = true
+            },
             modifier = modifier
                 .wrapContentWidth()
-                .clickable(onClick = { isExpanded = true })
-        )
+        ) {
+            Row {
+                Text(selectedItem)
+                Icon(Icons.Rounded.KeyboardArrowDown, "Dropdown")
+            }
+        }
         DropdownMenu(
             expanded = isExpanded,
             onDismissRequest = { isExpanded = false },
@@ -99,12 +110,18 @@ fun DropdownMenuFilters(
         val categories by remember { mutableStateOf(pointsOfInterestViewModel.getCategories()) } // every category
         var selectedItem by remember { mutableStateOf(allCategoriesString) }
 
-        Text(
-            selectedItem,
+        Button(
+            onClick = {
+                isExpanded = true
+            },
             modifier = modifier
                 .wrapContentWidth()
-                .clickable(onClick = { isExpanded = true })
-        )
+        ) {
+            Row {
+                Text(selectedItem)
+                Icon(Icons.Rounded.KeyboardArrowDown, "Dropdown")
+            }
+        }
         DropdownMenu(
             expanded = isExpanded,
             onDismissRequest = { isExpanded = false },

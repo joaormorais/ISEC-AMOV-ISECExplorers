@@ -29,4 +29,7 @@
     <string name="manual_lat_long">Coordenadas manuais</string>
     <string name="automatic_lat_long">Escolher localização atual</string>
     <string name="go_to_points_of_interest">Pontos De Interesse</string>
+    <string name="order_by">Ordenar por:</string>
+    <string name="filters">Filtrar por:</string>
+    <string name="not_approved_location">Esta localização ainda não foi aprovada por pelo menos 2 utilizadores</string>
 </resources>

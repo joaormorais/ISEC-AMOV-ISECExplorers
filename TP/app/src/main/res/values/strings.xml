@@ -28,4 +28,7 @@
     <string name="manual_lat_long">Manual Coordinates:</string>
     <string name="automatic_lat_long">Choose current position</string>
     <string name="go_to_points_of_interest">Points Of Interest</string>
+    <string name="order_by">Order by:</string>
+    <string name="filters">Filter by:</string>
+    <string name="not_approved_location">This location hasn\'t been approved by at least 2 users</string>
 </resources>
