@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -90,72 +91,88 @@ fun PointsOfInterestScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
         ) {
-            Text(stringResource(R.string.order_by), modifier = modifier.padding(top = 8.dp))
-            Box(
+            Column(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = modifier
-                    .wrapContentSize(Alignment.TopStart)
+                    .weight(1f)
+                    .padding(start = 8.dp, end = 8.dp)
             ) {
-                DropdownMenuOrders(itemPicked = { itemPicked ->
-                    when (itemPicked) {
-                        Codes.ORDER_BY_VOTES -> {
-                            pointsOfInterest = pointsOfInterest.sortedBy { it.votes }
-                        }
+                Text(stringResource(R.string.order_by), modifier = modifier.padding(top = 8.dp))
+                Box(
+                    modifier = modifier
+                        .wrapContentSize(Alignment.TopStart)
+                ) {
+                    DropdownMenuOrders(itemPicked = { itemPicked ->
+                        when (itemPicked) {
+                            Codes.ORDER_BY_VOTES -> {
+                                pointsOfInterest = pointsOfInterest.sortedBy { it.votes }
+                            }
 
-                        Codes.ORDER_BY_NAME -> {
-                            pointsOfInterest = pointsOfInterest.sortedBy { it.name }
-                        }
+                            Codes.ORDER_BY_NAME -> {
+                                pointsOfInterest = pointsOfInterest.sortedBy { it.name }
+                            }
 
-                        Codes.ORDER_BY_DISTANCE -> {
+                            Codes.ORDER_BY_DISTANCE -> {
+                                pointsOfInterest =
+                                    pointsOfInterestViewModel.getPointsOfInterestOrderedByDistance(
+                                        pointsOfInterest
+                                    )
+                            }
+
+                            else -> {}
+                        }
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(index = 0)
+                        }
+                    })
+                }
+            }
+            Column(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = modifier
+                    .weight(1f)
+                    .padding(start = 8.dp, end = 8.dp)
+            ) {
+                Text(stringResource(R.string.filters), modifier = modifier.padding(top = 8.dp))
+                Box(
+                    modifier = modifier
+                        .wrapContentSize(Alignment.TopStart)
+                ) {
+
+                    DropdownMenuFilters(
+                        pointsOfInterestViewModel = pointsOfInterestViewModel,
+                        itemNameForLocation = itemName,
+                        itemsLocations = locations,
+                        itemPicked = { itemPicked ->
                             pointsOfInterest =
-                                pointsOfInterestViewModel.getPointsOfInterestOrderedByDistance(
-                                    pointsOfInterest
-                                )
+                                pointsOfInterestViewModel.getPointsWithFilters(itemPicked, null)
+                        },
+                        newGeoPoint = { newGeoPoint ->
+                            geoPoint = newGeoPoint
                         }
-
-                        else -> {}
-                    }
-                    coroutineScope.launch {
-                        listState.animateScrollToItem(index = 0)
-                    }
-                })
-            }
-            Text(stringResource(R.string.filters), modifier = modifier.padding(top = 8.dp))
-            Box(
-                modifier = modifier
-                    .wrapContentSize(Alignment.TopStart)
-            ) {
-
-                DropdownMenuFilters(
-                    pointsOfInterestViewModel = pointsOfInterestViewModel,
-                    itemNameForLocation = itemName,
-                    itemsLocations = locations,
-                    itemPicked = { itemPicked ->
-                        pointsOfInterest =
-                            pointsOfInterestViewModel.getPointsWithFilters(itemPicked, null)
-                    },
-                    newGeoPoint = { newGeoPoint ->
-                        geoPoint = newGeoPoint
-                    }
-                )
-            }
-            Box(
-                modifier = modifier
-                    .wrapContentSize(Alignment.TopStart)
-            ) {
-                DropdownMenuFilters(
-                    pointsOfInterestViewModel = pointsOfInterestViewModel,
-                    itemNameForLocation = null,
-                    itemsLocations = null,
-                    itemPicked = { itemPicked ->
-                        pointsOfInterest =
-                            pointsOfInterestViewModel.getPointsWithFilters(null, itemPicked)
-                    },
-                    newGeoPoint = {}
-                )
+                    )
+                }
+                Box(
+                    modifier = modifier
+                        .wrapContentSize(Alignment.TopStart)
+                ) {
+                    DropdownMenuFilters(
+                        pointsOfInterestViewModel = pointsOfInterestViewModel,
+                        itemNameForLocation = null,
+                        itemsLocations = null,
+                        itemPicked = { itemPicked ->
+                            pointsOfInterest =
+                                pointsOfInterestViewModel.getPointsWithFilters(null, itemPicked)
+                        },
+                        newGeoPoint = {}
+                    )
+                }
             }
         }
 
