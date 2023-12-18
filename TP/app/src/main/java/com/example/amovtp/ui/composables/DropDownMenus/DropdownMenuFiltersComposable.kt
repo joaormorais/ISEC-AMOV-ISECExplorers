@@ -2,7 +2,11 @@ package com.example.amovtp.ui.composables.DropDownMenus
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
@@ -21,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.amovtp.R
 import com.example.amovtp.data.Category
 import com.example.amovtp.data.Location
@@ -141,14 +146,29 @@ fun DropdownMenuFilters(
             )
 
             categories.sortedBy { it.name }.forEachIndexed { index, category ->
-                DropdownMenuItem(
-                    text = { Text(text = category.name) },
-                    onClick = {
-                        selectedItem = category.name
-                        isExpanded = false
-                        itemPicked(category.name)
-                    }
-                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    // Adiciona a imagem usando AsyncImage para carregamento assíncrono
+                    AsyncImage(
+                        model = category.img,
+                        modifier = Modifier.size(30.dp),
+                        contentDescription = null
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp)) // Espaçamento entre a imagem e o texto
+
+                    DropdownMenuItem(
+                        text = { Text(text = category.name) },
+                        onClick = {
+                            selectedItem = category.name
+                            isExpanded = false
+                            itemPicked(category.name)
+                        }
+                    )
+                }
             }
 
         }

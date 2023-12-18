@@ -13,14 +13,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.amovtp.R
 import com.example.amovtp.ui.viewmodels.addViewModels.AddCategoryViewModel
 
 @Composable
 fun AddCategoryScreen(
     addCategoryViewModel: AddCategoryViewModel,
+    navController: NavHostController?,
     modifier: Modifier = Modifier
 ) {
+    var name = ""
+    var description = ""
+    var image = ""
+
 
     LazyColumn(
         modifier = modifier
@@ -32,14 +38,43 @@ fun AddCategoryScreen(
 
         item{
 
-            //NameDescription()
+            NameDescription(
+                nameChanged = { newName ->
+                    name = newName
+                },
+                descriptionChanged = { newDescription ->
+                    description = newDescription
+                }
+            )
             Spacer(modifier = modifier.height(8.dp))
-            //GalleryImage()
+            GalleryImage(imagesPathChanged = { newImg ->
+                if(newImg.isNotEmpty())
+                    image = newImg.first()
+            })
             Spacer(modifier = modifier.height(8.dp))
-            //CameraImage()
+            CameraImage(imagesPathChanged = { newImg ->
+                if(newImg.isNotEmpty())
+                    image = newImg.first()
+            })
 
             Button(
                 onClick = {
+                    if (name.isBlank()) {
+                        //TODO: pop up de erro a dizer name em falta
+                    } else if (description.isBlank()) {
+                        //TODO: pop up de erro a dizer description em falta
+                    }else if (image.isEmpty()) {
+                        //TODO: pop up de erro a dizer que é preciso uma imagem
+                    }else{
+                        addCategoryViewModel.addCategory(
+                            name,
+                            description,
+                            image
+                        )
+
+                        navController!!.navigateUp()
+                    }
+
                 },
                 modifier = modifier.padding(top = 16.dp)
             ) {

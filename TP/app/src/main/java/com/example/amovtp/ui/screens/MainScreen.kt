@@ -232,7 +232,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
             composable(Screens.ADD_CATEGORY.route) {
                 addCategoryViewModel = viewModel(factory = AddCategoryViewModelFactory(app.geoData))
-                AddCategoryScreen(addCategoryViewModel!!)
+                AddCategoryScreen(addCategoryViewModel!!, navController)
             }
 
         }
