@@ -166,9 +166,6 @@ class GeoData(/*firestore*/) {
 
         for (location in _locations) {
 
-            /*val tempLocNames = mutableListOf<String>()
-            tempLocNames.add(location.name)*/
-
             val tempPointOfInterest = PointOfInterest(
                 _currentPointsOfInterestId++,
                 "Ponto de Interesse em ${location.name}",

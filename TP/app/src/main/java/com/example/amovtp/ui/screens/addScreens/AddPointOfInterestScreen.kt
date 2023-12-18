@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.screens.addScreens
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -27,10 +26,10 @@ import androidx.navigation.NavHostController
 import com.example.amovtp.R
 import com.example.amovtp.data.Category
 import com.example.amovtp.data.Location
-import com.example.amovtp.ui.composables.CameraImage
-import com.example.amovtp.ui.composables.GalleryImage
-import com.example.amovtp.ui.composables.GeoDescription
-import com.example.amovtp.ui.composables.NameDescription
+import com.example.amovtp.ui.composables.AddInfoComposables.CameraImage
+import com.example.amovtp.ui.composables.AddInfoComposables.GalleryImage
+import com.example.amovtp.ui.composables.AddInfoComposables.GeoDescription
+import com.example.amovtp.ui.composables.AddInfoComposables.NameDescription
 import com.example.amovtp.ui.viewmodels.addViewModels.AddPointOfInterestViewModel
 
 

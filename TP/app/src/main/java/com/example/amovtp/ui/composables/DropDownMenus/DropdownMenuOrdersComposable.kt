@@ -1,8 +1,9 @@
 package com.example.amovtp.ui.composables.DropDownMenus
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
@@ -19,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.example.amovtp.R
 import com.example.amovtp.utils.codes.Codes
 
@@ -40,14 +42,14 @@ fun DropdownMenuOrders(
         },
         modifier = modifier
             .wrapContentWidth()
+            .padding(horizontal = 8.dp)
     ) {
         Row(
             modifier = modifier
-                .wrapContentWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .wrapContentWidth()
         ) {
             Text(items[selectedIndex])
-            Icon(Icons.Rounded.KeyboardArrowDown, "Dropdown")
+            Icon(Icons.Rounded.KeyboardArrowDown, "down")
         }
     }
 

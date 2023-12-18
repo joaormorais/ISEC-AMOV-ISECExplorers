@@ -50,8 +50,9 @@ fun LoginScreen(
 ) {
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -105,7 +106,7 @@ fun LoginScreen(
                                     navController?.navigate(i.route)
                                 } else {
                                     coroutineScope.launch {
-                                        snackbarHostState.showSnackbar(
+                                        snackBarHostState.showSnackbar(
                                             "Nome de utilizador e password são necessários."
                                         )
                                     }
@@ -137,7 +138,7 @@ fun LoginScreen(
             }
         }
         SnackbarHost(
-            hostState = snackbarHostState,
+            hostState = snackBarHostState,
             modifier = modifier.align(Alignment.BottomCenter)
         )
     }

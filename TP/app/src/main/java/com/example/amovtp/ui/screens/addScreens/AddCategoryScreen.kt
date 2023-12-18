@@ -14,9 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.amovtp.R
-import com.example.amovtp.ui.composables.CameraImage
-import com.example.amovtp.ui.composables.GalleryImage
-import com.example.amovtp.ui.composables.NameDescription
 import com.example.amovtp.ui.viewmodels.addViewModels.AddCategoryViewModel
 
 @Composable

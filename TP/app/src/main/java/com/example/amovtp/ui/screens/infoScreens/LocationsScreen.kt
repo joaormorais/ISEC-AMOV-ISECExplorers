@@ -169,14 +169,12 @@ fun LocationsScreen(
                             Spacer(modifier.height(16.dp))
                             LazyRow(
                                 modifier = Modifier
-                                    .wrapContentWidth()
-                                    .align(Alignment.Start)
+                                    .fillMaxWidth()
                                     .background(Color.White)
                                     .padding(bottom = 3.dp, top = 3.dp)
                             ) {
 
                                 items(it.imgs) { img ->
-                                    Log.d("LocationsScreen", "adicionei imagem = " + img)
                                     AsyncImage(
                                         model = img,
                                         modifier = Modifier

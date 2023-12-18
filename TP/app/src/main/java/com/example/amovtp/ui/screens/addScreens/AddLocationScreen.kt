@@ -16,10 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
 import com.example.amovtp.R
-import com.example.amovtp.ui.composables.CameraImage
-import com.example.amovtp.ui.composables.GalleryImage
-import com.example.amovtp.ui.composables.GeoDescription
-import com.example.amovtp.ui.composables.NameDescription
+import com.example.amovtp.ui.composables.AddInfoComposables.CameraImage
+import com.example.amovtp.ui.composables.AddInfoComposables.GalleryImage
+import com.example.amovtp.ui.composables.AddInfoComposables.GeoDescription
+import com.example.amovtp.ui.composables.AddInfoComposables.NameDescription
 import com.example.amovtp.ui.viewmodels.addViewModels.AddLocationViewModel
 
 @Composable
@@ -75,13 +75,11 @@ fun AddLocationScreen(
             )
             Spacer(modifier = modifier.height(8.dp))
             GalleryImage(imagesPathChanged = { newImgs ->
-                val uniqueImgs = newImgs.filter { !imgsGallery.contains(it) }
-                imgsGallery = uniqueImgs
+                imgsGallery = newImgs
             })
             Spacer(modifier = modifier.height(8.dp))
             CameraImage(imagesPathChanged = { newImgs ->
-                val uniqueImgs = newImgs.filter { !imgsCamera.contains(it) }
-                imgsCamera = uniqueImgs
+                imgsCamera = newImgs
             })
 
             Button(

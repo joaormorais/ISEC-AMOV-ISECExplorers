@@ -31,4 +31,5 @@
     <string name="order_by">Order by:</string>
     <string name="filters">Filter by:</string>
     <string name="not_approved_location">This location hasn\'t been approved by at least 2 users</string>
+    <string name="you_already_have_that_image">You already have that image!</string>
 </resources>

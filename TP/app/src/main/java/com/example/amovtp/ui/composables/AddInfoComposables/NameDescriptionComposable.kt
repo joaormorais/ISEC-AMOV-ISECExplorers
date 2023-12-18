@@ -1,4 +1,4 @@
-package com.example.amovtp.ui.composables
+package com.example.amovtp.ui.composables.AddInfoComposables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height

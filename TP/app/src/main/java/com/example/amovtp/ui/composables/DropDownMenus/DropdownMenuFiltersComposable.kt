@@ -119,7 +119,7 @@ fun DropdownMenuFilters(
         ) {
             Row {
                 Text(selectedItem)
-                Icon(Icons.Rounded.KeyboardArrowDown, "Dropdown")
+                Icon(Icons.Rounded.KeyboardArrowDown, "down")
             }
         }
         DropdownMenu(

@@ -15,9 +15,14 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -55,6 +60,7 @@ fun PointsOfInterestScreen(
 ) {
 
     // Common
+    var isHelperExpanded by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -68,7 +74,6 @@ fun PointsOfInterestScreen(
             )
         )
     } // used to mark a location on the map
-    //val categories = pointsOfInterestViewModel.getCategories() // every category
     val locations by remember { mutableStateOf(pointsOfInterestViewModel.getLocations()) } // locations used to filter the points of interest
     var pointsOfInterest by remember { mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest()) } // points of interest being shown to the user (with or without filters)
 
@@ -91,16 +96,29 @@ fun PointsOfInterestScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
+
+        Button(
+            onClick = {
+                isHelperExpanded = !isHelperExpanded
+            },
+            modifier = modifier
+                .wrapContentWidth()
+                .align(Alignment.Start)
+                .padding(start = 8.dp)
         ) {
+            Row {
+                Text("Show search helpers")
+                if (!isHelperExpanded)
+                    Icon(Icons.Rounded.KeyboardArrowDown, "down")
+                else
+                    Icon(Icons.Rounded.KeyboardArrowUp, "up")
+            }
+        }
+
+        if (isHelperExpanded)
             Column(
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = modifier
-                    .weight(1f)
-                    .padding(start = 8.dp, end = 8.dp)
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(stringResource(R.string.order_by), modifier = modifier.padding(top = 8.dp))
                 Box(
@@ -131,14 +149,6 @@ fun PointsOfInterestScreen(
                         }
                     })
                 }
-            }
-            Column(
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = modifier
-                    .weight(1f)
-                    .padding(start = 8.dp, end = 8.dp)
-            ) {
                 Text(stringResource(R.string.filters), modifier = modifier.padding(top = 8.dp))
                 Box(
                     modifier = modifier
@@ -174,7 +184,6 @@ fun PointsOfInterestScreen(
                     )
                 }
             }
-        }
 
         Box(
             modifier = modifier
