@@ -31,5 +31,8 @@
     <string name="order_by">Order by:</string>
     <string name="filters">Filter by:</string>
     <string name="not_approved_location">This location hasn\'t been approved by at least 2 users</string>
-    <string name="you_already_have_that_image">You already have that image!</string>
+    <string name="show_search_helpers">Show search helpers</string>
+    <string name="not_approved_point">This point of interest hasn\'t been approved by at least 2 users</string>
+    <string name="category_description">Category: %1$s</string>
+    <string name="votes">Votes: %1$s</string>
 </resources>

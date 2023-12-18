@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import coil.compose.AsyncImage
 import com.example.amovtp.R
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuFilters
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuOrders
@@ -103,11 +106,10 @@ fun PointsOfInterestScreen(
             },
             modifier = modifier
                 .wrapContentWidth()
-                .align(Alignment.Start)
-                .padding(start = 8.dp)
+                .padding(top = 8.dp),
         ) {
             Row {
-                Text("Show search helpers")
+                Text(stringResource(R.string.show_search_helpers))
                 if (!isHelperExpanded)
                     Icon(Icons.Rounded.KeyboardArrowDown, "down")
                 else
@@ -226,13 +228,23 @@ fun PointsOfInterestScreen(
         ) {
             items(pointsOfInterest, key = { it.id }) {
 
+                var isDetailExpanded by remember { mutableStateOf(false) }
+                var cardContainerColor by remember { mutableStateOf(Color.DarkGray) }
+
+                LaunchedEffect(key1 = it.votes, block = {
+                    cardContainerColor = if (it.votes < 2)
+                        Color(225, 120, 120, 255)
+                    else
+                        Color.DarkGray
+                })
+
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
                     modifier = modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
+                        .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 4.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color.DarkGray,
+                        containerColor = cardContainerColor,
                         contentColor = Color.White
                     ),
                     onClick = {
@@ -240,28 +252,101 @@ fun PointsOfInterestScreen(
                     }
                 ) {
 
-                    Column(
+                    Row(
                         modifier = modifier
-                            .fillMaxSize()
-                            .padding(8.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        //TODO: caso esta informação pertença a um utilizador, deve aparecer o botão de editar
-                        Text(
-                            text = it.name,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp
-                        )
-                        Spacer(modifier.height(16.dp))
-                        Text(
-                            text = "Category: " + it.category,
-                            fontSize = 12.sp
-                        )
-                        Spacer(modifier.height(16.dp))
-                        Text(
-                            text = stringResource(R.string.description, it.description),
-                            fontSize = 12.sp
-                        )
+                        Column(
+                            modifier = modifier
+                                .padding(start = 8.dp)
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = it.name,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp,
+                                modifier = modifier.padding(top=4.dp,bottom=4.dp,start=12.dp,end=12.dp)
+                            )
+                        }
+                        Column(
+                            modifier = modifier
+                                .padding(end = 8.dp)
+                                .wrapContentWidth(Alignment.End)
+                                .align(Alignment.Top),
+                        ) {
+                            Button(
+                                onClick = { isDetailExpanded = !isDetailExpanded },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
+                            ) {
+                                Icon(Icons.Rounded.KeyboardArrowDown, "Details")
+                            }
+                        }
                     }
+
+                    if (isDetailExpanded)
+                        Column {
+                            Spacer(modifier.height(16.dp))
+                            LazyRow(
+                                modifier = Modifier
+                                    .wrapContentWidth()
+                                    .background(Color.White)
+                                    .padding(bottom = 3.dp, top = 3.dp)
+                            ) {
+
+                                items(it.imgs) { img ->
+                                    AsyncImage(
+                                        model = img,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(200.dp),
+                                        contentDescription = "Background Image"
+                                    )
+                                }
+
+                            }
+                            Column(
+                                modifier = modifier
+                                    .padding(start = 8.dp)
+                            ) {
+                                Spacer(modifier.height(16.dp))
+                                Text(
+                                    text = stringResource(
+                                        R.string.category_description,
+                                        it.category
+                                    ),
+                                    fontSize = 12.sp
+                                )
+                                Spacer(modifier.height(16.dp))
+                                Text(
+                                    text = stringResource(R.string.latitude_description, it.lat),
+                                    fontSize = 12.sp
+                                )
+                                Spacer(modifier.height(16.dp))
+                                Text(
+                                    text = stringResource(R.string.longitude_description, it.long),
+                                    fontSize = 12.sp
+                                )
+                                Spacer(modifier.height(16.dp))
+                                Text(
+                                    text = stringResource(R.string.description, it.description),
+                                    fontSize = 12.sp
+                                )
+                                Spacer(modifier.height(16.dp))
+                                Text(
+                                    text = stringResource(R.string.votes, it.votes),
+                                    fontSize = 12.sp
+                                )
+                                Spacer(modifier.height(16.dp))
+                                if (!it.isApproved)
+                                    Text(
+                                        text = stringResource(R.string.not_approved_point),
+                                        fontSize = 12.sp,
+                                        color = Color.Red
+                                    )
+                            }
+                        }
+
                 }
             }
         }

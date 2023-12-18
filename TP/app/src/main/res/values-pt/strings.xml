@@ -32,4 +32,8 @@
     <string name="order_by">Ordenar por:</string>
     <string name="filters">Filtrar por:</string>
     <string name="not_approved_location">Esta localização ainda não foi aprovada por pelo menos 2 utilizadores</string>
+    <string name="show_search_helpers">Mostrar ajudas de pesquisa</string>
+    <string name="not_approved_point">Este ponto de interesse ainda não foi aprovada por pelo menos 2 utilizadores</string>
+    <string name="category_description">Categoria: %1$s</string>
+    <string name="votes">Votos: %1$s</string>
 </resources>

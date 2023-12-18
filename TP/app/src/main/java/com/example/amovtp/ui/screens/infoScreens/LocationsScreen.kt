@@ -110,6 +110,7 @@ fun LocationsScreen(
             state = listState,
             modifier = modifier
                 .fillMaxSize()
+                .padding(top = 8.dp)
         ) {
             items(locations, key = { it.id }) {
 
@@ -117,17 +118,17 @@ fun LocationsScreen(
                 var cardContainerColor by remember { mutableStateOf(Color.DarkGray) }
 
                 LaunchedEffect(key1 = it.votes, block = {
-                    if (it.votes < 2)
-                        cardContainerColor = Color(225, 120, 120, 255)
+                    cardContainerColor = if (it.votes < 2)
+                        Color(225, 120, 120, 255)
                     else
-                        cardContainerColor = Color.DarkGray
+                        Color.DarkGray
                 })
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
                     modifier = modifier
                         .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 2.dp),
+                        .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 4.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = cardContainerColor,
                         contentColor = Color.White
@@ -169,7 +170,7 @@ fun LocationsScreen(
                             Spacer(modifier.height(16.dp))
                             LazyRow(
                                 modifier = Modifier
-                                    .fillMaxWidth()
+                                    .wrapContentWidth()
                                     .background(Color.White)
                                     .padding(bottom = 3.dp, top = 3.dp)
                             ) {
