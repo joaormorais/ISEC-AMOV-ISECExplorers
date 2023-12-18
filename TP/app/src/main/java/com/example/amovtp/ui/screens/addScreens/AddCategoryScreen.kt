@@ -15,6 +15,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.amovtp.R
+import com.example.amovtp.ui.composables.AddInfoComposables.NameDescription
+import com.example.amovtp.ui.composables.AddInfoComposables.GalleryImage
+import com.example.amovtp.ui.composables.AddInfoComposables.CameraImage
 import com.example.amovtp.ui.viewmodels.addViewModels.AddCategoryViewModel
 
 @Composable

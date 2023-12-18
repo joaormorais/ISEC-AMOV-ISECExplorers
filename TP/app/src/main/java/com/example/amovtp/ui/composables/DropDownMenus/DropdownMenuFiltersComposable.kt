@@ -1,9 +1,11 @@
 package com.example.amovtp.ui.composables.DropDownMenus
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.amovtp.R
 import com.example.amovtp.data.Category
@@ -151,17 +154,20 @@ fun DropdownMenuFilters(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // Adiciona a imagem usando AsyncImage para carregamento assíncrono
                     AsyncImage(
                         model = category.img,
                         modifier = Modifier.size(30.dp),
                         contentDescription = null
                     )
-
-                    Spacer(modifier = Modifier.width(8.dp)) // Espaçamento entre a imagem e o texto
-
+                    Spacer(modifier = Modifier.width(8.dp))
                     DropdownMenuItem(
-                        text = { Text(text = category.name) },
+                        text = {
+                            Column {
+                                Text(text = category.name)
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(text = category.description, fontSize = 6.sp)
+                            }
+                               },
                         onClick = {
                             selectedItem = category.name
                             isExpanded = false
