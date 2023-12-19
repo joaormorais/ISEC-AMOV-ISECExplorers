@@ -49,76 +49,80 @@ fun RegisterScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    val snackbarHostState = remember {SnackbarHostState()} //para mostrar as mensagens de erro
+    val snackbarHostState = remember { SnackbarHostState() } //para mostrar as mensagens de erro
     var showSnackBar by remember { mutableStateOf(false) }
+    val unkownError = stringResource(R.string.unknown_error)
     val fillEveryFieldError = stringResource(R.string.fill_every_field)
     val invalidEmailError = stringResource(R.string.invalid_email)
     val passwordsDontMatchError = stringResource(R.string.pws_dont_match)
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
-    ) { innerPadding ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text(stringResource(R.string.name)) },
-                modifier = modifier.padding(bottom = 8.dp)
-            )
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text(stringResource(R.string.email)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                modifier = modifier.padding(bottom = 8.dp)
-            )
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text(stringResource(R.string.password)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = modifier.padding(bottom = 8.dp)
-            )
-            OutlinedTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
-                label = { Text(stringResource(R.string.confirm_password)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = modifier.padding(bottom = 8.dp)
-            )
-
-            Button(
-                onClick = {
-                    if (isRegisterValid(name, email, password, confirmPassword, fillEveryFieldError
-                            , invalidEmailError, passwordsDontMatchError)
-                        { msg ->
-                            errorMessage = msg
-                        }) {
-                        navController?.navigate(loginScreen.route)
-                    } else {
-                        showSnackBar = true
-                    }
-                },
-                modifier = modifier.padding(top = 16.dp)
-            ) {
-                Text(stringResource(R.string.register))
-            }
+    LaunchedEffect(showSnackBar) {
+        if (showSnackBar) {
+            snackbarHostState.showSnackbar(errorMessage ?: unkownError)
+            showSnackBar = false
         }
     }
 
-    LaunchedEffect(showSnackBar) {
-        if (showSnackBar) {
-            snackbarHostState.showSnackbar(errorMessage ?: "Erro desconhecido")
-            showSnackBar = false
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 32.dp)
+    ) {
+        OutlinedTextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text(stringResource(R.string.name)) },
+            modifier = modifier.padding(bottom = 8.dp)
+        )
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text(stringResource(R.string.email)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            modifier = modifier.padding(bottom = 8.dp)
+        )
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text(stringResource(R.string.password)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = modifier.padding(bottom = 8.dp)
+        )
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            label = { Text(stringResource(R.string.confirm_password)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = modifier.padding(bottom = 8.dp)
+        )
+
+        Button(
+            onClick = {
+                if (isRegisterValid(
+                        name,
+                        email,
+                        password,
+                        confirmPassword,
+                        fillEveryFieldError,
+                        invalidEmailError,
+                        passwordsDontMatchError
+                    )
+                    { msg ->
+                        errorMessage = msg
+                    }
+                ) {
+                    navController?.navigate(loginScreen.route)
+                } else {
+                    showSnackBar = true
+                }
+            },
+            modifier = modifier.padding(top = 16.dp)
+        ) {
+            Text(stringResource(R.string.register))
         }
     }
 }
@@ -160,7 +164,8 @@ fun RegisterPreview(navController: NavHostController = rememberNavController()) 
     val app = context.applicationContext as MyApplication
 
     // Specify the type parameter for viewModel explicitly
-    val registerViewModel = viewModel<RegisterViewModel>(factory = RegisterViewModelFactory(app.usersData))
+    val registerViewModel =
+        viewModel<RegisterViewModel>(factory = RegisterViewModelFactory(app.usersData))
 
     // Create a preview of the RegisterScreen
     RegisterScreen(

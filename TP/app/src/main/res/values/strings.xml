@@ -30,9 +30,12 @@
     <string name="go_to_points_of_interest">Points Of Interest</string>
     <string name="order_by">Order by:</string>
     <string name="filters">Filter by:</string>
-    <string name="not_approved_location">This location hasn\'t been approved by at least 2 users</string>
+    <string name="not_approved_location">This location hasn\'t been approved by at least 2 users!</string>
     <string name="show_search_helpers">Show search helpers</string>
-    <string name="not_approved_point">This point of interest hasn\'t been approved by at least 2 users</string>
+    <string name="not_approved_point">This point of interest hasn\'t been approved by at least 2 users!</string>
     <string name="category_description">Category: %1$s</string>
-    <string name="votes">Votes: %1$s</string>
+    <string name="name_pw_needed">Username and password needed!</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="votes_for_approval">"Votes for approval: "</string>
+    <string name="not_approved_category">This category hasn\'t been approved by at least 2 users!</string>
 </resources>

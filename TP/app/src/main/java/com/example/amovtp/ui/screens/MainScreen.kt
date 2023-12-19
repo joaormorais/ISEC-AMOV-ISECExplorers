@@ -1,5 +1,6 @@
 package com.example.amovtp.ui.screens
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -42,6 +43,7 @@ import com.example.amovtp.ui.screens.infoScreens.LocationsScreen
 import com.example.amovtp.ui.screens.infoScreens.PointsOfInterestScreen
 import com.example.amovtp.ui.screens.usersScreens.LoginScreen
 import com.example.amovtp.ui.screens.usersScreens.RegisterScreen
+import com.example.amovtp.ui.theme.AMOVTPTheme
 import com.example.amovtp.ui.viewmodels.addViewModels.AddCategoryViewModel
 import com.example.amovtp.ui.viewmodels.addViewModels.AddCategoryViewModelFactory
 import com.example.amovtp.ui.viewmodels.addViewModels.AddLocationViewModel
@@ -60,7 +62,10 @@ import com.example.amovtp.utils.codes.Codes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavHostController = rememberNavController()) {
+fun MainScreen(
+    navController: NavHostController = rememberNavController(),
+    modifier: Modifier = Modifier
+) {
 
     val context = LocalContext.current
     val app = context.applicationContext as MyApplication
@@ -79,164 +84,190 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
     var addPointOfInterestViewModel: AddPointOfInterestViewModel?
     var addCategoryViewModel: AddCategoryViewModel?
 
+    var isLogin by remember { mutableStateOf(false) }
     var addLoc by remember { mutableStateOf(false) }
     var addPointOrCategory by remember { mutableStateOf(false) }
 
     val currentScreen by navController.currentBackStackEntryAsState()
     navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        isLogin = (destination.route == Screens.LOGIN.route)
         addLoc = (destination.route == Screens.LOCATIONS.route)
         addPointOrCategory = (destination.route == Screens.POINTS_OF_INTEREST.route)
     }
 
-    Scaffold(
+    AMOVTPTheme() {
+        Box(
+            modifier = modifier.fillMaxSize()
+        ) {
+            Scaffold(
+                topBar = {
+                    if (!isLogin)
+                        TopAppBar(
+                            title = { currentScreen.toString() },
 
-        topBar = {
-
-            //if (currentScreen != null && Screens.valueOf(currentScreen!!.destination.route!!) != Screens.LOGIN)
-            if (currentScreen != null && currentScreen.toString() != Screens.LOGIN.route)
-                TopAppBar(
-                    title = {/*TODO: pegar numa viewmodel e fazer as funções para tirar o nome certo*/ },
-
-                    navigationIcon = {
-                        IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(
-                                Icons.Filled.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
-                    },
-
-                    actions = {
-
-                        if (addLoc) {
-                            IconButton(onClick = {
-                                navController.navigate(Screens.ADD_LOCATION.route)
-                            }) {
-                                Icon(
-                                    Icons.Filled.AddCircle,
-                                    contentDescription = "Add Information"
-                                )
-                            }
-                        } else if (addPointOrCategory) {
-                            IconButton(onClick = {
-                                isExpanded = true
-                            }) {
-                                Icon(
-                                    Icons.Filled.AddCircle,
-                                    contentDescription = "Add Information"
-                                )
-                            }
-
-                            DropdownMenu(
-                                expanded = isExpanded,
-                                onDismissRequest = { isExpanded = false },
-                                modifier = Modifier
-                                    .wrapContentWidth()
-                            ) {
-
-                                items.forEachIndexed { index, s ->
-                                    DropdownMenuItem(
-                                        text = { Text(text = s) },
-                                        onClick = {
-                                            selectedIndex = index
-                                            isExpanded = false
-
-                                            when (s) {
-
-                                                addCategoryString -> {
-                                                    navController.navigate(Screens.ADD_CATEGORY.route)
-                                                }
-
-                                                addPointString -> {
-                                                    navController.navigate(Screens.ADD_POINT_OF_INTEREST.route)
-                                                }
-
-                                            }
-
-                                        }
+                            navigationIcon = {
+                                IconButton(onClick = { navController.navigateUp() }) {
+                                    Icon(
+                                        Icons.Filled.ArrowBack,
+                                        contentDescription = "Back"
                                     )
                                 }
+                            },
 
-                            }
+                            actions = {
 
-                        }
+                                if (addLoc) {
+                                    IconButton(onClick = {
+                                        navController.navigate(Screens.ADD_LOCATION.route)
+                                    }) {
+                                        Icon(
+                                            Icons.Filled.AddCircle,
+                                            contentDescription = "Add Information"
+                                        )
+                                    }
+                                } else if (addPointOrCategory) {
+                                    IconButton(onClick = {
+                                        isExpanded = true
+                                    }) {
+                                        Icon(
+                                            Icons.Filled.AddCircle,
+                                            contentDescription = "Add Information"
+                                        )
+                                    }
 
-                    },
+                                    DropdownMenu(
+                                        expanded = isExpanded,
+                                        onDismissRequest = { isExpanded = false },
+                                        modifier = modifier
+                                            .wrapContentWidth()
+                                    ) {
 
-                    colors = topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        titleContentColor = MaterialTheme.colorScheme.inversePrimary,
-                        navigationIconContentColor = Color.White,
-                        actionIconContentColor = Color.White
-                    ),
-                )
-        },
-        modifier = Modifier.fillMaxSize()
-    ) {
+                                        items.forEachIndexed { index, s ->
+                                            DropdownMenuItem(
+                                                text = { Text(text = s) },
+                                                onClick = {
+                                                    selectedIndex = index
+                                                    isExpanded = false
 
-        NavHost(
-            navController = navController,
-            startDestination = Screens.LOGIN.route,
-            modifier = Modifier
-                .padding(it)
-        ) {
+                                                    when (s) {
 
-            composable(Screens.LOGIN.route) {
-                loginViewModel = viewModel(factory = LoginViewModelFactory(app.usersData))
-                LoginScreen(loginViewModel!!, navController, Screens.REGISTER, Screens.LOCATIONS)
-            }
+                                                        addCategoryString -> {
+                                                            navController.navigate(Screens.ADD_CATEGORY.route)
+                                                        }
 
-            composable(Screens.REGISTER.route) {
-                registerViewModel = viewModel(factory = RegisterViewModelFactory(app.usersData))
-                RegisterScreen(registerViewModel!!, navController, Screens.LOGIN)
-            }
+                                                        addPointString -> {
+                                                            navController.navigate(Screens.ADD_POINT_OF_INTEREST.route)
+                                                        }
 
-            composable(Screens.LOCATIONS.route) {
-                locationsViewModel =
-                    viewModel(factory = LocationsViewModelFactory(app.geoData, app.usersData))
-                LocationsScreen(locationsViewModel!!, navController)
-            }
+                                                    }
 
-            composable(Screens.POINTS_OF_INTEREST.route,
-                arguments = listOf(
-                    navArgument("itemName") {
-                        type = NavType.StringType
-                        defaultValue = Codes.DEFAULT_VALUE.toString()
-                        nullable = false
-                    }
-                )
+                                                }
+                                            )
+                                        }
+
+                                    }
+
+                                }
+
+                            },
+                            colors = topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                titleContentColor = MaterialTheme.colorScheme.inversePrimary,
+                                navigationIconContentColor = Color.White,
+                                actionIconContentColor = Color.White
+                            ),
+                        )
+                },
+                modifier = modifier.fillMaxSize()
             ) {
 
-                val itemName = it.arguments?.getString("itemName")
-                pointsOfInterestViewModel =
-                    viewModel(
-                        factory = PointsOfInterestViewModelFactory(
-                            app.geoData,
-                            app.usersData
+                NavHost(
+                    navController = navController,
+                    startDestination = Screens.LOGIN.route,
+                    modifier = modifier
+                        .padding(it)
+                ) {
+
+                    composable(Screens.LOGIN.route) {
+                        loginViewModel = viewModel(factory = LoginViewModelFactory(app.usersData))
+                        LoginScreen(
+                            loginViewModel!!,
+                            navController,
+                            Screens.REGISTER,
+                            Screens.LOCATIONS
                         )
-                    )
-                PointsOfInterestScreen(pointsOfInterestViewModel!!, itemName!!)
-            }
+                    }
 
-            composable(Screens.ADD_LOCATION.route) {
-                addLocationViewModel =
-                    viewModel(factory = AddLocationViewModelFactory(app.geoData, app.usersData))
-                AddLocationScreen(addLocationViewModel!!, navController)
-            }
+                    composable(Screens.REGISTER.route) {
+                        registerViewModel =
+                            viewModel(factory = RegisterViewModelFactory(app.usersData))
+                        RegisterScreen(registerViewModel!!, navController, Screens.LOGIN)
+                    }
 
-            composable(Screens.ADD_POINT_OF_INTEREST.route) {
-                addPointOfInterestViewModel =
-                    viewModel(factory = AddPointOfInterestViewModelFactory(app.geoData, app.usersData))
-                AddPointOfInterestScreen(addPointOfInterestViewModel!!, navController)
-            }
+                    composable(Screens.LOCATIONS.route) {
+                        locationsViewModel =
+                            viewModel(
+                                factory = LocationsViewModelFactory(
+                                    app.geoData,
+                                    app.usersData
+                                )
+                            )
+                        LocationsScreen(locationsViewModel!!, navController)
+                    }
 
-            composable(Screens.ADD_CATEGORY.route) {
-                addCategoryViewModel = viewModel(factory = AddCategoryViewModelFactory(app.geoData))
-                AddCategoryScreen(addCategoryViewModel!!, navController)
-            }
+                    composable(Screens.POINTS_OF_INTEREST.route,
+                        arguments = listOf(
+                            navArgument("itemName") {
+                                type = NavType.StringType
+                                defaultValue = Codes.DEFAULT_VALUE.toString()
+                                nullable = false
+                            }
+                        )
+                    ) {
 
+                        val itemName = it.arguments?.getString("itemName")
+                        pointsOfInterestViewModel =
+                            viewModel(
+                                factory = PointsOfInterestViewModelFactory(
+                                    app.geoData,
+                                    app.usersData
+                                )
+                            )
+                        PointsOfInterestScreen(pointsOfInterestViewModel!!, itemName!!)
+                    }
+
+                    composable(Screens.ADD_LOCATION.route) {
+                        addLocationViewModel =
+                            viewModel(
+                                factory = AddLocationViewModelFactory(
+                                    app.geoData,
+                                    app.usersData
+                                )
+                            )
+                        AddLocationScreen(addLocationViewModel!!, navController)
+                    }
+
+                    composable(Screens.ADD_POINT_OF_INTEREST.route) {
+                        addPointOfInterestViewModel =
+                            viewModel(
+                                factory = AddPointOfInterestViewModelFactory(
+                                    app.geoData,
+                                    app.usersData
+                                )
+                            )
+                        AddPointOfInterestScreen(addPointOfInterestViewModel!!, navController)
+                    }
+
+                    composable(Screens.ADD_CATEGORY.route) {
+                        addCategoryViewModel =
+                            viewModel(factory = AddCategoryViewModelFactory(app.geoData))
+                        AddCategoryScreen(addCategoryViewModel!!, navController)
+                    }
+
+                }
+
+            }
         }
-
     }
 
 }

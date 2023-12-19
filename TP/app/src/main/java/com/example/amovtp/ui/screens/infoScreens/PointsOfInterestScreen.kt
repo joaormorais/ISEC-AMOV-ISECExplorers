@@ -229,24 +229,21 @@ fun PointsOfInterestScreen(
             items(pointsOfInterest, key = { it.id }) {
 
                 var isDetailExpanded by remember { mutableStateOf(false) }
-                var cardContainerColor by remember { mutableStateOf(Color.DarkGray) }
-
-                LaunchedEffect(key1 = it.votes, block = {
-                    cardContainerColor = if (it.votes < 2)
-                        Color(225, 120, 120, 255)
-                    else
-                        Color.DarkGray
-                })
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 4.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = cardContainerColor,
-                        contentColor = Color.White
-                    ),
+                    colors =
+                    if (it.votes < 2)
+                        CardDefaults.cardColors(
+                            containerColor = Color(225, 120, 120, 255),
+                            contentColor = Color.White)
+                    else
+                        CardDefaults.cardColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White),
                     onClick = {
                         geoPoint = GeoPoint(it.lat, it.long)
                     }
@@ -277,7 +274,8 @@ fun PointsOfInterestScreen(
                         ) {
                             Button(
                                 onClick = { isDetailExpanded = !isDetailExpanded },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
+                                modifier = modifier
+                                    .padding(end = 8.dp)
                             ) {
                                 Icon(Icons.Rounded.KeyboardArrowDown, "Details")
                             }
@@ -334,7 +332,7 @@ fun PointsOfInterestScreen(
                                 )
                                 Spacer(modifier.height(16.dp))
                                 Text(
-                                    text = stringResource(R.string.votes, it.votes),
+                                    text = stringResource(R.string.votes_for_approval, it.votes),
                                     fontSize = 12.sp
                                 )
                                 Spacer(modifier.height(16.dp))

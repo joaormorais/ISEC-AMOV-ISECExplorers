@@ -1,38 +1,36 @@
 package com.example.amovtp.data
 
 import android.location.Location
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 class UsersData(/*firestore*/) {
 
     private var _username = mutableStateOf("")
     private var _password = mutableStateOf("")
-    private var _locationsUpVotes = mutableListOf<Int>()
-    private var _locationsDownVotes = mutableListOf<Int>()
-    private var _pointsOfInterestUpVotes = mutableListOf<Int>()
-    private var _pointsOfInterestDownVotes = mutableListOf<Int>()
     private val _currentLocation = MutableLiveData(Location(null))
+    private var _locationsApproved = mutableListOf<Int>()
+    private var _pointsOfInterestApproved = mutableListOf<Int>()
+    private var _categoriesApproved = mutableListOf<Int>()
 
     val username: String
         get() = _username.toString()
 
-    val locationsUpVotes: List<Int>
-        get() = _locationsUpVotes.toList()
-
-    val locationsDownVotes: List<Int>
-        get() = _locationsDownVotes.toList()
-
-    val pointsOfInterestUpVotes: List<Int>
-        get() = _pointsOfInterestUpVotes.toList()
-
-    val pointsOfInterestDownVotes: List<Int>
-        get() = _pointsOfInterestDownVotes.toList()
-
     val currentLocation: MutableLiveData<Location>
         get() = _currentLocation
+
+    val locationsApproved: List<Int>
+        get() = _locationsApproved.toList()
+
+    val pointsOfInterestApproved: List<Int>
+        get() = _pointsOfInterestApproved.toList()
+
+    val categoriesApproved: List<Int>
+        get() = _categoriesApproved.toList()
+
+    fun setCurrentLocation(location: Location) {
+        _currentLocation.postValue(location)
+    }
 
     fun setUsername(newValue: String) {
         _username.value = newValue
@@ -42,40 +40,27 @@ class UsersData(/*firestore*/) {
         _password.value = newValue
     }
 
-    fun setCurrentLocation(location: Location) {
-        _currentLocation.postValue(location)
+    fun addLocationApproved(locationId: Int) {
+        _locationsApproved.add(locationId)
     }
 
-    fun addLocationUpVote(vote: Int) {
-        _locationsUpVotes.add(vote)
+    fun removeLocationApproved(locationId: Int) {
+        _locationsApproved.remove(locationId)
     }
 
-    fun removeLocationUpVote(vote: Int) {
-        _locationsUpVotes.remove(vote)
+    fun addPointOfInterestApproved(pointOfInterestId: Int) {
+        _pointsOfInterestApproved.add(pointOfInterestId)
     }
 
-    fun addLocationDownVote(vote: Int) {
-        _locationsDownVotes.add(vote)
+    fun removePointOfInterestApproved(pointOfInterestId: Int) {
+        _pointsOfInterestApproved.remove(pointOfInterestId)
     }
 
-    fun removeLocationDownVote(vote: Int) {
-        _locationsDownVotes.remove(vote)
+    fun addCategoryApproved(categoryId: Int) {
+        _categoriesApproved.add(categoryId)
     }
 
-    fun addPointOfInterestUpVote(vote: Int) {
-        _pointsOfInterestUpVotes.add(vote)
+    fun removeCategoryApproved(categoryId: Int) {
+        _categoriesApproved.remove(categoryId)
     }
-
-    fun removePointOfInterestUpVote(vote: Int) {
-        _pointsOfInterestUpVotes.remove(vote)
-    }
-
-    fun addPointOfInterestDownVote(vote: Int) {
-        _pointsOfInterestDownVotes.add(vote)
-    }
-
-    fun removePointOfInterestDownVote(vote: Int) {
-        _pointsOfInterestDownVotes.remove(vote)
-    }
-
 }

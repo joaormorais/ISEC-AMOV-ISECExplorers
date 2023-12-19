@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,20 +24,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.amovtp.MyApplication
 import com.example.amovtp.R
 import com.example.amovtp.ui.screens.Screens
+import com.example.amovtp.ui.theme.AMOVTPTheme
 import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModel
-import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModelFactory
 import kotlinx.coroutines.launch
 
 @Composable
@@ -48,24 +42,20 @@ fun LoginScreen(
     vararg options: Screens,
     modifier: Modifier = Modifier
 ) {
+
+    val namePwNeeded = stringResource(R.string.name_pw_needed)
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        Column(
+    Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
+            verticalArrangement = Arrangement.Center,
             modifier = modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
+                .fillMaxSize()
+                .padding(top = 32.dp)
         ) {
-
-            // Campo de texto para nome de usuário
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -74,11 +64,7 @@ fun LoginScreen(
                     .widthIn(max = 300.dp)
                     .fillMaxWidth()
             )
-
-            // Espaçamento pequeno entre nome de usuário e senha
             Spacer(modifier = modifier.height(8.dp))
-
-            // Campo de texto para senha
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -89,11 +75,7 @@ fun LoginScreen(
                     .widthIn(max = 300.dp)
                     .fillMaxWidth()
             )
-
-            // Espaçamento maior antes dos botões
-            Spacer(modifier = modifier.height(56.dp))
-
-            // Row para os botões
+            Spacer(modifier = modifier.height(50.dp))
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = modifier.fillMaxWidth()
@@ -101,13 +83,13 @@ fun LoginScreen(
                 for (i in options) {
                     Button(
                         onClick = {
-                            if (i.path == "Locations") {
+                            if (i.path == Screens.LOCATIONS.route) {
                                 if (isLoginValid(name, password)) {
                                     navController?.navigate(i.route)
                                 } else {
                                     coroutineScope.launch {
                                         snackBarHostState.showSnackbar(
-                                            "Nome de utilizador e password são necessários."
+                                            namePwNeeded
                                         )
                                     }
                                 }
@@ -118,7 +100,7 @@ fun LoginScreen(
                         modifier = modifier.padding(4.dp)
                     ) {
                         Text(
-                            text = if (i.path == "Locations") "Login" else i.path,
+                            text = if (i.path == Screens.LOCATIONS.route) Screens.LOGIN.route else i.path,
                             modifier = modifier.padding(16.dp)
                         )
                     }
@@ -132,16 +114,12 @@ fun LoginScreen(
                 modifier = modifier.padding(4.dp)
             ) {
                 Text(
-                    text = "debug",
+                    text = "seguir sem login",
                     modifier = modifier.padding(16.dp)
                 )
             }
         }
-        SnackbarHost(
-            hostState = snackBarHostState,
-            modifier = modifier.align(Alignment.BottomCenter)
-        )
-    }
+
 }
 
 fun isLoginValid(

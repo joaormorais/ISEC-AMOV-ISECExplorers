@@ -12,8 +12,8 @@ data class Location(
     val isManualCoords: Boolean,
     val pointsOfInterest: MutableList<String>,
     val imgs: List<String>,
-    val votes: Int,
-    val isApproved: Boolean
+    var votes: Int,
+    var isApproved: Boolean
 )
 
 /**
@@ -24,8 +24,8 @@ data class Category(
     val name: String,
     val description: String,
     val img: String,
-    val votes: Int,
-    val isApproved: Boolean
+    var votes: Int,
+    var isApproved: Boolean
 )
 
 /**
@@ -41,8 +41,8 @@ data class PointOfInterest(
     val locations: String, //TODO: alterar para um array de localizações
     val category: String,
     val imgs: List<String>,
-    val votes: Int,
-    val isApproved: Boolean
+    var votes: Int,
+    var isApproved: Boolean
 )
 
 class GeoData(/*firestore*/) {
@@ -158,8 +158,8 @@ class GeoData(/*firestore*/) {
                     false,
                     mutableListOf(),
                     mutableListOf(),
-                    2,
-                    true
+                    0,
+                    false
                 )
             )
         }
@@ -257,6 +257,30 @@ class GeoData(/*firestore*/) {
 
         _categories.add(Category(_currentCategoryId++, name, description, img, 0, false))
 
+    }
+
+    fun voteForApprovalLocation(id: Int) {
+        _locations.find { it.id == id }?.apply { votes++ }
+    }
+
+    fun approveLocation(id: Int) {
+        _locations.find { it.id == id }?.apply { isApproved = true }
+    }
+
+    fun voteForApprovalPointOfInterest(id: Int) {
+        _pointsOfInterest.find { it.id == id }?.apply { votes++ }
+    }
+
+    fun approvePointOfInterest(id: Int) {
+        _pointsOfInterest.find { it.id == id }?.apply { isApproved = true }
+    }
+
+    fun voteForApprovalCategory(id: Int) {
+        _categories.find { it.id == id }?.apply { votes++ }
+    }
+
+    fun approveCategory(id: Int) {
+        _categories.find { it.id == id }?.apply { isApproved = true }
     }
 
 }

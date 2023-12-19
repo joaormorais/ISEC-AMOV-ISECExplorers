@@ -29,9 +29,6 @@ class LocationsViewModel(
         return geoData.locations.sortedBy { it.name }
     }
 
-    /**
-     * Gets locations ordered by distance
-     */
     fun getLocationsOrderedByDistance(): List<Location> {
 
         val currentLocation = usersData.currentLocation
@@ -46,6 +43,17 @@ class LocationsViewModel(
             )
 
         }
+    }
+
+    fun findVoteForApprovedLocation(locationId: Int): Boolean {
+        return usersData.locationsApproved.any { it == locationId }
+    }
+
+    fun voteForApprovalLocation(locationId: Int) {
+        geoData.voteForApprovalLocation(locationId)
+        usersData.addLocationApproved(locationId)
+        if (geoData.locations.find { it.id == locationId }?.votes!! >= 1 )
+            geoData.approveLocation(locationId)
     }
 
     /**

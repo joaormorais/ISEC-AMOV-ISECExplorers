@@ -31,9 +31,12 @@
     <string name="go_to_points_of_interest">Pontos De Interesse</string>
     <string name="order_by">Ordenar por:</string>
     <string name="filters">Filtrar por:</string>
-    <string name="not_approved_location">Esta localização ainda não foi aprovada por pelo menos 2 utilizadores</string>
+    <string name="not_approved_location">Esta localização ainda não foi aprovada por pelo menos 2 utilizadores!</string>
     <string name="show_search_helpers">Mostrar ajudas de pesquisa</string>
-    <string name="not_approved_point">Este ponto de interesse ainda não foi aprovada por pelo menos 2 utilizadores</string>
+    <string name="not_approved_point">Este ponto de interesse ainda não foi aprovada por pelo menos 2 utilizadores!</string>
     <string name="category_description">Categoria: %1$s</string>
-    <string name="votes">Votos: %1$s</string>
+    <string name="name_pw_needed">Nome de utilizador e password necessários</string>
+    <string name="unknown_error">Erro descohecido</string>
+    <string name="votes_for_approval">"Votos para aprovação: "</string>
+    <string name="not_approved_category">Esta categoria ainda não foi aprovada por pelo menos 2 utilizadores!</string>
 </resources>

@@ -20,14 +20,19 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -115,24 +120,29 @@ fun LocationsScreen(
             items(locations, key = { it.id }) {
 
                 var isDetailExpanded by remember { mutableStateOf(false) }
-                var cardContainerColor by remember { mutableStateOf(Color.DarkGray) }
-
-                LaunchedEffect(key1 = it.votes, block = {
-                    cardContainerColor = if (it.votes < 2)
-                        Color(225, 120, 120, 255)
-                    else
-                        Color.DarkGray
-                })
+                var isVotedByUser by remember {
+                    mutableStateOf(
+                        locationsViewModel.findVoteForApprovedLocation(it.id)
+                    )
+                }
+                var isLocationApproved by remember { mutableStateOf(it.isApproved) }
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 4.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = cardContainerColor,
-                        contentColor = Color.White
-                    ),
+                    colors =
+                    if (!isLocationApproved)
+                        CardDefaults.cardColors(
+                            containerColor = Color(225, 120, 120, 255),
+                            contentColor = Color.White
+                        )
+                    else
+                        CardDefaults.cardColors(
+                            containerColor = Color.DarkGray,
+                            contentColor = Color.White
+                        ),
                     onClick = {
                         navController?.navigate("PointsOfInterest?itemName=${it.name}")
                     }
@@ -157,7 +167,6 @@ fun LocationsScreen(
                         )
                         Button(
                             onClick = { isDetailExpanded = !isDetailExpanded },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                             modifier = modifier
                                 .padding(end = 8.dp)
                         ) {
@@ -167,7 +176,7 @@ fun LocationsScreen(
 
                     if (isDetailExpanded)
                         Column {
-                            Spacer(modifier.height(16.dp))
+                            Spacer(modifier.height(8.dp))
                             LazyRow(
                                 modifier = Modifier
                                     .wrapContentWidth()
@@ -190,33 +199,49 @@ fun LocationsScreen(
                                 modifier = modifier
                                     .padding(start = 8.dp)
                             ) {
-                                Spacer(modifier.height(16.dp))
+                                Spacer(modifier.height(8.dp))
                                 Text(
                                     text = stringResource(R.string.latitude_description, it.lat),
                                     fontSize = 12.sp
                                 )
-                                Spacer(modifier.height(16.dp))
+                                Spacer(modifier.height(8.dp))
                                 Text(
                                     text = stringResource(R.string.longitude_description, it.long),
                                     fontSize = 12.sp
                                 )
-                                Spacer(modifier.height(16.dp))
+                                Spacer(modifier.height(8.dp))
                                 Text(
                                     text = stringResource(R.string.description, it.description),
                                     fontSize = 12.sp
                                 )
-                                Spacer(modifier.height(16.dp))
-                                Text(
-                                    text = "Votes: " + it.votes,
-                                    fontSize = 12.sp
-                                )
-                                Spacer(modifier.height(16.dp))
-                                if (!it.isApproved)
+                                Spacer(modifier.height(8.dp))
+                                if (!isVotedByUser) {
+                                    //TODO: quem criou a localização não deve poder aprovar a mesma
+                                    Divider(color = Color.Black, thickness = 1.dp)
+                                    Spacer(modifier.height(8.dp))
                                     Text(
                                         text = stringResource(R.string.not_approved_location),
-                                        fontSize = 12.sp,
-                                        color = Color.Red
+                                        fontSize = 12.sp
                                     )
+                                    Spacer(modifier.height(8.dp))
+                                    Text(
+                                        text = stringResource(R.string.votes_for_approval) + it.votes,
+                                        fontSize = 12.sp
+                                    )
+                                    Spacer(modifier.height(8.dp))
+                                    Button(
+                                        onClick = {
+                                            isVotedByUser = true
+                                            locationsViewModel.voteForApprovalLocation(it.id)
+                                            isLocationApproved = it.isApproved
+                                        },
+                                    ) {
+                                        Row {
+                                            Text("Approve")
+                                            Icon(Icons.Rounded.ThumbUp, "Details")
+                                        }
+                                    }
+                                }
                             }
                         }
 
