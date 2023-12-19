@@ -3,7 +3,7 @@ package com.example.amovtp.ui.viewmodels.addViewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.GeoData
-import com.example.amovtp.utils.codes.Codes
+import com.example.amovtp.utils.Consts
 
 class AddCategoryViewModelFactory(private val geoData: GeoData): ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -17,14 +17,14 @@ class AddCategoryViewModel(private val geoData: GeoData) : ViewModel() {
         name: String,
         description: String,
         img: String,
-    ):Codes{
+    ):String{
         val tempCategories = geoData.categories
 
         if(tempCategories.any{it.name == name})
-            return Codes.ERROR_EXISTING_NAME
+            return Consts.ERROR_EXISTING_NAME
 
         geoData.addCategory(name,description,img)
 
-        return Codes.SUCCESS
+        return Consts.SUCCESS
     }
 }

@@ -1,6 +1,6 @@
 package com.example.amovtp.ui.screens.infoScreens
 
-import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,18 +23,13 @@ import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,7 +48,7 @@ import com.example.amovtp.R
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuOrders
 import com.example.amovtp.ui.screens.Screens
 import com.example.amovtp.ui.viewmodels.infoViewModels.LocationsViewModel
-import com.example.amovtp.utils.codes.Codes
+import com.example.amovtp.utils.Consts
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,15 +87,15 @@ fun LocationsScreen(
         ) {
             DropdownMenuOrders(itemPicked = { itemPicked ->
                 when (itemPicked) {
-                    Codes.ORDER_BY_VOTES -> {
+                    Consts.ORDER_BY_VOTES -> {
                         locations = locationsViewModel.getLocations().sortedBy { it.votes }
                     }
 
-                    Codes.ORDER_BY_NAME -> {
+                    Consts.ORDER_BY_NAME -> {
                         locations = locationsViewModel.getLocationsOrderedByName()
                     }
 
-                    Codes.ORDER_BY_DISTANCE -> {
+                    Consts.ORDER_BY_DISTANCE -> {
                         locations = locationsViewModel.getLocationsOrderedByDistance()
                     }
 
@@ -132,10 +128,11 @@ fun LocationsScreen(
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 4.dp),
+                    border = BorderStroke(2.dp,Color.Black),
                     colors =
                     if (!isLocationApproved)
                         CardDefaults.cardColors(
-                            containerColor = Color(225, 120, 120, 255),
+                            containerColor = Consts.NOT_APPROVED_COLOR,
                             contentColor = Color.White
                         )
                     else
@@ -153,24 +150,26 @@ fun LocationsScreen(
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = it.name,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                            modifier = modifier
-                                .padding(start = 8.dp)
-                        )
-                        Spacer(
-                            Modifier
-                                .weight(1f)
-                                .fillMaxWidth()
-                        )
-                        Button(
-                            onClick = { isDetailExpanded = !isDetailExpanded },
-                            modifier = modifier
-                                .padding(end = 8.dp)
+                        Column(
+                            modifier = modifier.weight(1f)
                         ) {
-                            Icon(Icons.Rounded.KeyboardArrowDown, "Details")
+                            Text(
+                                text = it.name,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp,
+                                modifier = modifier
+                                    .padding(start = 8.dp,end = 8.dp)
+                            )
+                        }
+                        Spacer(modifier.width(12.dp))
+                        Column {
+                            Button(
+                                onClick = { isDetailExpanded = !isDetailExpanded },
+                                modifier = modifier
+                                    .padding(start = 8.dp,end = 8.dp)
+                            ) {
+                                Icon(Icons.Rounded.KeyboardArrowDown, "Details")
+                            }
                         }
                     }
 
@@ -183,7 +182,6 @@ fun LocationsScreen(
                                     .background(Color.White)
                                     .padding(bottom = 3.dp, top = 3.dp)
                             ) {
-
                                 items(it.imgs) { img ->
                                     AsyncImage(
                                         model = img,
@@ -193,7 +191,6 @@ fun LocationsScreen(
                                         contentDescription = "Background Image"
                                     )
                                 }
-
                             }
                             Column(
                                 modifier = modifier
@@ -215,32 +212,43 @@ fun LocationsScreen(
                                     fontSize = 12.sp
                                 )
                                 Spacer(modifier.height(8.dp))
-                                if (!isVotedByUser) {
+                                if (!isLocationApproved) {
                                     //TODO: quem criou a localização não deve poder aprovar a mesma
-                                    Divider(color = Color.Black, thickness = 1.dp)
+                                    Divider(color = Color.DarkGray, thickness = 1.dp)
                                     Spacer(modifier.height(8.dp))
                                     Text(
                                         text = stringResource(R.string.not_approved_location),
-                                        fontSize = 12.sp
+                                        fontSize = 12.sp,
+                                        color = Consts.WARNING_COLOR
                                     )
                                     Spacer(modifier.height(8.dp))
                                     Text(
                                         text = stringResource(R.string.votes_for_approval) + it.votes,
                                         fontSize = 12.sp
                                     )
-                                    Spacer(modifier.height(8.dp))
-                                    Button(
-                                        onClick = {
-                                            isVotedByUser = true
-                                            locationsViewModel.voteForApprovalLocation(it.id)
-                                            isLocationApproved = it.isApproved
-                                        },
-                                    ) {
-                                        Row {
-                                            Text("Approve")
-                                            Icon(Icons.Rounded.ThumbUp, "Details")
+                                    if (!isVotedByUser) {
+                                        Spacer(modifier.height(8.dp))
+                                        Button(
+                                            onClick = {
+                                                isVotedByUser = true
+                                                locationsViewModel.voteForApprovalLocation(it.id)
+                                                isLocationApproved = it.isApproved
+                                            },
+                                        ) {
+                                            Row {
+                                                Text(stringResource(R.string.approve))
+                                                Icon(Icons.Rounded.ThumbUp, "Details")
+                                            }
                                         }
+                                    } else {
+                                        Spacer(modifier.height(8.dp))
+                                        Text(
+                                            text = stringResource(R.string.location_voted),
+                                            fontSize = 12.sp,
+                                            color = Consts.CONFIRMATION_COLOR
+                                        )
                                     }
+                                    Spacer(modifier.height(8.dp))
                                 }
                             }
                         }

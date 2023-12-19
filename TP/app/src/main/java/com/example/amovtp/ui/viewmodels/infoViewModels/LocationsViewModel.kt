@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.GeoData
 import com.example.amovtp.data.Location
 import com.example.amovtp.data.UsersData
+import com.example.amovtp.utils.Consts
 
 class LocationsViewModelFactory(
     private val geoData: GeoData,
@@ -52,7 +53,7 @@ class LocationsViewModel(
     fun voteForApprovalLocation(locationId: Int) {
         geoData.voteForApprovalLocation(locationId)
         usersData.addLocationApproved(locationId)
-        if (geoData.locations.find { it.id == locationId }?.votes!! >= 1 )
+        if (geoData.locations.find { it.id == locationId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
             geoData.approveLocation(locationId)
     }
 

@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.composables.DropDownMenus
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,10 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.amovtp.R
-import com.example.amovtp.data.Category
 import com.example.amovtp.data.Location
 import com.example.amovtp.ui.viewmodels.infoViewModels.PointsOfInterestViewModel
-import com.example.amovtp.utils.codes.Codes
+import com.example.amovtp.utils.Consts
 import org.osmdroid.util.GeoPoint
 
 @Composable
@@ -53,7 +51,7 @@ fun DropdownMenuFilters(
         val allLocationsString = stringResource(R.string.all_locations)
         var selectedItem by remember {
             mutableStateOf(
-                if (itemNameForLocation != Codes.DEFAULT_VALUE.toString())
+                if (itemNameForLocation != Consts.DEFAULT_VALUE)
                     itemNameForLocation!!
                 else
                     allLocationsString
@@ -86,7 +84,7 @@ fun DropdownMenuFilters(
                 onClick = {
                     selectedItem = allLocationsString
                     isExpanded = false
-                    itemPicked(Codes.ALL_LOCATIONS.toString())
+                    itemPicked(Consts.ALL_LOCATIONS)
                     val currentLocation = pointsOfInterestViewModel.getCurrentLocation()
                     newGeoPoint(
                         GeoPoint(
@@ -144,7 +142,7 @@ fun DropdownMenuFilters(
                 onClick = {
                     selectedItem = allCategoriesString
                     isExpanded = false
-                    itemPicked(Codes.ALL_CATEGORIES.toString())
+                    itemPicked(Consts.ALL_CATEGORIES)
                 }
             )
 

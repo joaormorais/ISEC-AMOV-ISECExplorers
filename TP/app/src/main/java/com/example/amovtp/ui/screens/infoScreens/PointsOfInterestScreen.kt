@@ -1,15 +1,18 @@
 package com.example.amovtp.ui.screens.infoScreens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,10 +22,11 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -47,7 +51,7 @@ import com.example.amovtp.R
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuFilters
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuOrders
 import com.example.amovtp.ui.viewmodels.infoViewModels.PointsOfInterestViewModel
-import com.example.amovtp.utils.codes.Codes
+import com.example.amovtp.utils.Consts
 import kotlinx.coroutines.launch
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -86,7 +90,7 @@ fun PointsOfInterestScreen(
     }
 
     LaunchedEffect(key1 = itemName) {
-        if (itemName != Codes.DEFAULT_VALUE.toString()) {
+        if (itemName != Consts.DEFAULT_VALUE) {
             pointsOfInterest = pointsOfInterestViewModel.getPointsFromLocation(itemName)
             val tempLoc = locations.find { it.name == itemName }
             geoPoint = GeoPoint(tempLoc!!.lat, tempLoc.long)
@@ -129,15 +133,15 @@ fun PointsOfInterestScreen(
                 ) {
                     DropdownMenuOrders(itemPicked = { itemPicked ->
                         when (itemPicked) {
-                            Codes.ORDER_BY_VOTES -> {
+                            Consts.ORDER_BY_VOTES -> {
                                 pointsOfInterest = pointsOfInterest.sortedBy { it.votes }
                             }
 
-                            Codes.ORDER_BY_NAME -> {
+                            Consts.ORDER_BY_NAME -> {
                                 pointsOfInterest = pointsOfInterest.sortedBy { it.name }
                             }
 
-                            Codes.ORDER_BY_DISTANCE -> {
+                            Consts.ORDER_BY_DISTANCE -> {
                                 pointsOfInterest =
                                     pointsOfInterestViewModel.getPointsOfInterestOrderedByDistance(
                                         pointsOfInterest
@@ -225,25 +229,35 @@ fun PointsOfInterestScreen(
             state = listState,
             modifier = modifier
                 .fillMaxSize()
+                .padding(top = 8.dp)
         ) {
             items(pointsOfInterest, key = { it.id }) {
 
                 var isDetailExpanded by remember { mutableStateOf(false) }
+                var isVotedByUser by remember {
+                    mutableStateOf(
+                        pointsOfInterestViewModel.findVoteForApprovedPointOfInterest(it.id)
+                    )
+                }
+                var isLocationApproved by remember { mutableStateOf(it.isApproved) }
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 4.dp),
+                    border = BorderStroke(2.dp, Color.Black),
                     colors =
-                    if (it.votes < 2)
+                    if (!isLocationApproved)
                         CardDefaults.cardColors(
-                            containerColor = Color(225, 120, 120, 255),
-                            contentColor = Color.White)
+                            containerColor = Consts.NOT_APPROVED_COLOR,
+                            contentColor = Color.White
+                        )
                     else
                         CardDefaults.cardColors(
                             containerColor = Color.DarkGray,
-                            contentColor = Color.White),
+                            contentColor = Color.White
+                        ),
                     onClick = {
                         geoPoint = GeoPoint(it.lat, it.long)
                     }
@@ -255,27 +269,22 @@ fun PointsOfInterestScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(
-                            modifier = modifier
-                                .padding(start = 8.dp)
-                                .weight(1f)
+                            modifier = modifier.weight(1f)
                         ) {
                             Text(
                                 text = it.name,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp,
-                                modifier = modifier.padding(top=4.dp,bottom=4.dp,start=12.dp,end=12.dp)
+                                modifier = modifier
+                                    .padding(start = 8.dp, end = 8.dp)
                             )
                         }
-                        Column(
-                            modifier = modifier
-                                .padding(end = 8.dp)
-                                .wrapContentWidth(Alignment.End)
-                                .align(Alignment.Top),
-                        ) {
+                        Spacer(modifier.width(12.dp))
+                        Column {
                             Button(
                                 onClick = { isDetailExpanded = !isDetailExpanded },
                                 modifier = modifier
-                                    .padding(end = 8.dp)
+                                    .padding(start = 8.dp, end = 8.dp)
                             ) {
                                 Icon(Icons.Rounded.KeyboardArrowDown, "Details")
                             }
@@ -284,14 +293,13 @@ fun PointsOfInterestScreen(
 
                     if (isDetailExpanded)
                         Column {
-                            Spacer(modifier.height(16.dp))
+                            Spacer(modifier.height(8.dp))
                             LazyRow(
                                 modifier = Modifier
                                     .wrapContentWidth()
                                     .background(Color.White)
                                     .padding(bottom = 3.dp, top = 3.dp)
                             ) {
-
                                 items(it.imgs) { img ->
                                     AsyncImage(
                                         model = img,
@@ -301,13 +309,12 @@ fun PointsOfInterestScreen(
                                         contentDescription = "Background Image"
                                     )
                                 }
-
                             }
                             Column(
                                 modifier = modifier
                                     .padding(start = 8.dp)
                             ) {
-                                Spacer(modifier.height(16.dp))
+                                Spacer(modifier.height(8.dp))
                                 Text(
                                     text = stringResource(
                                         R.string.category_description,
@@ -315,33 +322,62 @@ fun PointsOfInterestScreen(
                                     ),
                                     fontSize = 12.sp
                                 )
-                                Spacer(modifier.height(16.dp))
+                                Spacer(modifier.height(8.dp))
                                 Text(
                                     text = stringResource(R.string.latitude_description, it.lat),
                                     fontSize = 12.sp
                                 )
-                                Spacer(modifier.height(16.dp))
+                                Spacer(modifier.height(8.dp))
                                 Text(
                                     text = stringResource(R.string.longitude_description, it.long),
                                     fontSize = 12.sp
                                 )
-                                Spacer(modifier.height(16.dp))
+                                Spacer(modifier.height(8.dp))
                                 Text(
                                     text = stringResource(R.string.description, it.description),
                                     fontSize = 12.sp
                                 )
-                                Spacer(modifier.height(16.dp))
-                                Text(
-                                    text = stringResource(R.string.votes_for_approval, it.votes),
-                                    fontSize = 12.sp
-                                )
-                                Spacer(modifier.height(16.dp))
-                                if (!it.isApproved)
+                                Spacer(modifier.height(8.dp))
+                                if (!isLocationApproved) {
+                                    //TODO: quem criou o ponto não deve poder aprovar a mesma
+                                    Divider(color = Color.DarkGray, thickness = 1.dp)
+                                    Spacer(modifier.height(8.dp))
                                     Text(
-                                        text = stringResource(R.string.not_approved_point),
+                                        text = stringResource(R.string.not_approved_location),
                                         fontSize = 12.sp,
-                                        color = Color.Red
+                                        color = Consts.WARNING_COLOR
                                     )
+                                    Spacer(modifier.height(8.dp))
+                                    Text(
+                                        text = stringResource(R.string.votes_for_approval) + it.votes,
+                                        fontSize = 12.sp
+                                    )
+                                    if (!isVotedByUser) {
+                                        Spacer(modifier.height(8.dp))
+                                        Button(
+                                            onClick = {
+                                                isVotedByUser = true
+                                                pointsOfInterestViewModel.voteForApprovalPointOfInterest(
+                                                    it.id
+                                                )
+                                                isLocationApproved = it.isApproved
+                                            },
+                                        ) {
+                                            Row {
+                                                Text(stringResource(R.string.approve))
+                                                Icon(Icons.Rounded.ThumbUp, "Details")
+                                            }
+                                        }
+                                    } else {
+                                        Spacer(modifier.height(8.dp))
+                                        Text(
+                                            text = stringResource(R.string.point_of_interest_voted),
+                                            fontSize = 12.sp,
+                                            color = Consts.CONFIRMATION_COLOR
+                                        )
+                                    }
+                                    Spacer(modifier.height(8.dp))
+                                }
                             }
                         }
 

@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.Category
 import com.example.amovtp.data.GeoData
 import com.example.amovtp.data.UsersData
-import com.example.amovtp.utils.codes.Codes
+import com.example.amovtp.utils.Consts
 
 class AddPointOfInterestViewModelFactory(
     private val geoData: GeoData,
@@ -45,13 +45,13 @@ class AddPointOfInterestViewModel(
         location: String,
         category: String,
         imgs: List<String>
-    ): Codes {
+    ): String {
         val tempPointsOfInterest = geoData.pointsOfInterest
 
         if (tempPointsOfInterest.any { it.name == name })
-            return Codes.ERROR_EXISTING_NAME
+            return Consts.ERROR_EXISTING_NAME
         else if (tempPointsOfInterest.any { it.lat == lat && it.long == long })
-            return Codes.ERROR_EXISTING_POINT_OF_INTEREST
+            return Consts.ERROR_EXISTING_POINT_OF_INTEREST
 
         geoData.addPointOfInterest(
             name,
@@ -64,6 +64,6 @@ class AddPointOfInterestViewModel(
             imgs
         )
 
-        return Codes.SUCCESS
+        return Consts.SUCCESS
     }
 }

@@ -38,4 +38,7 @@
     <string name="unknown_error">Unknown error</string>
     <string name="votes_for_approval">"Votes for approval: "</string>
     <string name="not_approved_category">This category hasn\'t been approved by at least 2 users!</string>
+    <string name="location_voted">You already voted on this location!</string>
+    <string name="point_of_interest_voted">You already voted on this point of interest!</string>
+    <string name="approve">Approve</string>
 </resources>

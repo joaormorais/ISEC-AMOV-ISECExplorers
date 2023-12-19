@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.GeoData
 import com.example.amovtp.data.UsersData
-import com.example.amovtp.utils.codes.Codes
+import com.example.amovtp.utils.Consts
 
 class AddLocationViewModelFactory(
     private val geoData: GeoData,
@@ -35,18 +35,18 @@ class AddLocationViewModel(
         long: Double,
         isManualCoords: Boolean,
         imgs: List<String>
-    ): Codes {
+    ): String {
 
         val tempLocations = geoData.locations
 
         if (tempLocations.any { it.name == name })
-            return Codes.ERROR_EXISTING_NAME
+            return Consts.ERROR_EXISTING_NAME
         else if (tempLocations.any { it.lat == lat && it.long == long })
-            return Codes.ERROR_EXISTING_LOCATION
+            return Consts.ERROR_EXISTING_LOCATION
 
         geoData.addLocation(name, description, lat, long, isManualCoords, imgs)
 
-        return Codes.SUCCESS
+        return Consts.SUCCESS
     }
 
 }

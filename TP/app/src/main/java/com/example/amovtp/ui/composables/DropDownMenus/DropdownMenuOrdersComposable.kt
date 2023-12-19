@@ -1,8 +1,6 @@
 package com.example.amovtp.ui.composables.DropDownMenus
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -22,11 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.amovtp.R
-import com.example.amovtp.utils.codes.Codes
+import com.example.amovtp.utils.Consts
 
 @Composable
 fun DropdownMenuOrders(
-    itemPicked: (Codes) -> Unit,
+    itemPicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val orderVotesString = stringResource(R.string.ordered_by_votes)
@@ -70,15 +68,15 @@ fun DropdownMenuOrders(
 
                     when (s) {
                         orderVotesString -> {
-                            itemPicked(Codes.ORDER_BY_VOTES)
+                            itemPicked(Consts.ORDER_BY_VOTES)
                         }
 
                         orderNameString -> {
-                            itemPicked(Codes.ORDER_BY_NAME)
+                            itemPicked(Consts.ORDER_BY_NAME)
                         }
 
                         orderDistanceString -> {
-                            itemPicked(Codes.ORDER_BY_DISTANCE)
+                            itemPicked(Consts.ORDER_BY_DISTANCE)
                         }
                     }
                 }

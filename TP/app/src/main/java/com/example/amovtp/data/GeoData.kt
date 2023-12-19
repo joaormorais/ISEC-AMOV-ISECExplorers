@@ -158,8 +158,8 @@ class GeoData(/*firestore*/) {
                     false,
                     mutableListOf(),
                     mutableListOf(),
-                    0,
-                    false
+                    2,
+                    true
                 )
             )
         }

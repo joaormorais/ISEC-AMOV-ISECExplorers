@@ -58,7 +58,7 @@ import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModel
 import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModelFactory
 import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModel
 import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModelFactory
-import com.example.amovtp.utils.codes.Codes
+import com.example.amovtp.utils.Consts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -219,7 +219,7 @@ fun MainScreen(
                         arguments = listOf(
                             navArgument("itemName") {
                                 type = NavType.StringType
-                                defaultValue = Codes.DEFAULT_VALUE.toString()
+                                defaultValue = Consts.DEFAULT_VALUE
                                 nullable = false
                             }
                         )

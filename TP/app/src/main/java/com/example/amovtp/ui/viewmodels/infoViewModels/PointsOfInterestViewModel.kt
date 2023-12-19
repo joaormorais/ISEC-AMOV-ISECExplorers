@@ -9,7 +9,7 @@ import com.example.amovtp.data.GeoData
 import com.example.amovtp.data.Location
 import com.example.amovtp.data.PointOfInterest
 import com.example.amovtp.data.UsersData
-import com.example.amovtp.utils.codes.Codes
+import com.example.amovtp.utils.Consts
 
 class PointsOfInterestViewModelFactory(
     private val geoData: GeoData,
@@ -26,8 +26,8 @@ class PointsOfInterestViewModel(
     private val usersData: UsersData
 ) : ViewModel() {
 
-    private var _filterLocationName = mutableStateOf(Codes.ALL_LOCATIONS.toString())
-    private var _filterCategoryName = mutableStateOf(Codes.ALL_CATEGORIES.toString())
+    private var _filterLocationName = mutableStateOf(Consts.ALL_LOCATIONS)
+    private var _filterCategoryName = mutableStateOf(Consts.ALL_CATEGORIES.toString())
 
     /**
      * Gets the current location of the android device
@@ -87,12 +87,12 @@ class PointsOfInterestViewModel(
 
         var filteredPoints: List<PointOfInterest>
 
-        if (_filterLocationName.value == Codes.ALL_LOCATIONS.toString())
+        if (_filterLocationName.value == Consts.ALL_LOCATIONS.toString())
             filteredPoints = geoData.pointsOfInterest
         else
             filteredPoints = getPointsFromLocation(_filterLocationName.value)
 
-        if (_filterCategoryName.value == Codes.ALL_CATEGORIES.toString())
+        if (_filterCategoryName.value == Consts.ALL_CATEGORIES.toString())
             return filteredPoints
         else
             return getPointsFromCategory(_filterCategoryName.value, filteredPoints)
@@ -100,7 +100,7 @@ class PointsOfInterestViewModel(
     }
 
     /**
-     * Gets points ordered by distance
+     * Calculates the distance between every point of interest, and the current location
      */
     fun getPointsOfInterestOrderedByDistance(pointsOfInterest: List<PointOfInterest>): List<PointOfInterest> {
 
@@ -116,6 +116,17 @@ class PointsOfInterestViewModel(
             )
 
         }
+    }
+
+    fun findVoteForApprovedPointOfInterest(pointOfInterestId: Int): Boolean {
+        return usersData.pointsOfInterestApproved.any { it == pointOfInterestId }
+    }
+
+    fun voteForApprovalPointOfInterest(pointOfInterestId: Int) {
+        geoData.voteForApprovalPointOfInterest(pointOfInterestId)
+        usersData.addPointOfInterestApproved(pointOfInterestId)
+        if (geoData.pointsOfInterest.find { it.id == pointOfInterestId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
+            geoData.approvePointOfInterest(pointOfInterestId)
     }
 
     /**

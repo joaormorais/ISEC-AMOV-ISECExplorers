@@ -39,4 +39,7 @@
     <string name="unknown_error">Erro descohecido</string>
     <string name="votes_for_approval">"Votos para aprovação: "</string>
     <string name="not_approved_category">Esta categoria ainda não foi aprovada por pelo menos 2 utilizadores!</string>
+    <string name="location_voted">Você já votou nesta localização!</string>
+    <string name="point_of_interest_voted">Você já votou neste ponto de interesse!</string>
+    <string name="approve">Aprovar</string>
 </resources>
