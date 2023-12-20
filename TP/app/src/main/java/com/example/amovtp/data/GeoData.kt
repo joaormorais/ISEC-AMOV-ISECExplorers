@@ -43,6 +43,7 @@ data class PointOfInterest(
     val locations: String, //TODO: alterar para um array de localizações
     val category: String,
     val imgs: List<String>,
+    var classification: Int,
     var votes: Int,
     var isApproved: Boolean
 )
@@ -167,7 +168,6 @@ class GeoData(/*firestore*/) {
         }
 
         for (location in _locations) {
-
             val tempPointOfInterest = PointOfInterest(
                 _currentPointsOfInterestId++,
                 "Ponto de Interesse em ${location.name}",
@@ -178,6 +178,7 @@ class GeoData(/*firestore*/) {
                 location.name,
                 _categories.random().name,
                 mutableListOf(),
+                0,
                 2,
                 true
             )
@@ -244,6 +245,7 @@ class GeoData(/*firestore*/) {
                 locations,
                 category,
                 imgs,
+                Consts.INITIAL_CLASSIFICATION,
                 Consts.INITIAL_VOTES,
                 false
             )
@@ -257,7 +259,16 @@ class GeoData(/*firestore*/) {
         img: String,
     ) {
 
-        _categories.add(Category(_currentCategoryId++, name, description, img, Consts.INITIAL_VOTES, false))
+        _categories.add(
+            Category(
+                _currentCategoryId++,
+                name,
+                description,
+                img,
+                Consts.INITIAL_VOTES,
+                false
+            )
+        )
 
     }
 

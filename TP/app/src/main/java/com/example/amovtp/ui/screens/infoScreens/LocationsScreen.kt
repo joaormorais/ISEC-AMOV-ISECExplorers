@@ -77,7 +77,7 @@ fun LocationsScreen(
         ) {
             Row {
                 Text(stringResource(R.string.go_to_points_of_interest))
-                Icon(Icons.Rounded.KeyboardArrowRight, "Details")
+                Icon(Icons.Rounded.KeyboardArrowRight, "Next Screen")
             }
         }
         Text(stringResource(R.string.order_by), modifier = modifier.padding(top = 8.dp))
@@ -201,11 +201,21 @@ fun LocationsScreen(
                                     text = stringResource(R.string.latitude_description, it.lat),
                                     fontSize = 12.sp
                                 )
-                                Spacer(modifier.height(8.dp))
                                 Text(
                                     text = stringResource(R.string.longitude_description, it.long),
                                     fontSize = 12.sp
                                 )
+                                if (it.isManualCoords) {
+                                    Text(
+                                        text = stringResource(R.string.manual_coordinates),
+                                        fontSize = 12.sp
+                                    )
+                                } else {
+                                    Text(
+                                        text = stringResource(R.string.automatically_coordinates),
+                                        fontSize = 12.sp
+                                    )
+                                }
                                 Spacer(modifier.height(8.dp))
                                 Text(
                                     text = stringResource(R.string.description, it.description),
@@ -239,7 +249,7 @@ fun LocationsScreen(
                                                 Text(stringResource(R.string.approve))
                                                 Icon(
                                                     Icons.Rounded.ThumbUp,
-                                                    "Details",
+                                                    "Approve",
                                                     modifier = modifier.padding(start = 8.dp)
                                                 )
                                             }

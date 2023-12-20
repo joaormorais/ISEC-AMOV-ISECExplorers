@@ -43,4 +43,7 @@
     <string name="point_of_interest_voted">Você já votou neste ponto de interesse!</string>
     <string name="approve">Aprovar</string>
     <string name="category_voted">Você já votou nesta categoria!</string>
+    <string name="manual_coordinates">Estas coordenadas foram introduzidas manualmente</string>
+    <string name="automatically_coordinates">Estas coordenadas foram introduzidas automaticamente</string>
+    <string name="classify">"Classificar: "</string>
 </resources>

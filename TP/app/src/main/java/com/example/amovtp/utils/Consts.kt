@@ -3,7 +3,7 @@ package com.example.amovtp.utils
 import androidx.compose.ui.graphics.Color
 
 class Consts {
-    companion object{
+    companion object {
         const val POINTS_OF_INTEREST: String = "Points of Interest"
         const val DEFAULT_VALUE: String = "DEFAULT_VALUE"
         const val ALL_LOCATIONS: String = "ALL_LOCATIONS"
@@ -16,6 +16,10 @@ class Consts {
         const val ORDER_BY_NAME: String = "ORDER_BY_NAME"
         const val ORDER_BY_DISTANCE: String = "ORDER_BY_DISTANCE"
         const val VOTES_NEEDED_FOR_APPROVAL: Int = 2
+        const val INITIAL_CLASSIFICATION: Int = 0
+        const val ONE_STAR_CLASSIFICATION: Int = 1
+        const val TWO_STAR_CLASSIFICATION: Int = 2
+        const val THREE_STAR_CLASSIFICATION: Int = 3
         const val INITIAL_VOTES: Int = 0
         val NOT_APPROVED_COLOR: Color = Color(255, 135, 70, 255)
         val CONFIRMATION_COLOR: Color = Color(15, 100, 0, 255)

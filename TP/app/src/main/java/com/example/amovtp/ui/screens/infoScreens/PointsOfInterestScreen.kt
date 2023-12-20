@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -344,11 +344,21 @@ fun PointsOfInterestScreen(
                                     text = stringResource(R.string.latitude_description, it.lat),
                                     fontSize = 12.sp
                                 )
-                                Spacer(modifier.height(8.dp))
                                 Text(
                                     text = stringResource(R.string.longitude_description, it.long),
                                     fontSize = 12.sp
                                 )
+                                if (it.isManualCoords) {
+                                    Text(
+                                        text = stringResource(R.string.manual_coordinates),
+                                        fontSize = 12.sp
+                                    )
+                                } else {
+                                    Text(
+                                        text = stringResource(R.string.automatically_coordinates),
+                                        fontSize = 12.sp
+                                    )
+                                }
                                 Spacer(modifier.height(8.dp))
                                 Text(
                                     text = stringResource(R.string.description, it.description),
@@ -384,7 +394,7 @@ fun PointsOfInterestScreen(
                                                 Text(stringResource(R.string.approve))
                                                 Icon(
                                                     Icons.Rounded.ThumbUp,
-                                                    "Details",
+                                                    "Approve",
                                                     modifier = modifier.padding(start = 8.dp)
                                                 )
                                             }
@@ -397,8 +407,59 @@ fun PointsOfInterestScreen(
                                             color = Consts.CONFIRMATION_COLOR
                                         )
                                     }
+                                } else {
                                     Spacer(modifier.height(8.dp))
+                                    Row(
+                                        modifier = modifier
+                                            .fillMaxWidth()
+                                            .padding(end = 32.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = stringResource(R.string.classify),
+                                            fontSize = 12.sp
+                                        )
+                                        Button(
+                                            //modifier = modifier.padding(start = 4.dp, end = 4.dp),
+                                            onClick = {},
+                                        ) {
+                                            Row {
+                                                Text(Consts.ONE_STAR_CLASSIFICATION.toString())
+                                                Icon(
+                                                    Icons.Rounded.Star,
+                                                    "Classification",
+                                                    modifier = modifier.padding(start = 8.dp)
+                                                )
+                                            }
+                                        }
+                                        Button(
+                                            onClick = {},
+                                        ) {
+                                            Row {
+                                                Text(Consts.TWO_STAR_CLASSIFICATION.toString())
+                                                Icon(
+                                                    Icons.Rounded.Star,
+                                                    "Classification",
+                                                    modifier = modifier.padding(start = 8.dp)
+                                                )
+                                            }
+                                        }
+                                        Button(
+                                            onClick = {},
+                                        ) {
+                                            Row {
+                                                Text(Consts.THREE_STAR_CLASSIFICATION.toString())
+                                                Icon(
+                                                    Icons.Rounded.Star,
+                                                    "Classification",
+                                                    modifier = modifier.padding(start = 8.dp)
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
+                                Spacer(modifier.height(8.dp))
                             }
                         }
 

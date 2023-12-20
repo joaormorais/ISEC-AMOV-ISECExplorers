@@ -42,4 +42,7 @@
     <string name="point_of_interest_voted">You already voted on this point of interest!</string>
     <string name="approve">Approve</string>
     <string name="category_voted">You already voted on this category!</string>
+    <string name="manual_coordinates">These coordinates were manually introduced</string>
+    <string name="automatically_coordinates">These coordinates were automatically introduced</string>
+    <string name="classify">Classify:</string>
 </resources>

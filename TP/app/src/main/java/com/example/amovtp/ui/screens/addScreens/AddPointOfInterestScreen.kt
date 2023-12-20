@@ -37,6 +37,7 @@ import com.example.amovtp.ui.composables.AddInfoComposables.GalleryImage
 import com.example.amovtp.ui.composables.AddInfoComposables.GeoDescription
 import com.example.amovtp.ui.composables.AddInfoComposables.NameDescription
 import com.example.amovtp.ui.viewmodels.addViewModels.AddPointOfInterestViewModel
+import com.example.amovtp.utils.Consts
 
 
 @Composable
@@ -174,7 +175,7 @@ fun AddPointOfInterestScreen(
 
 
                 Button(
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Green, contentColor = Color.DarkGray),
+                    colors = ButtonDefaults.buttonColors(containerColor = Consts.CONFIRMATION_COLOR, contentColor = Color.DarkGray),
                     onClick = {
                         val validationResult = isAddPointOfInterestValid(
                             name,
