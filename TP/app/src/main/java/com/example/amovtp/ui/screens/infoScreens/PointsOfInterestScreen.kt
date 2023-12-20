@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.ThumbUp
@@ -29,6 +30,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,10 +49,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.amovtp.R
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuFilters
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuOrders
+import com.example.amovtp.ui.screens.Screens
 import com.example.amovtp.ui.viewmodels.infoViewModels.PointsOfInterestViewModel
 import com.example.amovtp.utils.Consts
 import kotlinx.coroutines.launch
@@ -63,6 +68,7 @@ import org.osmdroid.views.overlay.Marker
 fun PointsOfInterestScreen(
     pointsOfInterestViewModel: PointsOfInterestViewModel,
     itemName: String,
+    navController: NavHostController?,
     modifier: Modifier = Modifier
 ) {
 
@@ -178,16 +184,27 @@ fun PointsOfInterestScreen(
                     modifier = modifier
                         .wrapContentSize(Alignment.TopStart)
                 ) {
-                    DropdownMenuFilters(
-                        pointsOfInterestViewModel = pointsOfInterestViewModel,
-                        itemNameForLocation = null,
-                        itemsLocations = null,
-                        itemPicked = { itemPicked ->
-                            pointsOfInterest =
-                                pointsOfInterestViewModel.getPointsWithFilters(null, itemPicked)
-                        },
-                        newGeoPoint = {}
-                    )
+                    Row {
+                        DropdownMenuFilters(
+                            pointsOfInterestViewModel = pointsOfInterestViewModel,
+                            itemNameForLocation = null,
+                            itemsLocations = null,
+                            itemPicked = { itemPicked ->
+                                pointsOfInterest =
+                                    pointsOfInterestViewModel.getPointsWithFilters(null, itemPicked)
+                            },
+                            newGeoPoint = {}
+                        )
+                        IconButton(
+                            onClick = { navController?.navigate(Screens.CATEGORIES.route) },
+                        ) {
+                            Icon(
+                                Icons.Rounded.Info,
+                                "info",
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
                 }
             }
 
@@ -295,7 +312,7 @@ fun PointsOfInterestScreen(
                         Column {
                             Spacer(modifier.height(8.dp))
                             LazyRow(
-                                modifier = Modifier
+                                modifier = modifier
                                     .wrapContentWidth()
                                     .background(Color.White)
                                     .padding(bottom = 3.dp, top = 3.dp)
@@ -303,7 +320,7 @@ fun PointsOfInterestScreen(
                                 items(it.imgs) { img ->
                                     AsyncImage(
                                         model = img,
-                                        modifier = Modifier
+                                        modifier = modifier
                                             .fillMaxWidth()
                                             .height(200.dp),
                                         contentDescription = "Background Image"
@@ -365,7 +382,11 @@ fun PointsOfInterestScreen(
                                         ) {
                                             Row {
                                                 Text(stringResource(R.string.approve))
-                                                Icon(Icons.Rounded.ThumbUp, "Details")
+                                                Icon(
+                                                    Icons.Rounded.ThumbUp,
+                                                    "Details",
+                                                    modifier = modifier.padding(start = 8.dp)
+                                                )
                                             }
                                         }
                                     } else {

@@ -44,23 +44,11 @@ class UsersData(/*firestore*/) {
         _locationsApproved.add(locationId)
     }
 
-    fun removeLocationApproved(locationId: Int) {
-        _locationsApproved.remove(locationId)
-    }
-
     fun addPointOfInterestApproved(pointOfInterestId: Int) {
         _pointsOfInterestApproved.add(pointOfInterestId)
     }
 
-    fun removePointOfInterestApproved(pointOfInterestId: Int) {
-        _pointsOfInterestApproved.remove(pointOfInterestId)
-    }
-
     fun addCategoryApproved(categoryId: Int) {
         _categoriesApproved.add(categoryId)
-    }
-
-    fun removeCategoryApproved(categoryId: Int) {
-        _categoriesApproved.remove(categoryId)
     }
 }

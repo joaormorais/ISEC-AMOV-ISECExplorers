@@ -42,4 +42,5 @@
     <string name="location_voted">Você já votou nesta localização!</string>
     <string name="point_of_interest_voted">Você já votou neste ponto de interesse!</string>
     <string name="approve">Aprovar</string>
+    <string name="category_voted">Você já votou nesta categoria!</string>
 </resources>

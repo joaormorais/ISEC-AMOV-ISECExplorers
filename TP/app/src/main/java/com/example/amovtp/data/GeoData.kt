@@ -1,5 +1,7 @@
 package com.example.amovtp.data
 
+import com.example.amovtp.utils.Consts
+
 /**
  * Represents a location with N points of interest
  */
@@ -213,7 +215,7 @@ class GeoData(/*firestore*/) {
                 isManualCoords,
                 mutableListOf(),
                 imgs,
-                0,
+                Consts.INITIAL_VOTES,
                 false
             )
         )
@@ -242,7 +244,7 @@ class GeoData(/*firestore*/) {
                 locations,
                 category,
                 imgs,
-                0,
+                Consts.INITIAL_VOTES,
                 false
             )
         )
@@ -255,7 +257,7 @@ class GeoData(/*firestore*/) {
         img: String,
     ) {
 
-        _categories.add(Category(_currentCategoryId++, name, description, img, 0, false))
+        _categories.add(Category(_currentCategoryId++, name, description, img, Consts.INITIAL_VOTES, false))
 
     }
 

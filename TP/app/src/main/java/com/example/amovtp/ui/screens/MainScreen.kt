@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +40,7 @@ import com.example.amovtp.R
 import com.example.amovtp.ui.screens.addScreens.AddCategoryScreen
 import com.example.amovtp.ui.screens.addScreens.AddLocationScreen
 import com.example.amovtp.ui.screens.addScreens.AddPointOfInterestScreen
+import com.example.amovtp.ui.screens.infoScreens.CategoriesScreen
 import com.example.amovtp.ui.screens.infoScreens.LocationsScreen
 import com.example.amovtp.ui.screens.infoScreens.PointsOfInterestScreen
 import com.example.amovtp.ui.screens.usersScreens.LoginScreen
@@ -50,6 +52,8 @@ import com.example.amovtp.ui.viewmodels.addViewModels.AddLocationViewModel
 import com.example.amovtp.ui.viewmodels.addViewModels.AddLocationViewModelFactory
 import com.example.amovtp.ui.viewmodels.addViewModels.AddPointOfInterestViewModel
 import com.example.amovtp.ui.viewmodels.addViewModels.AddPointOfInterestViewModelFactory
+import com.example.amovtp.ui.viewmodels.infoViewModels.CategoriesViewModel
+import com.example.amovtp.ui.viewmodels.infoViewModels.CategoriesViewModelFactory
 import com.example.amovtp.ui.viewmodels.infoViewModels.LocationsViewModel
 import com.example.amovtp.ui.viewmodels.infoViewModels.LocationsViewModelFactory
 import com.example.amovtp.ui.viewmodels.infoViewModels.PointsOfInterestViewModel
@@ -70,29 +74,28 @@ fun MainScreen(
     val context = LocalContext.current
     val app = context.applicationContext as MyApplication
 
-    var isExpanded by remember { mutableStateOf(false) }
-    val addCategoryString = stringResource(R.string.add_category)
-    val addPointString = stringResource(R.string.add_point)
-    val items = listOf(addCategoryString, addPointString)
-    var selectedIndex by remember { mutableStateOf(0) }
-
     var loginViewModel: LoginViewModel?
     var registerViewModel: RegisterViewModel?
     var locationsViewModel: LocationsViewModel?
     var pointsOfInterestViewModel: PointsOfInterestViewModel?
+    var categoriesViewModel: CategoriesViewModel?
     var addLocationViewModel: AddLocationViewModel?
     var addPointOfInterestViewModel: AddPointOfInterestViewModel?
     var addCategoryViewModel: AddCategoryViewModel?
 
     var isLogin by remember { mutableStateOf(false) }
-    var addLoc by remember { mutableStateOf(false) }
-    var addPointOrCategory by remember { mutableStateOf(false) }
+    var addLocation by remember { mutableStateOf(false) }
+    var addPointOfInterest by remember { mutableStateOf(false) }
+    var addCategory by remember { mutableStateOf(false) }
+    var screenTitle by remember { mutableStateOf("") }
 
-    val currentScreen by navController.currentBackStackEntryAsState()
     navController.addOnDestinationChangedListener { controller, destination, arguments ->
         isLogin = (destination.route == Screens.LOGIN.route)
-        addLoc = (destination.route == Screens.LOCATIONS.route)
-        addPointOrCategory = (destination.route == Screens.POINTS_OF_INTEREST.route)
+        addLocation = (destination.route == Screens.LOCATIONS.route)
+        addPointOfInterest = (destination.route == Screens.POINTS_OF_INTEREST.route)
+        addCategory = (destination.route == Screens.CATEGORIES.route)
+
+        screenTitle = if(destination.route == Screens.POINTS_OF_INTEREST.route) Consts.POINTS_OF_INTEREST else destination.route.toString()
     }
 
     AMOVTPTheme() {
@@ -103,7 +106,9 @@ fun MainScreen(
                 topBar = {
                     if (!isLogin)
                         TopAppBar(
-                            title = { currentScreen.toString() },
+                            title = {
+                                Text(screenTitle, color = Color.White)
+                            },
 
                             navigationIcon = {
                                 IconButton(onClick = { navController.navigateUp() }) {
@@ -116,7 +121,7 @@ fun MainScreen(
 
                             actions = {
 
-                                if (addLoc) {
+                                if (addLocation) {
                                     IconButton(onClick = {
                                         navController.navigate(Screens.ADD_LOCATION.route)
                                     }) {
@@ -125,48 +130,24 @@ fun MainScreen(
                                             contentDescription = "Add Information"
                                         )
                                     }
-                                } else if (addPointOrCategory) {
+                                } else if (addPointOfInterest) {
                                     IconButton(onClick = {
-                                        isExpanded = true
+                                        navController.navigate(Screens.ADD_POINT_OF_INTEREST.route)
                                     }) {
                                         Icon(
                                             Icons.Filled.AddCircle,
                                             contentDescription = "Add Information"
                                         )
                                     }
-
-                                    DropdownMenu(
-                                        expanded = isExpanded,
-                                        onDismissRequest = { isExpanded = false },
-                                        modifier = modifier
-                                            .wrapContentWidth()
-                                    ) {
-
-                                        items.forEachIndexed { index, s ->
-                                            DropdownMenuItem(
-                                                text = { Text(text = s) },
-                                                onClick = {
-                                                    selectedIndex = index
-                                                    isExpanded = false
-
-                                                    when (s) {
-
-                                                        addCategoryString -> {
-                                                            navController.navigate(Screens.ADD_CATEGORY.route)
-                                                        }
-
-                                                        addPointString -> {
-                                                            navController.navigate(Screens.ADD_POINT_OF_INTEREST.route)
-                                                        }
-
-                                                    }
-
-                                                }
-                                            )
-                                        }
-
+                                } else if (addCategory) {
+                                    IconButton(onClick = {
+                                        navController.navigate(Screens.ADD_CATEGORY.route)
+                                    }) {
+                                        Icon(
+                                            Icons.Filled.AddCircle,
+                                            contentDescription = "Add Information"
+                                        )
                                     }
-
                                 }
 
                             },
@@ -233,7 +214,22 @@ fun MainScreen(
                                     app.usersData
                                 )
                             )
-                        PointsOfInterestScreen(pointsOfInterestViewModel!!, itemName!!)
+                        PointsOfInterestScreen(
+                            pointsOfInterestViewModel!!,
+                            itemName!!,
+                            navController
+                        )
+                    }
+
+                    composable(Screens.CATEGORIES.route) {
+                        categoriesViewModel =
+                            viewModel(
+                                factory = CategoriesViewModelFactory(
+                                    app.geoData,
+                                    app.usersData
+                                )
+                            )
+                        CategoriesScreen(categoriesViewModel!!)
                     }
 
                     composable(Screens.ADD_LOCATION.route) {

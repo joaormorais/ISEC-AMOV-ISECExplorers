@@ -5,6 +5,7 @@ enum class Screens(val path: String) {
     REGISTER("Register"),
     LOCATIONS("Locations"),
     POINTS_OF_INTEREST("PointsOfInterest?itemName={itemName}"),
+    CATEGORIES("Categories"),
     ADD_LOCATION("AddLocation"),
     ADD_POINT_OF_INTEREST("AddPointOfInterest"),
     ADD_CATEGORY("AddCategory");

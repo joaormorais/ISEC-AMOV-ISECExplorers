@@ -41,4 +41,5 @@
     <string name="location_voted">You already voted on this location!</string>
     <string name="point_of_interest_voted">You already voted on this point of interest!</string>
     <string name="approve">Approve</string>
+    <string name="category_voted">You already voted on this category!</string>
 </resources>
