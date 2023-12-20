@@ -42,4 +42,10 @@
     <string name="point_of_interest_voted">You already voted on this point of interest!</string>
     <string name="approve">Approve</string>
     <string name="category_voted">You already voted on this category!</string>
+    <string name="invalid_name">Please fill the name!</string>
+    <string name="invalid_description">Please fill the description!</string>
+    <string name="invalid_coordinates">Please fill the coordinates!</string>
+    <string name="invalid_images">Please insert image!</string>
+    <string name="invalid_location">Please choose location!</string>
+    <string name="invalid_category">Please choose category!</string>
 </resources>

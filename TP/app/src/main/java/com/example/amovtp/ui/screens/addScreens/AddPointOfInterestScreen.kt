@@ -50,9 +50,9 @@ fun AddPointOfInterestScreen(
     var description by remember { mutableStateOf("") }
     var lat by remember { mutableStateOf<Double?>(null) }
     var long by remember { mutableStateOf<Double?>(null) }
-    var isManual: Boolean = true
-    var imgsGallery: List<String> = emptyList()
-    var imgsCamera: List<String> = emptyList()
+    var isManual by remember { mutableStateOf(true) }
+    var imgsGallery by remember { mutableStateOf(listOf<String>())}
+    var imgsCamera by remember { mutableStateOf(listOf<String>())}
 
     var selectedLocation by remember { mutableStateOf("") }
     var expanded1 by remember { mutableStateOf(false) }
@@ -66,6 +66,12 @@ fun AddPointOfInterestScreen(
     var errorMessage by remember { mutableStateOf<String?>(null) }
     val unkownError = stringResource(R.string.unknown_error)
     val fillEveryFieldError = stringResource(R.string.fill_every_field)
+    val fillNameError = stringResource(R.string.invalid_name)
+    val fillDescriptionError = stringResource(R.string.invalid_description)
+    val fillCoordinatesError = stringResource(R.string.invalid_coordinates)
+    val fillImagesError = stringResource(R.string.invalid_images)
+    val fillLocationError = stringResource(R.string.invalid_location)
+    val fillCategoryError = stringResource(R.string.invalid_category)
 
     LaunchedEffect(showSnackBar) {
         if (showSnackBar) {
@@ -114,7 +120,6 @@ fun AddPointOfInterestScreen(
                     }
                 )
                 Spacer(modifier = modifier.height(8.dp))
-                //TODO: fazer um dropdown menu com todas as localizações e quando o utilizador escolhe uma, manda para a função de adicionar ponto de interesse
 
                 // DropdownMenu para selecionar a localização
                 Box(Modifier.fillMaxWidth()) {
@@ -176,6 +181,7 @@ fun AddPointOfInterestScreen(
                 Button(
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Green, contentColor = Color.DarkGray),
                     onClick = {
+
                         val validationResult = isAddPointOfInterestValid(
                             name,
                             description,
@@ -186,7 +192,13 @@ fun AddPointOfInterestScreen(
                             selectedCategory,
                             imgsGallery,
                             imgsCamera,
-                            fillEveryFieldError
+                            fillEveryFieldError,
+                            fillNameError,
+                            fillDescriptionError,
+                            fillCoordinatesError,
+                            fillImagesError,
+                            fillLocationError,
+                            fillCategoryError
                         ){ msg ->
                             errorMessage = msg
                         }
@@ -194,7 +206,6 @@ fun AddPointOfInterestScreen(
                         if (validationResult){
                             //a validação foi bem sucedida
                             val mixedImgs = imgsGallery + imgsCamera
-
                             addPointOfInterestViewModel.addPointOfInterest(
                                 name,
                                 description,
@@ -233,15 +244,41 @@ fun isAddPointOfInterestValid(
     imgsGallery: List<String>,
     imgsCamera: List<String>,
     fillEveryFieldError: String,
+    fillNameError : String,
+    fillDescriptionError : String,
+    fillCoordinatesError : String,
+    fillImagesError: String,
+    fillLocationError: String,
+    fillCategoryError: String,
     errorMessage: (String) -> Unit
 ): Boolean {
-    if (name.isBlank() || description.isBlank() || (imgsGallery.isEmpty() && imgsCamera.isEmpty())
-        || selectedLocation.isBlank() || selectedCategory.isBlank()) {
+    if (name.isBlank() && description.isBlank() && (isManualCoords && (lat == null || long == null)) && (imgsGallery.isEmpty() && imgsCamera.isEmpty())
+        && selectedLocation.isBlank() && selectedCategory.isBlank()) {
         errorMessage(fillEveryFieldError)
         return false
     }
+    if(name.isBlank()){
+        errorMessage(fillNameError)
+        return false
+    }
+    if (description.isBlank()){
+        errorMessage(fillDescriptionError)
+        return false
+    }
     if(isManualCoords && (lat == null || long == null)){
-        errorMessage(fillEveryFieldError)
+        errorMessage(fillCoordinatesError)
+        return false
+    }
+    if(selectedLocation.isBlank()){
+        errorMessage(fillLocationError)
+        return false
+    }
+    if(selectedCategory.isBlank()){
+        errorMessage(fillCategoryError)
+        return false
+    }
+    if(imgsGallery.isEmpty() && imgsCamera.isEmpty()){
+        errorMessage(fillImagesError)
         return false
     }
     return true

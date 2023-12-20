@@ -8,8 +8,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,67 +36,126 @@ fun AddCategoryScreen(
     navController: NavHostController?,
     modifier: Modifier = Modifier
 ) {
-    var name = ""
-    var description = ""
-    var image = ""
+    var name by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var image by remember { mutableStateOf("")}
 
+    val snackbarHostState = remember { SnackbarHostState() } //para mostrar as mensagens de erro
+    var showSnackBar by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val unkownError = stringResource(R.string.unknown_error)
+    val fillEveryFieldError = stringResource(R.string.fill_every_field)
+    val fillNameError = stringResource(R.string.invalid_name)
+    val fillDescriptionError = stringResource(R.string.invalid_description)
+    val fillImageError = stringResource(R.string.invalid_images)
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    LaunchedEffect(showSnackBar) {
+        if (showSnackBar) {
+            snackbarHostState.showSnackbar(errorMessage ?: unkownError)
+            showSnackBar = false
+        }
+    }
 
-        item{
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        modifier=modifier.padding(top = 32.dp)
+    ){innerPadding ->
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-            NameDescription(
-                nameChanged = { newName ->
-                    name = newName
-                },
-                descriptionChanged = { newDescription ->
-                    description = newDescription
-                }
-            )
-            Spacer(modifier = modifier.height(8.dp))
-            GalleryImage(imagesPathChanged = { newImg ->
-                if(newImg.isNotEmpty())
-                    image = newImg.first()
-            })
-            Spacer(modifier = modifier.height(8.dp))
-            CameraImage(imagesPathChanged = { newImg ->
-                if(newImg.isNotEmpty())
-                    image = newImg.first()
-            })
+            item{
 
-            Button(
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Green, contentColor = Color.DarkGray),
-                onClick = {
-                    if (name.isBlank()) {
-                        //TODO: pop up de erro a dizer name em falta
-                    } else if (description.isBlank()) {
-                        //TODO: pop up de erro a dizer description em falta
-                    }else if (image.isEmpty()) {
-                        //TODO: pop up de erro a dizer que é preciso uma imagem
-                    }else{
-                        addCategoryViewModel.addCategory(
+                NameDescription(
+                    nameChanged = { newName ->
+                        name = newName
+                    },
+                    descriptionChanged = { newDescription ->
+                        description = newDescription
+                    }
+                )
+                Spacer(modifier = modifier.height(8.dp))
+                GalleryImage(imagesPathChanged = { newImg ->
+                    if(newImg.isNotEmpty())
+                        image = newImg.first()
+                })
+                Spacer(modifier = modifier.height(8.dp))
+                CameraImage(imagesPathChanged = { newImg ->
+                    if(newImg.isNotEmpty())
+                        image = newImg.first()
+                })
+
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Green, contentColor = Color.DarkGray),
+                    onClick = {
+                        val validationResult = isAddCategoryValid(
                             name,
                             description,
-                            image
-                        )
+                            image,
+                            fillEveryFieldError,
+                            fillNameError,
+                            fillDescriptionError,
+                            fillImageError
+                        ) { msg ->
+                            errorMessage = msg
+                        }
 
-                        navController!!.navigateUp()
-                    }
+                        if (validationResult) {
+                            //a validação foi bem sucedida
+                            addCategoryViewModel.addCategory(
+                                name,
+                                description,
+                                image
+                            )
 
-                },
-                modifier = modifier.padding(top = 16.dp)
-            ) {
-                Text(stringResource(R.string.add_category))
+                            navController!!.navigateUp()
+                        }
+                        else{
+                            // a validação falhou
+                            showSnackBar = true
+                        }
+                    },
+
+                    modifier = modifier.padding(top = 16.dp)
+                ) {
+                    Text(stringResource(R.string.add_category))
+                }
+
             }
 
         }
-
     }
+}
 
+fun isAddCategoryValid(
+    name: String,
+    description: String,
+    image: String,
+    fillEveryFieldError: String,
+    fillNameError : String,
+    fillDescriptionError : String,
+    fillImageError: String,
+    errorMessage: (String) -> Unit
+): Boolean{
+    if (name.isBlank() && description.isBlank() && image.isBlank()) {
+        errorMessage(fillEveryFieldError)
+        return false
+    }
+    if(name.isBlank()){
+        errorMessage(fillNameError)
+        return false
+    }
+    if (description.isBlank()){
+        errorMessage(fillDescriptionError)
+        return false
+    }
+    if(image.isEmpty()){
+        errorMessage(fillImageError)
+        return false
+    }
+    return true
 }
