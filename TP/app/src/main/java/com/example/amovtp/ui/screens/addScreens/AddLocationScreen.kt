@@ -52,7 +52,6 @@ fun AddLocationScreen(
     var showSnackBar by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     val unkownError = stringResource(R.string.unknown_error)
-    val fillEveryFieldError = stringResource(R.string.fill_every_field)
     val fillNameError = stringResource(R.string.invalid_name)
     val fillDescriptionError = stringResource(R.string.invalid_description)
     val fillCoordinatesError = stringResource(R.string.invalid_coordinates)
@@ -127,7 +126,6 @@ fun AddLocationScreen(
                             isManual,
                             imgsGallery,
                             imgsCamera,
-                            fillEveryFieldError,
                             fillNameError,
                             fillDescriptionError,
                             fillCoordinatesError,
@@ -175,17 +173,12 @@ fun isAddLocationValid(
     isManualCoords: Boolean,
     imgsGallery: List<String>,
     imgsCamera: List<String>,
-    fillEveryFieldError: String,
     fillNameError : String,
     fillDescriptionError : String,
     fillCoordinatesError : String,
     fillImagesError: String,
     errorMessage: (String) -> Unit
 ): Boolean {
-    if (name.isBlank() && description.isBlank() && (isManualCoords && (lat == null || long == null)) && (imgsGallery.isEmpty() && imgsCamera.isEmpty())) {
-        errorMessage(fillEveryFieldError)
-        return false
-    }
     if(name.isBlank()){
         errorMessage(fillNameError)
         return false

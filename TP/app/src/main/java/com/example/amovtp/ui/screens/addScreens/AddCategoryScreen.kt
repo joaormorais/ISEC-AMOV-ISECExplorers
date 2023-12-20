@@ -45,7 +45,6 @@ fun AddCategoryScreen(
     var showSnackBar by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     val unkownError = stringResource(R.string.unknown_error)
-    val fillEveryFieldError = stringResource(R.string.fill_every_field)
     val fillNameError = stringResource(R.string.invalid_name)
     val fillDescriptionError = stringResource(R.string.invalid_description)
     val fillImageError = stringResource(R.string.invalid_images)
@@ -91,13 +90,12 @@ fun AddCategoryScreen(
                 })
 
                 Button(
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Green, contentColor = Color.DarkGray),
+                    colors = ButtonDefaults.buttonColors(containerColor = Consts.CONFIRMATION_COLOR, contentColor = Color.Black),
                     onClick = {
                         val validationResult = isAddCategoryValid(
                             name,
                             description,
                             image,
-                            fillEveryFieldError,
                             fillNameError,
                             fillDescriptionError,
                             fillImageError
@@ -136,16 +134,11 @@ fun isAddCategoryValid(
     name: String,
     description: String,
     image: String,
-    fillEveryFieldError: String,
     fillNameError : String,
     fillDescriptionError : String,
     fillImageError: String,
     errorMessage: (String) -> Unit
 ): Boolean{
-    if (name.isBlank() && description.isBlank() && image.isBlank()) {
-        errorMessage(fillEveryFieldError)
-        return false
-    }
     if(name.isBlank()){
         errorMessage(fillNameError)
         return false
