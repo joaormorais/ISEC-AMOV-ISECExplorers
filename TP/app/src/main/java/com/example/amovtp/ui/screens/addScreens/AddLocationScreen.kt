@@ -8,8 +8,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,98 +40,167 @@ fun AddLocationScreen(
     modifier: Modifier = Modifier
 ) {
 
-    var name = ""
-    var description = ""
-    var lat: Double? = null
-    var long: Double? = null
-    var isManual: Boolean = true
-    var imgsGallery: List<String> = emptyList()
-    var imgsCamera: List<String> = emptyList()
+    var name by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var lat by remember { mutableStateOf<Double?>(null) }
+    var long by remember { mutableStateOf<Double?>(null) }
+    var isManual by remember { mutableStateOf(true) }
+    var imgsGallery by remember { mutableStateOf(listOf<String>())}
+    var imgsCamera by remember { mutableStateOf(listOf<String>())}
+
+    val snackbarHostState = remember { SnackbarHostState() } //para mostrar as mensagens de erro
+    var showSnackBar by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val unkownError = stringResource(R.string.unknown_error)
+    val fillEveryFieldError = stringResource(R.string.fill_every_field)
+    val fillNameError = stringResource(R.string.invalid_name)
+    val fillDescriptionError = stringResource(R.string.invalid_description)
+    val fillCoordinatesError = stringResource(R.string.invalid_coordinates)
+    val fillImagesError = stringResource(R.string.invalid_images)
 
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    LaunchedEffect(showSnackBar) {
+        if (showSnackBar) {
+            snackbarHostState.showSnackbar(errorMessage ?: unkownError)
+            showSnackBar = false
+        }
+    }
 
-        item {
 
-            NameDescription(
-                nameChanged = { newName ->
-                    name = newName
-                },
-                descriptionChanged = { newDescription ->
-                    description = newDescription
-                }
-            )
-            Spacer(modifier = modifier.height(8.dp))
-            GeoDescription(
-                latChanged = { newLat ->
-                    lat = newLat
-                },
-                longChanged = { newLong ->
-                    long = newLong
-                },
-                manualChanged = { newManual ->
-                    isManual = newManual
-                    if (!newManual) {
-                        val tempLocation = addLocationViewModel.getCurrentLocation()
-                        lat = tempLocation.value!!.latitude
-                        long = tempLocation.value!!.longitude
+    Scaffold (
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        modifier=modifier.padding(top = 32.dp)
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            item {
+
+                NameDescription(
+                    nameChanged = { newName ->
+                        name = newName
+                    },
+                    descriptionChanged = { newDescription ->
+                        description = newDescription
                     }
-                }
-            )
-            Spacer(modifier = modifier.height(8.dp))
-            GalleryImage(imagesPathChanged = { newImgs ->
-                imgsGallery = newImgs
-            })
-            Spacer(modifier = modifier.height(8.dp))
-            CameraImage(imagesPathChanged = { newImgs ->
-                imgsCamera = newImgs
-            })
+                )
+                Spacer(modifier = modifier.height(8.dp))
+                GeoDescription(
+                    latChanged = { newLat ->
+                        lat = newLat
+                    },
+                    longChanged = { newLong ->
+                        long = newLong
+                    },
+                    manualChanged = { newManual ->
+                        isManual = newManual
+                        if (!newManual) {
+                            val tempLocation = addLocationViewModel.getCurrentLocation()
+                            lat = tempLocation.value!!.latitude
+                            long = tempLocation.value!!.longitude
+                        }
+                    }
+                )
+                Spacer(modifier = modifier.height(8.dp))
+                GalleryImage(imagesPathChanged = { newImgs ->
+                    imgsGallery = newImgs
+                })
+                Spacer(modifier = modifier.height(8.dp))
+                CameraImage(imagesPathChanged = { newImgs ->
+                    imgsCamera = newImgs
+                })
 
             Button(
                 colors = ButtonDefaults.buttonColors(containerColor = Consts.CONFIRMATION_COLOR, contentColor = Color.Black),
                 onClick = {
 
-                    if (name.isBlank()) {
-                        //TODO: pop up de erro a dizer name em falta
-                    } else if (description.isBlank()) {
-                        //TODO: pop up de erro a dizer description em falta
-                    } else if (lat == null) {
-                        //TODO: pop up de erro a dizer lat em falta
-                    } else if (long == null) {
-                        //TODO: pop up de erro a dizer long em falta
-                    } else if (imgsGallery.isEmpty() && imgsCamera.isEmpty()) {
-                        //TODO: pop up de erro a dizer que é preciso pelo menos uma imagem
-                    } else {
-
-                        val mixedImgs = imgsGallery + imgsCamera
-
-                        addLocationViewModel.addLocation(
+                        val validationResult = isAddLocationValid(
                             name,
                             description,
-                            lat!!,
-                            long!!,
+                            lat,
+                            long,
                             isManual,
-                            mixedImgs
-                        )
+                            imgsGallery,
+                            imgsCamera,
+                            fillEveryFieldError,
+                            fillNameError,
+                            fillDescriptionError,
+                            fillCoordinatesError,
+                            fillImagesError
+                        ){ msg ->
+                            errorMessage = msg
+                        }
 
-                        navController!!.navigateUp()
+                        if(validationResult){
+                            //a validação foi bem sucedida
+                            val mixedImgs = imgsGallery + imgsCamera
 
-                    }
+                            addLocationViewModel.addLocation(
+                                name,
+                                description,
+                                lat!!,
+                                long!!,
+                                isManual,
+                                mixedImgs
+                            )
 
-                },
-                modifier = modifier.padding(top = 16.dp)
-            ) {
-                Text(stringResource(R.string.add_loc))
+                            navController!!.navigateUp()
+                        }
+                        else{
+                            // a validação falhou
+                            showSnackBar = true
+                        }
+                    },
+                    modifier = modifier.padding(top = 16.dp)
+                ) {
+                    Text(stringResource(R.string.add_loc))
+                }
+
             }
 
         }
-
     }
+}
 
+fun isAddLocationValid(
+    name: String,
+    description: String,
+    lat: Double?,
+    long: Double?,
+    isManualCoords: Boolean,
+    imgsGallery: List<String>,
+    imgsCamera: List<String>,
+    fillEveryFieldError: String,
+    fillNameError : String,
+    fillDescriptionError : String,
+    fillCoordinatesError : String,
+    fillImagesError: String,
+    errorMessage: (String) -> Unit
+): Boolean {
+    if (name.isBlank() && description.isBlank() && (isManualCoords && (lat == null || long == null)) && (imgsGallery.isEmpty() && imgsCamera.isEmpty())) {
+        errorMessage(fillEveryFieldError)
+        return false
+    }
+    if(name.isBlank()){
+        errorMessage(fillNameError)
+        return false
+    }
+    if (description.isBlank()){
+        errorMessage(fillDescriptionError)
+        return false
+    }
+    if(isManualCoords && (lat == null || long == null)){
+        errorMessage(fillCoordinatesError)
+        return false
+    }
+    if(imgsGallery.isEmpty() && imgsCamera.isEmpty()){
+        errorMessage(fillImagesError)
+        return false
+    }
+    return true
 }

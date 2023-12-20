@@ -46,4 +46,10 @@
     <string name="manual_coordinates">Estas coordenadas foram introduzidas manualmente</string>
     <string name="automatically_coordinates">Estas coordenadas foram introduzidas automaticamente</string>
     <string name="classify">"Classificar: "</string>
+    <string name="invalid_name">Pf preencha o nome!</string>
+    <string name="invalid_description">Pf preencha a descrição!</string>
+    <string name="invalid_coordinates">Pf preencha as coordenadas!</string>
+    <string name="invalid_images">Pf insira imagem!</string>
+    <string name="invalid_location">Pf escolha a localização!</string>
+    <string name="invalid_category">Pf escolha a categoria!</string>
 </resources>

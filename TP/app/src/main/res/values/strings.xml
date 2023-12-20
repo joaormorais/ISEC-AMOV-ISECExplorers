@@ -45,4 +45,10 @@
     <string name="manual_coordinates">These coordinates were manually introduced</string>
     <string name="automatically_coordinates">These coordinates were automatically introduced</string>
     <string name="classify">Classify:</string>
+    <string name="invalid_name">Please fill the name!</string>
+    <string name="invalid_description">Please fill the description!</string>
+    <string name="invalid_coordinates">Please fill the coordinates!</string>
+    <string name="invalid_images">Please insert image!</string>
+    <string name="invalid_location">Please choose location!</string>
+    <string name="invalid_category">Please choose category!</string>
 </resources>

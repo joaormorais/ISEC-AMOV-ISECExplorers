@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,18 +45,33 @@ fun LoginScreen(
     modifier: Modifier = Modifier
 ) {
 
-    val namePwNeeded = stringResource(R.string.name_pw_needed)
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val snackBarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
+    //val coroutineScope = rememberCoroutineScope()
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val snackbarHostState = remember { SnackbarHostState() } //para mostrar as mensagens de erro
+    var showSnackBar by remember { mutableStateOf(false) }
+    val unkownError = stringResource(R.string.unknown_error)
+    val namePwNeeded = stringResource(R.string.name_pw_needed)
 
-    Column(
+    LaunchedEffect(showSnackBar) {
+        if (showSnackBar) {
+            snackbarHostState.showSnackbar(errorMessage ?: unkownError)
+            showSnackBar = false
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        modifier=modifier.padding(top = 32.dp)
+    ) { innerPadding ->
+        Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = modifier
                 .fillMaxSize()
-                .padding(top = 32.dp)
+                .padding(innerPadding)
         ) {
             OutlinedTextField(
                 value = name,
@@ -84,14 +101,18 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             if (i.path == Screens.LOCATIONS.route) {
-                                if (isLoginValid(name, password)) {
+                                if (isLoginValid(
+                                        name,
+                                        password,
+                                        namePwNeeded
+                                    )
+                                    { msg ->
+                                        errorMessage = msg
+                                    }
+                                ) {
                                     navController?.navigate(i.route)
                                 } else {
-                                    coroutineScope.launch {
-                                        snackBarHostState.showSnackbar(
-                                            namePwNeeded
-                                        )
-                                    }
+                                    showSnackBar = true
                                 }
                             } else {
                                 navController?.navigate(i.route)
@@ -119,14 +140,17 @@ fun LoginScreen(
                 )
             }
         }
-
+    }
 }
 
 fun isLoginValid(
     name: String,
     password: String,
+    namePwNeeded: String,
+    errorMessage: (String) -> Unit
 ): Boolean {
     if (name.isBlank() || password.isBlank()) {
+        errorMessage(namePwNeeded)
         return false
     }
     return true

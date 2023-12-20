@@ -57,9 +57,9 @@ fun AddPointOfInterestScreen(
     var description by remember { mutableStateOf("") }
     var lat by remember { mutableStateOf<Double?>(null) }
     var long by remember { mutableStateOf<Double?>(null) }
-    var isManual = true
-    var imgsGallery: List<String> = emptyList()
-    var imgsCamera: List<String> = emptyList()
+    var isManual by remember { mutableStateOf(true) }
+    var imgsGallery by remember { mutableStateOf(listOf<String>())}
+    var imgsCamera by remember { mutableStateOf(listOf<String>())}
 
     var selectedLocations by remember { mutableStateOf(mutableListOf<String>()) }
     var expanded1 by remember { mutableStateOf(false) }
@@ -73,6 +73,12 @@ fun AddPointOfInterestScreen(
     var errorMessage by remember { mutableStateOf<String?>(null) }
     val unkownError = stringResource(R.string.unknown_error)
     val fillEveryFieldError = stringResource(R.string.fill_every_field)
+    val fillNameError = stringResource(R.string.invalid_name)
+    val fillDescriptionError = stringResource(R.string.invalid_description)
+    val fillCoordinatesError = stringResource(R.string.invalid_coordinates)
+    val fillImagesError = stringResource(R.string.invalid_images)
+    val fillLocationError = stringResource(R.string.invalid_location)
+    val fillCategoryError = stringResource(R.string.invalid_category)
 
     LaunchedEffect(showSnackBar) {
         if (showSnackBar) {
@@ -217,6 +223,7 @@ fun AddPointOfInterestScreen(
                         contentColor = Color.Black
                     ),
                     onClick = {
+
                         val validationResult = isAddPointOfInterestValid(
                             name,
                             description,
@@ -227,14 +234,19 @@ fun AddPointOfInterestScreen(
                             selectedCategory,
                             imgsGallery,
                             imgsCamera,
-                            fillEveryFieldError
-                        ) { msg ->
+                            fillEveryFieldError,
+                            fillNameError,
+                            fillDescriptionError,
+                            fillCoordinatesError,
+                            fillImagesError,
+                            fillLocationError,
+                            fillCategoryError
+                        ){ msg ->
                             errorMessage = msg
                         }
 
                         if (validationResult) {
                             val mixedImgs = imgsGallery + imgsCamera
-
                             addPointOfInterestViewModel.addPointOfInterest(
                                 name,
                                 description,
@@ -271,6 +283,12 @@ fun isAddPointOfInterestValid(
     imgsGallery: List<String>,
     imgsCamera: List<String>,
     fillEveryFieldError: String,
+    fillNameError : String,
+    fillDescriptionError : String,
+    fillCoordinatesError : String,
+    fillImagesError: String,
+    fillLocationError: String,
+    fillCategoryError: String,
     errorMessage: (String) -> Unit
 ): Boolean {
     if (name.isBlank() || description.isBlank() || (imgsGallery.isEmpty() && imgsCamera.isEmpty())
@@ -279,8 +297,28 @@ fun isAddPointOfInterestValid(
         errorMessage(fillEveryFieldError)
         return false
     }
-    if (isManualCoords && (lat == null || long == null)) {
-        errorMessage(fillEveryFieldError)
+    if(name.isBlank()){
+        errorMessage(fillNameError)
+        return false
+    }
+    if (description.isBlank()){
+        errorMessage(fillDescriptionError)
+        return false
+    }
+    if(isManualCoords && (lat == null || long == null)){
+        errorMessage(fillCoordinatesError)
+        return false
+    }
+    if(selectedLocation.isBlank()){
+        errorMessage(fillLocationError)
+        return false
+    }
+    if(selectedCategory.isBlank()){
+        errorMessage(fillCategoryError)
+        return false
+    }
+    if(imgsGallery.isEmpty() && imgsCamera.isEmpty()){
+        errorMessage(fillImagesError)
         return false
     }
     return true
