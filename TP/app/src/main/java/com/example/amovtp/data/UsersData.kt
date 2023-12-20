@@ -6,15 +6,11 @@ import androidx.lifecycle.MutableLiveData
 
 class UsersData(/*firestore*/) {
 
-    private var _username = mutableStateOf("")
-    private var _password = mutableStateOf("")
     private val _currentLocation = MutableLiveData(Location(null))
     private var _locationsApproved = mutableListOf<Int>()
     private var _pointsOfInterestApproved = mutableListOf<Int>()
     private var _categoriesApproved = mutableListOf<Int>()
-
-    val username: String
-        get() = _username.toString()
+    private var _pointsOfInterestClassified = mutableMapOf<Int, Int>()
 
     val currentLocation: MutableLiveData<Location>
         get() = _currentLocation
@@ -28,27 +24,43 @@ class UsersData(/*firestore*/) {
     val categoriesApproved: List<Int>
         get() = _categoriesApproved.toList()
 
+    val pointsOfInterestClassified: Map<Int, Int>
+        get() = _pointsOfInterestClassified.toMap()
+
     fun setCurrentLocation(location: Location) {
         _currentLocation.postValue(location)
-    }
-
-    fun setUsername(newValue: String) {
-        _username.value = newValue
-    }
-
-    fun setPassword(newValue: String) {
-        _password.value = newValue
     }
 
     fun addLocationApproved(locationId: Int) {
         _locationsApproved.add(locationId)
     }
 
+    fun removeLocationApproved(locationId: Int) {
+        _locationsApproved.remove(locationId)
+    }
+
     fun addPointOfInterestApproved(pointOfInterestId: Int) {
         _pointsOfInterestApproved.add(pointOfInterestId)
+    }
+
+    fun removePointOfInterestApproved(pointOfInterestId: Int) {
+        _pointsOfInterestApproved.remove(pointOfInterestId)
     }
 
     fun addCategoryApproved(categoryId: Int) {
         _categoriesApproved.add(categoryId)
     }
+
+    fun removeCategoryApproved(categoryId: Int) {
+        _categoriesApproved.add(categoryId)
+    }
+
+    fun addPointOfInterestClassified(pointOfInterestId: Int, classification: Int) {
+        _pointsOfInterestClassified[pointOfInterestId] = classification
+    }
+
+    fun removePointOfInterestClassified(pointOfInterestId: Int) {
+        _pointsOfInterestClassified.remove(pointOfInterestId)
+    }
+
 }

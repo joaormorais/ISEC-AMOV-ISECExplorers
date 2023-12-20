@@ -22,6 +22,30 @@ class LocationsViewModel(
     private val usersData: UsersData
 ) : ViewModel() {
 
+    /**
+     * Calculates the distance between a point and the current location of the device
+     */
+    private fun calculateDistance(
+        currLat: Double, // lat1
+        currLong: Double, // long1
+        locLat: Double, // lat2
+        locLong: Double // long2
+    ): Double {
+
+        val earthRadius = 6371
+        var latDistance = Math.toRadians(locLat - currLat)
+        var longDistance = Math.toRadians(locLong - currLong)
+
+        val a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
+                Math.cos(Math.toRadians(currLat)) * Math.cos(Math.toRadians(locLat)) *
+                Math.sin(longDistance / 2) * Math.sin(longDistance / 2)
+
+        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+        return earthRadius * c
+
+    }
+
     fun getLocations(): List<Location> {
         return geoData.locations
     }
@@ -57,28 +81,9 @@ class LocationsViewModel(
             geoData.approveLocation(locationId)
     }
 
-    /**
-     * Calculates the distance between a point and the current location of the device
-     */
-    private fun calculateDistance(
-        currLat: Double, // lat1
-        currLong: Double, // long1
-        locLat: Double, // lat2
-        locLong: Double // long2
-    ): Double {
-
-        val earthRadius = 6371
-        var latDistance = Math.toRadians(locLat - currLat)
-        var longDistance = Math.toRadians(locLong - currLong)
-
-        val a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
-                Math.cos(Math.toRadians(currLat)) * Math.cos(Math.toRadians(locLat)) *
-                Math.sin(longDistance / 2) * Math.sin(longDistance / 2)
-
-        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
-        return earthRadius * c
-
+    fun removeVoteForApprovalLocation(locationId: Int) {
+        geoData.removeVoteForApprovalLocation(locationId)
+        usersData.removeLocationApproved(locationId)
     }
 
 }

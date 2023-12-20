@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.ThumbUp
@@ -30,6 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -233,34 +235,46 @@ fun LocationsScreen(
                                     )
                                     Spacer(modifier.height(8.dp))
                                     Text(
-                                        text = stringResource(R.string.votes_for_approval) + it.votes,
+                                        text = stringResource(
+                                            R.string.votes_for_approval)+it.votes,
                                         fontSize = 12.sp
                                     )
-                                    if (!isVotedByUser) {
-                                        Spacer(modifier.height(8.dp))
-                                        Button(
-                                            onClick = {
-                                                isVotedByUser = true
-                                                locationsViewModel.voteForApprovalLocation(it.id)
+                                    Button(
+                                        onClick = {
+                                            isVotedByUser = !isVotedByUser
+
+                                            if (!isVotedByUser) {
+                                                locationsViewModel.voteForApprovalLocation(
+                                                    it.id
+                                                )
                                                 isLocationApproved = it.isApproved
-                                            },
-                                        ) {
-                                            Row {
+                                            } else {
+                                                locationsViewModel.removeVoteForApprovalLocation(
+                                                    it.id
+                                                )
+                                                isLocationApproved = it.isApproved
+                                            }
+
+                                        },
+                                    ) {
+                                        Row {
+
+                                            if (!isVotedByUser) {
                                                 Text(stringResource(R.string.approve))
                                                 Icon(
                                                     Icons.Rounded.ThumbUp,
                                                     "Approve",
                                                     modifier = modifier.padding(start = 8.dp)
                                                 )
+                                            } else {
+                                                Text(stringResource(R.string.disapprove))
+                                                Icon(
+                                                    Icons.Rounded.Close,
+                                                    "Disapprove",
+                                                    modifier = modifier.padding(start = 8.dp)
+                                                )
                                             }
                                         }
-                                    } else {
-                                        Spacer(modifier.height(8.dp))
-                                        Text(
-                                            text = stringResource(R.string.location_voted),
-                                            fontSize = 12.sp,
-                                            color = Consts.CONFIRMATION_COLOR
-                                        )
                                     }
                                     Spacer(modifier.height(8.dp))
                                 }

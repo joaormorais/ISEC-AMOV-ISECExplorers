@@ -27,7 +27,31 @@ class PointsOfInterestViewModel(
 ) : ViewModel() {
 
     private var _filterLocationName = mutableStateOf(Consts.ALL_LOCATIONS)
-    private var _filterCategoryName = mutableStateOf(Consts.ALL_CATEGORIES.toString())
+    private var _filterCategoryName = mutableStateOf(Consts.ALL_CATEGORIES)
+
+    /**
+     * Calculates the distance between a point and the current location of the device
+     */
+    private fun calculateDistance(
+        currLat: Double, // lat1
+        currLong: Double, // long1
+        locLat: Double, // lat2
+        locLong: Double // long2
+    ): Double {
+
+        val earthRadius = 6371
+        var latDistance = Math.toRadians(locLat - currLat)
+        var longDistance = Math.toRadians(locLong - currLong)
+
+        val a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
+                Math.cos(Math.toRadians(currLat)) * Math.cos(Math.toRadians(locLat)) *
+                Math.sin(longDistance / 2) * Math.sin(longDistance / 2)
+
+        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+        return earthRadius * c
+
+    }
 
     /**
      * Gets the current location of the android device
@@ -86,12 +110,12 @@ class PointsOfInterestViewModel(
 
         var filteredPoints: List<PointOfInterest>
 
-        if (_filterLocationName.value == Consts.ALL_LOCATIONS.toString())
+        if (_filterLocationName.value == Consts.ALL_LOCATIONS)
             filteredPoints = geoData.pointsOfInterest
         else
             filteredPoints = getPointsFromLocation(_filterLocationName.value)
 
-        if (_filterCategoryName.value == Consts.ALL_CATEGORIES.toString())
+        if (_filterCategoryName.value == Consts.ALL_CATEGORIES)
             return filteredPoints
         else
             return getPointsFromCategory(_filterCategoryName.value, filteredPoints)
@@ -128,28 +152,18 @@ class PointsOfInterestViewModel(
             geoData.approvePointOfInterest(pointOfInterestId)
     }
 
-    /**
-     * Calculates the distance between a point and the current location of the device
-     */
-    private fun calculateDistance(
-        currLat: Double, // lat1
-        currLong: Double, // long1
-        locLat: Double, // lat2
-        locLong: Double // long2
-    ): Double {
+    fun removeVoteForApprovalPointOfInterest(pointOfInterestId: Int) {
+        geoData.removeVoteForApprovalPointOfInterest(pointOfInterestId)
+        usersData.removePointOfInterestApproved(pointOfInterestId)
+    }
 
-        val earthRadius = 6371
-        var latDistance = Math.toRadians(locLat - currLat)
-        var longDistance = Math.toRadians(locLong - currLong)
-
-        val a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
-                Math.cos(Math.toRadians(currLat)) * Math.cos(Math.toRadians(locLat)) *
-                Math.sin(longDistance / 2) * Math.sin(longDistance / 2)
-
-        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
-        return earthRadius * c
+    /*fun addClassificationByUser(pointOfInterestID: Int, classification: Int){
 
     }
+
+    fun removeClassificationByUser(pointOfInterestID: Int, classification: Int){
+        usersData.removePointOfInterestClassified(pointOfInterestID)
+        geoData.removeClassificationToPoint(pointOfInterestID, classification)
+    }*/
 
 }

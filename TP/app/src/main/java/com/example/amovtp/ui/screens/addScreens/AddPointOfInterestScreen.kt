@@ -122,9 +122,6 @@ fun AddPointOfInterestScreen(
                             val tempLocation = addPointOfInterestViewModel.getCurrentLocation()
                             lat = tempLocation.value!!.latitude
                             long = tempLocation.value!!.longitude
-                        } else {
-                            lat = null
-                            long = null
                         }
                     }
                 )
@@ -157,6 +154,7 @@ fun AddPointOfInterestScreen(
                         ) {
                             locationList.forEach { location ->
 
+                                //TODO: terminar + pintar o fundo
                                 val itemBackgroundColor by remember { mutableStateOf(Color.White) }
 
                                 DropdownMenuItem(

@@ -19,10 +19,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
-import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -256,7 +256,7 @@ fun PointsOfInterestScreen(
                         pointsOfInterestViewModel.findVoteForApprovedPointOfInterest(it.id)
                     )
                 }
-                var isLocationApproved by remember { mutableStateOf(it.isApproved) }
+                var isPointOfInterestApproved by remember { mutableStateOf(it.isApproved) }
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
@@ -265,7 +265,7 @@ fun PointsOfInterestScreen(
                         .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 4.dp),
                     border = BorderStroke(2.dp, Color.Black),
                     colors =
-                    if (!isLocationApproved)
+                    if (!isPointOfInterestApproved)
                         CardDefaults.cardColors(
                             containerColor = Consts.NOT_APPROVED_COLOR,
                             contentColor = Color.White
@@ -341,6 +341,14 @@ fun PointsOfInterestScreen(
                                 )
                                 Spacer(modifier.height(8.dp))
                                 Text(
+                                    text = stringResource(
+                                        R.string.locations_description,
+                                        it.locations.toString()
+                                    ),
+                                    fontSize = 12.sp
+                                )
+                                Spacer(modifier.height(8.dp))
+                                Text(
                                     text = stringResource(R.string.latitude_description, it.lat),
                                     fontSize = 12.sp
                                 )
@@ -365,50 +373,68 @@ fun PointsOfInterestScreen(
                                     fontSize = 12.sp
                                 )
                                 Spacer(modifier.height(8.dp))
-                                if (!isLocationApproved) {
+                                if (!isPointOfInterestApproved) {
                                     //TODO: quem criou o ponto não deve poder aprovar a mesma
                                     Divider(color = Color.DarkGray, thickness = 1.dp)
                                     Spacer(modifier.height(8.dp))
                                     Text(
-                                        text = stringResource(R.string.not_approved_location),
+                                        text = stringResource(R.string.not_approved_point),
                                         fontSize = 12.sp,
                                         color = Consts.WARNING_COLOR
                                     )
                                     Spacer(modifier.height(8.dp))
                                     Text(
-                                        text = stringResource(R.string.votes_for_approval) + it.votes,
+                                        text = stringResource(
+                                            R.string.votes_for_approval
+                                        )+it.votes,
                                         fontSize = 12.sp
                                     )
-                                    if (!isVotedByUser) {
-                                        Spacer(modifier.height(8.dp))
-                                        Button(
-                                            onClick = {
-                                                isVotedByUser = true
+                                    Spacer(modifier.height(8.dp))
+                                    Button(
+                                        onClick = {
+                                            isVotedByUser = !isVotedByUser
+
+                                            if (!isVotedByUser) {
                                                 pointsOfInterestViewModel.voteForApprovalPointOfInterest(
                                                     it.id
                                                 )
-                                                isLocationApproved = it.isApproved
-                                            },
-                                        ) {
-                                            Row {
+                                                isPointOfInterestApproved = it.isApproved
+                                            } else {
+                                                pointsOfInterestViewModel.removeVoteForApprovalPointOfInterest(
+                                                    it.id
+                                                )
+                                                isPointOfInterestApproved = it.isApproved
+                                            }
+
+                                        },
+                                    ) {
+                                        Row {
+
+                                            if (!isVotedByUser) {
                                                 Text(stringResource(R.string.approve))
                                                 Icon(
                                                     Icons.Rounded.ThumbUp,
                                                     "Approve",
                                                     modifier = modifier.padding(start = 8.dp)
                                                 )
+                                            } else {
+                                                Text(stringResource(R.string.disapprove))
+                                                Icon(
+                                                    Icons.Rounded.Close,
+                                                    "Disapprove",
+                                                    modifier = modifier.padding(start = 8.dp)
+                                                )
                                             }
                                         }
-                                    } else {
-                                        Spacer(modifier.height(8.dp))
-                                        Text(
-                                            text = stringResource(R.string.point_of_interest_voted),
-                                            fontSize = 12.sp,
-                                            color = Consts.CONFIRMATION_COLOR
-                                        )
                                     }
                                 } else {
+                                    //TODO: fazer a classificação
                                     Spacer(modifier.height(8.dp))
+                                    val listOfClassifications = listOf(
+                                        Consts.ONE_STAR_CLASSIFICATION.toString(),
+                                        Consts.TWO_STAR_CLASSIFICATION.toString(),
+                                        Consts.THREE_STAR_CLASSIFICATION.toString()
+                                    )
                                     Row(
                                         modifier = modifier
                                             .fillMaxWidth()
@@ -420,43 +446,37 @@ fun PointsOfInterestScreen(
                                             text = stringResource(R.string.classify),
                                             fontSize = 12.sp
                                         )
-                                        Button(
-                                            //modifier = modifier.padding(start = 4.dp, end = 4.dp),
-                                            onClick = {},
-                                        ) {
-                                            Row {
-                                                Text(Consts.ONE_STAR_CLASSIFICATION.toString())
-                                                Icon(
-                                                    Icons.Rounded.Star,
-                                                    "Classification",
-                                                    modifier = modifier.padding(start = 8.dp)
-                                                )
+                                        /*var isClassificationSelected by remember{ mutableStateOf(false)}
+                                        for (i in listOfClassifications) {
+                                            Button(
+                                                onClick = {
+                                                    when (i) {
+
+                                                        Consts.ONE_STAR_CLASSIFICATION.toString() -> {
+                                                            pointsOfInterestViewModel.addPo
+                                                        }
+
+                                                        Consts.TWO_STAR_CLASSIFICATION.toString() -> {
+
+                                                        }
+
+                                                        Consts.THREE_STAR_CLASSIFICATION.toString() -> {
+
+                                                        }
+
+                                                    }
+                                                },
+                                            ) {
+                                                Row {
+                                                    Text(i)
+                                                    Icon(
+                                                        Icons.Rounded.Star,
+                                                        "Classification",
+                                                        modifier = modifier.padding(start = 8.dp)
+                                                    )
+                                                }
                                             }
-                                        }
-                                        Button(
-                                            onClick = {},
-                                        ) {
-                                            Row {
-                                                Text(Consts.TWO_STAR_CLASSIFICATION.toString())
-                                                Icon(
-                                                    Icons.Rounded.Star,
-                                                    "Classification",
-                                                    modifier = modifier.padding(start = 8.dp)
-                                                )
-                                            }
-                                        }
-                                        Button(
-                                            onClick = {},
-                                        ) {
-                                            Row {
-                                                Text(Consts.THREE_STAR_CLASSIFICATION.toString())
-                                                Icon(
-                                                    Icons.Rounded.Star,
-                                                    "Classification",
-                                                    modifier = modifier.padding(start = 8.dp)
-                                                )
-                                            }
-                                        }
+                                        }*/
                                     }
                                 }
                                 Spacer(modifier.height(8.dp))

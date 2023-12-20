@@ -1,7 +1,5 @@
 package com.example.amovtp.data
 
-import com.example.amovtp.utils.Consts
-
 /**
  * Represents a location with N points of interest
  */
@@ -44,6 +42,7 @@ data class PointOfInterest(
     val category: String,
     val imgs: List<String>,
     var classification: Int,
+    var nClassifications:Int,
     var votes: Int,
     var isApproved: Boolean
 )
@@ -161,8 +160,8 @@ class GeoData(/*firestore*/) {
                     false,
                     mutableListOf(),
                     mutableListOf(),
-                    2,
-                    true
+                    0,
+                    false
                 )
             )
         }
@@ -179,8 +178,9 @@ class GeoData(/*firestore*/) {
                 _categories.random().name,
                 mutableListOf(),
                 0,
-                2,
-                true
+                0,
+                0,
+                false
             )
 
             _pointsOfInterest.add(tempPointOfInterest)
@@ -216,7 +216,7 @@ class GeoData(/*firestore*/) {
                 isManualCoords,
                 mutableListOf(),
                 imgs,
-                Consts.INITIAL_VOTES,
+                0,
                 false
             )
         )
@@ -245,8 +245,9 @@ class GeoData(/*firestore*/) {
                 locations,
                 category,
                 imgs,
-                Consts.INITIAL_CLASSIFICATION,
-                Consts.INITIAL_VOTES,
+                0,
+                0,
+                0,
                 false
             )
         )
@@ -265,7 +266,7 @@ class GeoData(/*firestore*/) {
                 name,
                 description,
                 img,
-                Consts.INITIAL_VOTES,
+                0,
                 false
             )
         )
@@ -276,24 +277,58 @@ class GeoData(/*firestore*/) {
         _locations.find { it.id == id }?.apply { votes++ }
     }
 
+    fun removeVoteForApprovalLocation(id: Int) {
+        _locations.find { it.id == id }?.apply { votes-- }
+    }
+
     fun approveLocation(id: Int) {
         _locations.find { it.id == id }?.apply { isApproved = true }
+    }
+
+    fun disapproveLocation(id: Int) {
+        _locations.find { it.id == id }?.apply { isApproved = false }
     }
 
     fun voteForApprovalPointOfInterest(id: Int) {
         _pointsOfInterest.find { it.id == id }?.apply { votes++ }
     }
 
+    fun removeVoteForApprovalPointOfInterest(id: Int) {
+        _pointsOfInterest.find { it.id == id }?.apply { votes-- }
+    }
+
     fun approvePointOfInterest(id: Int) {
         _pointsOfInterest.find { it.id == id }?.apply { isApproved = true }
+    }
+
+    fun disapprovePointOfInterest(id: Int) {
+        _pointsOfInterest.find { it.id == id }?.apply { isApproved = false }
     }
 
     fun voteForApprovalCategory(id: Int) {
         _categories.find { it.id == id }?.apply { votes++ }
     }
 
+    fun removeVoteForApprovalCategory(id: Int) {
+        _categories.find { it.id == id }?.apply { votes-- }
+    }
+
     fun approveCategory(id: Int) {
         _categories.find { it.id == id }?.apply { isApproved = true }
+    }
+
+    fun disapproveCategory(id: Int) {
+        _categories.find { it.id == id }?.apply { isApproved = false }
+    }
+
+    fun addClassificationToPoint(pointOfInterestID: Int, classification: Int) {
+        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification =+ classification
+        _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications =+ 1
+    }
+
+    fun removeClassificationToPoint(pointOfInterestID: Int, classification: Int) {
+        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification =- classification
+        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification =- 1
     }
 
 }
