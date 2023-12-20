@@ -42,7 +42,7 @@ class AddPointOfInterestViewModel(
         lat: Double,
         long: Double,
         isManualCoords: Boolean,
-        location: String,
+        location: List<String>,
         category: String,
         imgs: List<String>
     ): String {

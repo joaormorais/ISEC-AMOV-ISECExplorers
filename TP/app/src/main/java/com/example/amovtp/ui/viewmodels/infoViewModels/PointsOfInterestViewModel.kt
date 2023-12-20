@@ -61,8 +61,7 @@ class PointsOfInterestViewModel(
      * Gets every point of interest with a specific location
      */
     fun getPointsFromLocation(locationName: String): List<PointOfInterest> {
-        //return geoData.pointsOfInterest.filter { it.locations.contains(Regex("\\b${Regex.escape(locationName)}\\b"))}
-        return geoData.pointsOfInterest.filter { it.locations == locationName }
+        return geoData.pointsOfInterest.filter { it.locations.contains(locationName) }
     }
 
     /**
@@ -125,7 +124,7 @@ class PointsOfInterestViewModel(
     fun voteForApprovalPointOfInterest(pointOfInterestId: Int) {
         geoData.voteForApprovalPointOfInterest(pointOfInterestId)
         usersData.addPointOfInterestApproved(pointOfInterestId)
-        if (geoData.pointsOfInterest.find { it.id == pointOfInterestId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
+        if (geoData.pointsOfInterest.find { it.id == pointOfInterestId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
             geoData.approvePointOfInterest(pointOfInterestId)
     }
 

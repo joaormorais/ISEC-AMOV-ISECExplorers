@@ -64,7 +64,7 @@ fun AddCategoryScreen(
             })
 
             Button(
-                colors = ButtonDefaults.buttonColors(containerColor = Consts.CONFIRMATION_COLOR, contentColor = Color.DarkGray),
+                colors = ButtonDefaults.buttonColors(containerColor = Consts.CONFIRMATION_COLOR, contentColor = Color.Black),
                 onClick = {
                     if (name.isBlank()) {
                         //TODO: pop up de erro a dizer name em falta

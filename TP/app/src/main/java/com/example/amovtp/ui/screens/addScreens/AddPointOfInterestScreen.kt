@@ -2,16 +2,23 @@ package com.example.amovtp.ui.screens.addScreens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -39,7 +46,6 @@ import com.example.amovtp.ui.composables.AddInfoComposables.NameDescription
 import com.example.amovtp.ui.viewmodels.addViewModels.AddPointOfInterestViewModel
 import com.example.amovtp.utils.Consts
 
-
 @Composable
 fun AddPointOfInterestScreen(
     addPointOfInterestViewModel: AddPointOfInterestViewModel,
@@ -51,18 +57,18 @@ fun AddPointOfInterestScreen(
     var description by remember { mutableStateOf("") }
     var lat by remember { mutableStateOf<Double?>(null) }
     var long by remember { mutableStateOf<Double?>(null) }
-    var isManual: Boolean = true
+    var isManual = true
     var imgsGallery: List<String> = emptyList()
     var imgsCamera: List<String> = emptyList()
 
-    var selectedLocation by remember { mutableStateOf("") }
+    var selectedLocations by remember { mutableStateOf(mutableListOf<String>()) }
     var expanded1 by remember { mutableStateOf(false) }
     var locationList: List<Location> = addPointOfInterestViewModel.getLocations()
     var selectedCategory by remember { mutableStateOf("") }
     var expanded2 by remember { mutableStateOf(false) }
     var categoryList: List<Category> = addPointOfInterestViewModel.getCategories()
 
-    val snackbarHostState = remember { SnackbarHostState() } //para mostrar as mensagens de erro
+    val snackbarHostState = remember { SnackbarHostState() }
     var showSnackBar by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     val unkownError = stringResource(R.string.unknown_error)
@@ -77,8 +83,8 @@ fun AddPointOfInterestScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        modifier=modifier.padding(top = 32.dp)
-    ){innerPadding ->
+        modifier = modifier.padding(top = 32.dp)
+    ) { innerPadding ->
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
@@ -87,7 +93,7 @@ fun AddPointOfInterestScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            item{
+            item {
 
                 NameDescription(
                     nameChanged = { newName ->
@@ -115,53 +121,84 @@ fun AddPointOfInterestScreen(
                     }
                 )
                 Spacer(modifier = modifier.height(8.dp))
-                //TODO: fazer um dropdown menu com todas as localizações e quando o utilizador escolhe uma, manda para a função de adicionar ponto de interesse
+                Row {
+                    Box {
+                        Button(
+                            onClick = {
+                                expanded1 = true
+                            },
+                            modifier = modifier
+                                .wrapContentWidth()
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("Choose locations")
+                                Icon(Icons.Rounded.KeyboardArrowDown, "down")
+                            }
+                        }
 
-                // DropdownMenu para selecionar a localização
-                Box(Modifier.fillMaxWidth()) {
-                    TextButton(
-                        onClick = { expanded1 = true },
-                    ) {
+                        DropdownMenu(
+                            expanded = expanded1,
+                            onDismissRequest = { expanded1 = false },
+                            modifier = modifier
+                                .wrapContentWidth()
+                                .heightIn(max = 200.dp)
+                                .wrapContentHeight(Alignment.Top)
+                        ) {
+                            locationList.forEach { location ->
 
-                        Text(if (selectedLocation.isEmpty()) "Escolha uma localização" else selectedLocation)
+                                val itemBackgroundColor by remember { mutableStateOf(Color.White) }
+
+                                DropdownMenuItem(
+                                    text = { Text(location.name) },
+                                    //colors = MenuItemColors(),
+                                    onClick = {
+                                        if (!selectedLocations.removeAll { it == location.name }) {
+                                            selectedLocations.add(location.name)
+                                        } else {
+
+                                        }
+                                    })
+                            }
+                        }
                     }
-
-                    DropdownMenu(
-                        expanded = expanded1,
-                        onDismissRequest = { expanded1 = false }
-                    ) {
-                        locationList.forEach { location ->
-                            DropdownMenuItem(
-                                text = {Text(location.name)},
-                                onClick = {
-                                    selectedLocation = location.name
-                                    expanded1 = false
-                                })
+                    Box {
+                        Button(
+                            onClick = {
+                                expanded2 = true
+                            },
+                            modifier = modifier
+                                .wrapContentWidth()
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(if (selectedCategory.isEmpty()) "Choose a category" else selectedCategory)
+                                Icon(Icons.Rounded.KeyboardArrowDown, "down")
+                            }
+                        }
+                        DropdownMenu(
+                            expanded = expanded2,
+                            onDismissRequest = { expanded2 = false },
+                            modifier = modifier
+                                .wrapContentWidth()
+                                .heightIn(max = 200.dp)
+                                .wrapContentHeight(Alignment.Top)
+                        ) {
+                            categoryList.forEach { category ->
+                                DropdownMenuItem(
+                                    text = { Text(category.name) },
+                                    onClick = {
+                                        selectedCategory = category.name
+                                        expanded2 = false
+                                    })
+                            }
                         }
                     }
                 }
-
-                // DropdownMenu para selecionar a categoria
-                Box(Modifier.fillMaxWidth()) {
-                    TextButton(onClick = { expanded2 = true }) {
-                        Text(if (selectedCategory.isEmpty()) "Escolha uma categoria" else selectedCategory)
-                    }
-
-                    DropdownMenu(
-                        expanded = expanded2,
-                        onDismissRequest = { expanded2 = false }
-                    ) {
-                        categoryList.forEach { category ->
-                            DropdownMenuItem(
-                                text = {Text(category.name)},
-                                onClick = {
-                                    selectedCategory = category.name
-                                    expanded2 = false
-                                })
-                        }
-                    }
-                }
-
                 Spacer(modifier = modifier.height(8.dp))
                 GalleryImage(imagesPathChanged = { newImgs ->
                     val uniqueImgs = newImgs.filter { !imgsGallery.contains(it) }
@@ -175,7 +212,10 @@ fun AddPointOfInterestScreen(
 
 
                 Button(
-                    colors = ButtonDefaults.buttonColors(containerColor = Consts.CONFIRMATION_COLOR, contentColor = Color.DarkGray),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Consts.CONFIRMATION_COLOR,
+                        contentColor = Color.Black
+                    ),
                     onClick = {
                         val validationResult = isAddPointOfInterestValid(
                             name,
@@ -183,17 +223,16 @@ fun AddPointOfInterestScreen(
                             lat,
                             long,
                             isManual,
-                            selectedLocation,
+                            selectedLocations,
                             selectedCategory,
                             imgsGallery,
                             imgsCamera,
                             fillEveryFieldError
-                        ){ msg ->
+                        ) { msg ->
                             errorMessage = msg
                         }
 
-                        if (validationResult){
-                            //a validação foi bem sucedida
+                        if (validationResult) {
                             val mixedImgs = imgsGallery + imgsCamera
 
                             addPointOfInterestViewModel.addPointOfInterest(
@@ -202,15 +241,13 @@ fun AddPointOfInterestScreen(
                                 lat!!,
                                 long!!,
                                 isManual,
-                                selectedLocation,
+                                selectedLocations,
                                 selectedCategory,
                                 mixedImgs
                             )
 
                             navController!!.navigateUp()
-                        }
-                        else{
-                            // a validação falhou
+                        } else {
                             showSnackBar = true
                         }
                     },
@@ -229,7 +266,7 @@ fun isAddPointOfInterestValid(
     lat: Double?,
     long: Double?,
     isManualCoords: Boolean,
-    selectedLocation: String,
+    selectedLocation: List<String>,
     selectedCategory: String,
     imgsGallery: List<String>,
     imgsCamera: List<String>,
@@ -237,11 +274,12 @@ fun isAddPointOfInterestValid(
     errorMessage: (String) -> Unit
 ): Boolean {
     if (name.isBlank() || description.isBlank() || (imgsGallery.isEmpty() && imgsCamera.isEmpty())
-        || selectedLocation.isBlank() || selectedCategory.isBlank()) {
+        || selectedLocation.isNullOrEmpty() || selectedCategory.isBlank()
+    ) {
         errorMessage(fillEveryFieldError)
         return false
     }
-    if(isManualCoords && (lat == null || long == null)){
+    if (isManualCoords && (lat == null || long == null)) {
         errorMessage(fillEveryFieldError)
         return false
     }

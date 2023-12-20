@@ -86,7 +86,7 @@ fun AddLocationScreen(
             })
 
             Button(
-                colors = ButtonDefaults.buttonColors(containerColor = Consts.CONFIRMATION_COLOR, contentColor = Color.DarkGray),
+                colors = ButtonDefaults.buttonColors(containerColor = Consts.CONFIRMATION_COLOR, contentColor = Color.Black),
                 onClick = {
 
                     if (name.isBlank()) {
