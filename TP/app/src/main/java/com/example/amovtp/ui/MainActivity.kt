@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
 
     private val app by lazy { application as MyApplication }
     private val viewModel: GPSViewModel by viewModels() {
-        GPSViewModelFactory(app.locationHandler, app.usersData)
+        GPSViewModelFactory(app.locationHandler, app.userData)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

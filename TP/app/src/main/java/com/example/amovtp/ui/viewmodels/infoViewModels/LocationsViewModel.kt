@@ -4,22 +4,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.GeoData
 import com.example.amovtp.data.Location
-import com.example.amovtp.data.UsersData
+import com.example.amovtp.data.UserData
 import com.example.amovtp.utils.Consts
 
 class LocationsViewModelFactory(
     private val geoData: GeoData,
-    private val usersData: UsersData
+    private val userData: UserData
 ) :
     ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return LocationsViewModel(geoData, usersData) as T
+        return LocationsViewModel(geoData, userData) as T
     }
 }
 
 class LocationsViewModel(
     private val geoData: GeoData,
-    private val usersData: UsersData
+    private val userData: UserData
 ) : ViewModel() {
 
     /**
@@ -56,7 +56,7 @@ class LocationsViewModel(
 
     fun getLocationsOrderedByDistance(): List<Location> {
 
-        val currentLocation = usersData.currentLocation
+        val currentLocation = userData.currentLocation
 
         return geoData.locations.sortedBy { location ->
 
@@ -71,19 +71,19 @@ class LocationsViewModel(
     }
 
     fun findVoteForApprovedLocationByUser(locationId: Int): Boolean {
-        return usersData.locationsApproved.any { it == locationId }
+        return userData.locationsApproved.any { it == locationId }
     }
 
     fun voteForApprovalLocationByUser(locationId: Int) {
         geoData.voteForApprovalLocation(locationId)
-        usersData.addLocationApproved(locationId)
+        userData.addLocationApproved(locationId)
         if (geoData.locations.find { it.id == locationId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
             geoData.approveLocation(locationId)
     }
 
     fun removeVoteForApprovalLocationByUser(locationId: Int) {
         geoData.removeVoteForApprovalLocation(locationId)
-        usersData.removeLocationApproved(locationId)
+        userData.removeLocationApproved(locationId)
     }
 
 }

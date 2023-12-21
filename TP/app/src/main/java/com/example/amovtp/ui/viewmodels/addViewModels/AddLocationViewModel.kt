@@ -5,27 +5,27 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.GeoData
-import com.example.amovtp.data.UsersData
+import com.example.amovtp.data.UserData
 import com.example.amovtp.utils.Consts
 
 class AddLocationViewModelFactory(
     private val geoData: GeoData,
-    private val usersData: UsersData
+    private val userData: UserData
 ) :
     ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return AddLocationViewModel(geoData, usersData) as T
+        return AddLocationViewModel(geoData, userData) as T
     }
 }
 
 
 class AddLocationViewModel(
     private val geoData: GeoData,
-    private val usersData: UsersData
+    private val userData: UserData
 ) : ViewModel() {
 
     fun getCurrentLocation(): MutableLiveData<Location> {
-        return usersData.currentLocation
+        return userData.currentLocation
     }
 
     fun addLocation(

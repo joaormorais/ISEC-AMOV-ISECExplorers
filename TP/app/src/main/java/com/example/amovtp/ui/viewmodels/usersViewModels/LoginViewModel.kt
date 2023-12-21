@@ -2,15 +2,15 @@ package com.example.amovtp.ui.viewmodels.usersViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.amovtp.data.UsersData
+import com.example.amovtp.data.UserData
 
-class LoginViewModelFactory(private val usersData: UsersData): ViewModelProvider.NewInstanceFactory(){
+class LoginViewModelFactory(private val userData: UserData): ViewModelProvider.NewInstanceFactory(){
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return LoginViewModel(usersData) as T
+        return LoginViewModel(userData) as T
     }
 }
 
-class LoginViewModel(private val usersData: UsersData) : ViewModel() {
+class LoginViewModel(private val userData: UserData) : ViewModel() {
 
 
 

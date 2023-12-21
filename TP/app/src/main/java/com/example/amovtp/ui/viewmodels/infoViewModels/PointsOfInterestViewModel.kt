@@ -8,22 +8,22 @@ import com.example.amovtp.data.Category
 import com.example.amovtp.data.GeoData
 import com.example.amovtp.data.Location
 import com.example.amovtp.data.PointOfInterest
-import com.example.amovtp.data.UsersData
+import com.example.amovtp.data.UserData
 import com.example.amovtp.utils.Consts
 
 class PointsOfInterestViewModelFactory(
     private val geoData: GeoData,
-    private val usersData: UsersData
+    private val userData: UserData
 ) :
     ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return PointsOfInterestViewModel(geoData, usersData) as T
+        return PointsOfInterestViewModel(geoData, userData) as T
     }
 }
 
 class PointsOfInterestViewModel(
     private val geoData: GeoData,
-    private val usersData: UsersData
+    private val userData: UserData
 ) : ViewModel() {
 
     private var _filterLocationName = mutableStateOf(Consts.ALL_LOCATIONS)
@@ -57,7 +57,7 @@ class PointsOfInterestViewModel(
      * Gets the current location of the android device
      */
     fun getCurrentLocation(): MutableLiveData<android.location.Location> {
-        return usersData.currentLocation
+        return userData.currentLocation
     }
 
     /**
@@ -127,7 +127,7 @@ class PointsOfInterestViewModel(
      */
     fun getPointsOfInterestOrderedByDistance(pointsOfInterest: List<PointOfInterest>): List<PointOfInterest> {
 
-        val currentLocation = usersData.currentLocation
+        val currentLocation = userData.currentLocation
 
         return pointsOfInterest.sortedBy { pointOfInterest ->
 
@@ -142,38 +142,38 @@ class PointsOfInterestViewModel(
     }
 
     fun findVoteForApprovedPointOfInterestByUser(pointOfInterestId: Int): Boolean {
-        return usersData.pointsOfInterestApproved.any { it == pointOfInterestId }
+        return userData.pointsOfInterestApproved.any { it == pointOfInterestId }
     }
 
     fun voteForApprovalPointOfInterestByUser(pointOfInterestId: Int) {
         geoData.voteForApprovalPointOfInterest(pointOfInterestId)
-        usersData.addPointOfInterestApproved(pointOfInterestId)
+        userData.addPointOfInterestApproved(pointOfInterestId)
         if (geoData.pointsOfInterest.find { it.id == pointOfInterestId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
             geoData.approvePointOfInterest(pointOfInterestId)
     }
 
     fun removeVoteForApprovalPointOfInterestByUser(pointOfInterestId: Int) {
         geoData.removeVoteForApprovalPointOfInterest(pointOfInterestId)
-        usersData.removePointOfInterestApproved(pointOfInterestId)
+        userData.removePointOfInterestApproved(pointOfInterestId)
     }
 
     fun findClassificationFromUser(pointOfInterestID: Int):Int{
 
-        return if(usersData.pointsOfInterestClassified.keys.contains(pointOfInterestID))
-            usersData.pointsOfInterestClassified.getValue(pointOfInterestID)
+        return if(userData.pointsOfInterestClassified.keys.contains(pointOfInterestID))
+            userData.pointsOfInterestClassified.getValue(pointOfInterestID)
         else
             Consts.NO_START_CLASSIFICATION
 
     }
 
     fun addClassificationToPointByUser(pointOfInterestID: Int, classification: Int) {
-        if (usersData.pointsOfInterestClassified.containsKey(pointOfInterestID)) {
+        if (userData.pointsOfInterestClassified.containsKey(pointOfInterestID)) {
             removeClassificationToPointByUser(pointOfInterestID)
         }
 
         geoData.addClassificationToPoint(pointOfInterestID, classification)
         geoData.incrementNumberOfClassifications(pointOfInterestID)
-        usersData.addPointOfInterestClassified(pointOfInterestID,classification)
+        userData.addPointOfInterestClassified(pointOfInterestID,classification)
     }
 
     fun removeClassificationToPointByUser(pointOfInterestID: Int) {
@@ -182,7 +182,7 @@ class PointsOfInterestViewModel(
             findClassificationFromUser(pointOfInterestID)
         )
         geoData.decrementNumberOfClassifications(pointOfInterestID)
-        usersData.removePointOfInterestClassified(pointOfInterestID)
+        userData.removePointOfInterestClassified(pointOfInterestID)
     }
 
     fun calculateMediaClassification(pointOfInterestID: Int): Float {

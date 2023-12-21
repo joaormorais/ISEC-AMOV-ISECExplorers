@@ -2,23 +2,23 @@ package com.example.amovtp.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.amovtp.data.UsersData
+import com.example.amovtp.data.UserData
 import pt.isec.ans.locationmaps.utils.LocationHandler
 
 @Suppress("UNCHECKED_CAST")
 class GPSViewModelFactory(
     private val locationHandler: LocationHandler,
-    private val usersData: UsersData
+    private val userData: UserData
 ) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return GPSViewModel(locationHandler, usersData) as T
+        return GPSViewModel(locationHandler, userData) as T
     }
 }
 
 class GPSViewModel(
     private val locationHandler: LocationHandler,
-    usersData: UsersData
+    userData: UserData
 ) : ViewModel() {
 
     // Permissions
@@ -28,7 +28,7 @@ class GPSViewModel(
 
     init {
         locationHandler.onLocation = {
-            usersData.setCurrentLocation(it)
+            userData.setCurrentLocation(it)
         }
     }
 

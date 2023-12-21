@@ -29,7 +29,7 @@ data class Category(
 )
 
 /**
- * Represents a point of interest from a location or more, that has a category
+ * Represents a point of interest from N locations, that has a category
  */
 data class PointOfInterest(
     val id: Int,
@@ -47,6 +47,9 @@ data class PointOfInterest(
     var isApproved: Boolean
 )
 
+/**
+ * Locations, Points of interest and categories
+ */
 class GeoData(/*firestore*/) {
 
     companion object {
@@ -195,6 +198,8 @@ class GeoData(/*firestore*/) {
     val categories: List<Category>
         get() = _categories.toList()
 
+    /* ------------------------  Add, remove, and edit info (Start) ------------------------ */
+
     fun addLocation(
         name: String,
         description: String,
@@ -271,7 +276,9 @@ class GeoData(/*firestore*/) {
 
     }
 
-    // ------  Approval Location (Start) ------
+    /* ------------------------  Add, remove, and edit info (End) ------------------------ */
+
+    /* ------------------------  Location approval (Start) ------------------------ */
     fun voteForApprovalLocation(id: Int) {
         _locations.find { it.id == id }?.apply { votes++ }
     }
@@ -287,9 +294,9 @@ class GeoData(/*firestore*/) {
     fun disapproveLocation(id: Int) {
         _locations.find { it.id == id }?.apply { isApproved = false }
     }
-    // ------  Approval Location (Start) ------
+    /* ------------------------  Location approval (End) ------------------------ */
 
-    // ------  Approval Point Of Interest (Start) ------
+    /* ------------------------  Point of interest approval (Start) ------------------------ */
     fun voteForApprovalPointOfInterest(id: Int) {
         _pointsOfInterest.find { it.id == id }?.apply { votes++ }
     }
@@ -305,9 +312,9 @@ class GeoData(/*firestore*/) {
     fun disapprovePointOfInterest(id: Int) {
         _pointsOfInterest.find { it.id == id }?.apply { isApproved = false }
     }
-    // ------  Approval Point Of Interest (End) ------
+    /* ------------------------  Point of interest approval (End) ------------------------ */
 
-    // ------  Approval Category (Start) ------
+    /* ------------------------  Category approval (Start) ------------------------ */
     fun voteForApprovalCategory(id: Int) {
         _categories.find { it.id == id }?.apply { votes++ }
     }
@@ -323,9 +330,9 @@ class GeoData(/*firestore*/) {
     fun disapproveCategory(id: Int) {
         _categories.find { it.id == id }?.apply { isApproved = false }
     }
-    // ------  Approval Category (End) ------
+    /* ------------------------  Category approval (End) ------------------------ */
 
-    // ------ Classification of Point (Start) ------
+    /* ------------------------  Point classification (Start) ------------------------ */
     fun addClassificationToPoint(pointOfInterestID: Int, classification: Int) {
         _pointsOfInterest.find { it.id == pointOfInterestID }?.classification = _pointsOfInterest.find { it.id == pointOfInterestID }?.classification!! + classification
     }
@@ -341,6 +348,5 @@ class GeoData(/*firestore*/) {
     fun decrementNumberOfClassifications(pointOfInterestID: Int){
       _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications = _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications!! - 1
     }
-    // -- Classification of Point (End) ------
-
+    /* ------------------------  Point classification (End) ------------------------ */
 }

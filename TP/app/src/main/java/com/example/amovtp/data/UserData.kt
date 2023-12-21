@@ -1,10 +1,9 @@
 package com.example.amovtp.data
 
 import android.location.Location
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 
-class UsersData(/*firestore*/) {
+class UserData(/*firestore*/) {
 
     private val _currentLocation = MutableLiveData(Location(null))
     private var _locationsApproved = mutableListOf<Int>()
@@ -27,10 +26,13 @@ class UsersData(/*firestore*/) {
     val pointsOfInterestClassified: Map<Int, Int>
         get() = _pointsOfInterestClassified.toMap()
 
+    /* ------------------------  Device location (Start) ------------------------ */
     fun setCurrentLocation(location: Location) {
         _currentLocation.postValue(location)
     }
+    /* ------------------------  Device location (End) ------------------------ */
 
+    /* ------------------------  Location approval (Start) ------------------------ */
     fun addLocationApproved(locationId: Int) {
         _locationsApproved.add(locationId)
     }
@@ -38,7 +40,9 @@ class UsersData(/*firestore*/) {
     fun removeLocationApproved(locationId: Int) {
         _locationsApproved.remove(locationId)
     }
+    /* ------------------------  Location approval (End) ------------------------ */
 
+    /* ------------------------  Point of interest approval (Start) ------------------------ */
     fun addPointOfInterestApproved(pointOfInterestId: Int) {
         _pointsOfInterestApproved.add(pointOfInterestId)
     }
@@ -46,7 +50,9 @@ class UsersData(/*firestore*/) {
     fun removePointOfInterestApproved(pointOfInterestId: Int) {
         _pointsOfInterestApproved.remove(pointOfInterestId)
     }
+    /* ------------------------  Point of interest approval (End) ------------------------ */
 
+    /* ------------------------  Point of interest approval (Start) ------------------------ */
     fun addCategoryApproved(categoryId: Int) {
         _categoriesApproved.add(categoryId)
     }
@@ -54,7 +60,9 @@ class UsersData(/*firestore*/) {
     fun removeCategoryApproved(categoryId: Int) {
         _categoriesApproved.add(categoryId)
     }
+    /* ------------------------  Point of interest approval (End) ------------------------ */
 
+    /* ------------------------  Point classification (Start) ------------------------ */
     fun addPointOfInterestClassified(pointOfInterestId: Int, classification: Int) {
         _pointsOfInterestClassified[pointOfInterestId] = classification
     }
@@ -62,5 +70,5 @@ class UsersData(/*firestore*/) {
     fun removePointOfInterestClassified(pointOfInterestId: Int) {
         _pointsOfInterestClassified.remove(pointOfInterestId)
     }
-
+    /* ------------------------  Point classification (End) ------------------------ */
 }

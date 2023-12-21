@@ -6,26 +6,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.Category
 import com.example.amovtp.data.GeoData
-import com.example.amovtp.data.UsersData
+import com.example.amovtp.data.UserData
 import com.example.amovtp.utils.Consts
 
 class AddPointOfInterestViewModelFactory(
     private val geoData: GeoData,
-    private val usersData: UsersData
+    private val userData: UserData
 ) :
     ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return AddPointOfInterestViewModel(geoData, usersData) as T
+        return AddPointOfInterestViewModel(geoData, userData) as T
     }
 }
 
 class AddPointOfInterestViewModel(
     private val geoData: GeoData,
-    private val usersData: UsersData
+    private val userData: UserData
 ) : ViewModel() {
 
     fun getCurrentLocation(): MutableLiveData<Location> {
-        return usersData.currentLocation
+        return userData.currentLocation
     }
 
     fun getLocations(): List<com.example.amovtp.data.Location> {
