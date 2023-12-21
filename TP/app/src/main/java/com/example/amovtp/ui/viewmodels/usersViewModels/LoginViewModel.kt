@@ -12,6 +12,10 @@ class LoginViewModelFactory(private val userData: UserData): ViewModelProvider.N
 
 class LoginViewModel(private val userData: UserData) : ViewModel() {
 
-
+    fun login(email:String,pw:String,onResult: (Throwable?) -> Unit){
+        userData.login(email,pw){exception ->
+            onResult(exception)
+        }
+    }
 
 }

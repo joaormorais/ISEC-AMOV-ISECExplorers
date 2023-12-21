@@ -77,6 +77,7 @@ fun MainScreen(
     var addCategoryViewModel: AddCategoryViewModel?
 
     var isLogin by remember { mutableStateOf(false) }
+    var isLocation by remember { mutableStateOf(false) }
     var addLocation by remember { mutableStateOf(false) }
     var addPointOfInterest by remember { mutableStateOf(false) }
     var addCategory by remember { mutableStateOf(false) }
@@ -84,6 +85,7 @@ fun MainScreen(
 
     navController.addOnDestinationChangedListener { controller, destination, arguments ->
         isLogin = (destination.route == Screens.LOGIN.route)
+        isLocation = (destination.route == Screens.LOCATIONS.route)
         addLocation = (destination.route == Screens.LOCATIONS.route)
         addPointOfInterest = (destination.route == Screens.POINTS_OF_INTEREST.route)
         addCategory = (destination.route == Screens.CATEGORIES.route)
@@ -105,7 +107,13 @@ fun MainScreen(
                             },
 
                             navigationIcon = {
-                                IconButton(onClick = { navController.navigateUp() }) {
+                                IconButton(onClick = {
+                                    navController.navigateUp()
+
+                                    if(isLocation)
+                                        app.userData.signOut()
+
+                                }) {
                                     Icon(
                                         Icons.Filled.ArrowBack,
                                         contentDescription = "Back"
@@ -178,8 +186,7 @@ fun MainScreen(
                             viewModel(factory = RegisterViewModelFactory(app.userData))
                         RegisterScreen(
                             registerViewModel!!,
-                            navController,
-                            Screens.LOGIN
+                            navController
                         )
                     }
 

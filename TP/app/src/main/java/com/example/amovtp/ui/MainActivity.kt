@@ -34,11 +34,13 @@ class MainActivity : ComponentActivity() {
             PreferenceManager.getDefaultSharedPreferences(this)
         )
 
+        verifyCameraPermissions()
+        verifyGeoPermissions()
+
         setContent {
             MainScreen()
         }
-        verifyGeoPermissions()
-        verifyCameraPermissions()
+
     }
 
     override fun onResume() {

@@ -1,10 +1,10 @@
 package com.example.amovtp.ui.screens.usersScreens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -13,39 +13,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.amovtp.MyApplication
 import com.example.amovtp.R
 import com.example.amovtp.ui.screens.Screens
 import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModel
-import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModelFactory
-import com.example.amovtp.ui.viewmodels.utils.FirebaseViewModel
 
 @Composable
 fun RegisterScreen(
     registerViewModel: RegisterViewModel,
     navController: NavHostController?,
-    loginScreen: Screens,
     modifier: Modifier = Modifier
 ) {
 
-    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -76,12 +66,6 @@ fun RegisterScreen(
                 .padding(innerPadding)
         ) {
             OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text(stringResource(R.string.name)) },
-                modifier = modifier.padding(bottom = 8.dp)
-            )
-            OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text(stringResource(R.string.email)) },
@@ -108,7 +92,6 @@ fun RegisterScreen(
             Button(
                 onClick = {
                     if (isRegisterValid(
-                            name,
                             email,
                             password,
                             confirmPassword,
@@ -120,7 +103,13 @@ fun RegisterScreen(
                             errorMessage = msg
                         }
                     ) {
-                        navController?.navigate(loginScreen.route)
+                        registerViewModel.register(email,password){exception ->
+                            if(exception!=null){
+                                Log.d("RegisterScreen", "exception recebida = " + exception.message)
+                                errorMessage = exception.message
+                            }else
+                                navController?.navigate(Screens.LOGIN.route)
+                        }
                     } else {
                         showSnackBar = true
                     }
@@ -134,7 +123,6 @@ fun RegisterScreen(
 }
 
 fun isRegisterValid(
-    name: String,
     email: String,
     password: String,
     confirmPassword: String,
@@ -145,7 +133,8 @@ fun isRegisterValid(
 ): Boolean {
 
 
-    if (name.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
+    //TODO: dividir em dois popups -> fazer um para o nome e depois pw
+    if (email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
         errorMessage(fillEveryFieldError)
         return false
     }

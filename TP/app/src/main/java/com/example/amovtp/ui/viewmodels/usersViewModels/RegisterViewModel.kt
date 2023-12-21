@@ -12,4 +12,10 @@ class RegisterViewModelFactory(private val userData: UserData): ViewModelProvide
 
 class RegisterViewModel(private val userData: UserData) : ViewModel() {
 
+    fun register(email:String,pw:String,onResult: (Throwable?) -> Unit){
+        userData.register(email,pw){exception ->
+            onResult(exception)
+        }
+    }
+
 }
