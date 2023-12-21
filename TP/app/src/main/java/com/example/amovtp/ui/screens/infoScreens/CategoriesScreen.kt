@@ -151,7 +151,7 @@ fun CategoriesScreen(
                                     )
                                     Spacer(modifier.height(8.dp))
                                     Text(
-                                        text = stringResource(R.string.votes_for_approval) + it.votes,
+                                        text = stringResource(R.string.votes_for_approval,it.votes),
                                         fontSize = 12.sp
                                     )
                                     if (!isVotedByUser) {

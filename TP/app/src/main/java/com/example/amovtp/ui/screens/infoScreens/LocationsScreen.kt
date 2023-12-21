@@ -124,6 +124,7 @@ fun LocationsScreen(
                     )
                 }
                 var isLocationApproved by remember { mutableStateOf(it.isApproved) }
+                var vostesOnLocattion by remember { mutableStateOf(it.votes) }
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
@@ -235,26 +236,57 @@ fun LocationsScreen(
                                     )
                                     Spacer(modifier.height(8.dp))
                                     Text(
-                                        text = stringResource(
-                                            R.string.votes_for_approval)+it.votes,
+                                        text = stringResource(R.string.votes_for_approval,it.votes),
                                         fontSize = 12.sp
                                     )
-                                    Button(
-                                        onClick = {
-                                            isVotedByUser = !isVotedByUser
-
-                                            if (!isVotedByUser) {
-                                                locationsViewModel.voteForApprovalLocation(
-                                                    it.id
+                                    if (!isVotedByUser) {
+                                        Spacer(modifier.height(8.dp))
+                                        Button(
+                                            onClick = {
+                                                isVotedByUser = true
+                                                locationsViewModel.voteForApprovalLocation(it.id)
+                                                isLocationApproved = it.isApproved
+                                            },
+                                        ) {
+                                            Row {
+                                                Text(stringResource(R.string.approve))
+                                                Icon(
+                                                    Icons.Rounded.ThumbUp,
+                                                    "Approve",
+                                                    modifier = modifier.padding(start = 8.dp)
                                                 )
+                                            }
+                                        }
+                                    } else {
+                                        Spacer(modifier.height(8.dp))
+                                        Button(
+                                            onClick = {
+                                                isVotedByUser = false
+                                                locationsViewModel.removeVoteForApprovalLocation(it.id)
+                                                isLocationApproved = it.isApproved
+                                            },
+                                        ) {
+                                            Row {
+                                                Text(stringResource(R.string.disapprove))
+                                                Icon(
+                                                    Icons.Rounded.Close,
+                                                    "Disapprove",
+                                                    modifier = modifier.padding(start = 8.dp)
+                                                )
+                                            }
+                                        }
+                                    }
+                                    //TODO: perceber pq que isto n funciona
+                                    /*Button(
+                                        onClick = {
+                                            if (!isVotedByUser) {
+                                                locationsViewModel.voteForApprovalLocation(it.id)
                                                 isLocationApproved = it.isApproved
                                             } else {
-                                                locationsViewModel.removeVoteForApprovalLocation(
-                                                    it.id
-                                                )
+                                                locationsViewModel.removeVoteForApprovalLocation(it.id)
                                                 isLocationApproved = it.isApproved
                                             }
-
+                                            isVotedByUser = !isVotedByUser
                                         },
                                     ) {
                                         Row {
@@ -275,7 +307,7 @@ fun LocationsScreen(
                                                 )
                                             }
                                         }
-                                    }
+                                    }*/
                                     Spacer(modifier.height(8.dp))
                                 }
                             }
