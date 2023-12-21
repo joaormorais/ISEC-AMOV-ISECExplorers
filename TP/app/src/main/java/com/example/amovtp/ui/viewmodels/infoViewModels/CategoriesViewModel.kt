@@ -29,15 +29,20 @@ class CategoriesViewModel(
         return geoData.categories
     }
 
-    fun findVoteForApprovedCategory(categoryId: Int): Boolean {
+    fun findVoteForApprovedCategoryByUser(categoryId: Int): Boolean {
         return usersData.categoriesApproved.any { it == categoryId }
     }
 
-    fun voteForApprovalCategory(categoryId: Int) {
+    fun voteForApprovalCategoryByUser(categoryId: Int) {
         geoData.voteForApprovalCategory(categoryId)
         usersData.addCategoryApproved(categoryId)
         if (geoData.categories.find { it.id == categoryId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
             geoData.approveCategory(categoryId)
+    }
+
+    fun removeVoteForApprovalCategoryByUser(categoryId: Int) {
+        geoData.removeVoteForApprovalCategory(categoryId)
+        usersData.removeCategoryApproved(categoryId)
     }
 
 }

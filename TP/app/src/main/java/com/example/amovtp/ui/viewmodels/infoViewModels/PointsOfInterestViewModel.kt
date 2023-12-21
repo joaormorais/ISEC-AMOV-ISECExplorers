@@ -141,29 +141,53 @@ class PointsOfInterestViewModel(
         }
     }
 
-    fun findVoteForApprovedPointOfInterest(pointOfInterestId: Int): Boolean {
+    fun findVoteForApprovedPointOfInterestByUser(pointOfInterestId: Int): Boolean {
         return usersData.pointsOfInterestApproved.any { it == pointOfInterestId }
     }
 
-    fun voteForApprovalPointOfInterest(pointOfInterestId: Int) {
+    fun voteForApprovalPointOfInterestByUser(pointOfInterestId: Int) {
         geoData.voteForApprovalPointOfInterest(pointOfInterestId)
         usersData.addPointOfInterestApproved(pointOfInterestId)
         if (geoData.pointsOfInterest.find { it.id == pointOfInterestId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
             geoData.approvePointOfInterest(pointOfInterestId)
     }
 
-    fun removeVoteForApprovalPointOfInterest(pointOfInterestId: Int) {
+    fun removeVoteForApprovalPointOfInterestByUser(pointOfInterestId: Int) {
         geoData.removeVoteForApprovalPointOfInterest(pointOfInterestId)
         usersData.removePointOfInterestApproved(pointOfInterestId)
     }
 
-    /*fun addClassificationByUser(pointOfInterestID: Int, classification: Int){
+    fun findClassificationFromUser(pointOfInterestID: Int):Int{
+
+        return if(usersData.pointsOfInterestClassified.keys.contains(pointOfInterestID))
+            usersData.pointsOfInterestClassified.getValue(pointOfInterestID)
+        else
+            Consts.NO_START_CLASSIFICATION
 
     }
 
-    fun removeClassificationByUser(pointOfInterestID: Int, classification: Int){
+    fun addClassificationToPointByUser(pointOfInterestID: Int, classification: Int) {
+        if (usersData.pointsOfInterestClassified.containsKey(pointOfInterestID)) {
+            removeClassificationToPointByUser(pointOfInterestID)
+        }
+
+        geoData.addClassificationToPoint(pointOfInterestID, classification)
+        geoData.incrementNumberOfClassifications(pointOfInterestID)
+        usersData.addPointOfInterestClassified(pointOfInterestID,classification)
+    }
+
+    fun removeClassificationToPointByUser(pointOfInterestID: Int) {
+        geoData.removeClassificationToPoint(
+            pointOfInterestID,
+            findClassificationFromUser(pointOfInterestID)
+        )
+        geoData.decrementNumberOfClassifications(pointOfInterestID)
         usersData.removePointOfInterestClassified(pointOfInterestID)
-        geoData.removeClassificationToPoint(pointOfInterestID, classification)
-    }*/
+    }
+
+    fun calculateMediaClassification(pointOfInterestID: Int): Float {
+        val tempPoint = geoData.pointsOfInterest.find { it.id == pointOfInterestID }
+        return tempPoint!!.classification.toFloat().div(tempPoint.nClassifications.toFloat())
+    }
 
 }

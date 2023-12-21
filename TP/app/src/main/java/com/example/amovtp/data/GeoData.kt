@@ -29,7 +29,7 @@ data class Category(
 )
 
 /**
- * Represents a point of interest from a location or more, and has a category
+ * Represents a point of interest from a location or more, that has a category
  */
 data class PointOfInterest(
     val id: Int,
@@ -61,7 +61,6 @@ class GeoData(/*firestore*/) {
 
     init { //TODO: apagar
 
-        // Criação das instâncias das categorias
         val museumCategory = Category(
             _currentCategoryId++,
             "Museus",
@@ -101,19 +100,18 @@ class GeoData(/*firestore*/) {
             "Restaurantes & Bares",
             "Locais para refeições e entretenimento.",
             "",
-            2,
-            true
+            1,
+            false
         )
         val accommodationCategory = Category(
             _currentCategoryId++,
             "Alojamento",
             "Hospedagem e acomodações para estadias temporárias.",
             "",
-            2,
-            true
+            0,
+            false
         )
 
-        // Adição das categorias à lista _categories
         _categories.addAll(
             listOf(
                 museumCategory,
@@ -177,9 +175,9 @@ class GeoData(/*firestore*/) {
                 listOf(location.name),
                 _categories.random().name,
                 mutableListOf(),
-                0,
-                0,
-                0,
+                12,
+                5,
+                1,
                 false
             )
 
@@ -273,6 +271,7 @@ class GeoData(/*firestore*/) {
 
     }
 
+    // ------  Approval Location (Start) ------
     fun voteForApprovalLocation(id: Int) {
         _locations.find { it.id == id }?.apply { votes++ }
     }
@@ -288,7 +287,9 @@ class GeoData(/*firestore*/) {
     fun disapproveLocation(id: Int) {
         _locations.find { it.id == id }?.apply { isApproved = false }
     }
+    // ------  Approval Location (Start) ------
 
+    // ------  Approval Point Of Interest (Start) ------
     fun voteForApprovalPointOfInterest(id: Int) {
         _pointsOfInterest.find { it.id == id }?.apply { votes++ }
     }
@@ -304,7 +305,9 @@ class GeoData(/*firestore*/) {
     fun disapprovePointOfInterest(id: Int) {
         _pointsOfInterest.find { it.id == id }?.apply { isApproved = false }
     }
+    // ------  Approval Point Of Interest (End) ------
 
+    // ------  Approval Category (Start) ------
     fun voteForApprovalCategory(id: Int) {
         _categories.find { it.id == id }?.apply { votes++ }
     }
@@ -320,15 +323,24 @@ class GeoData(/*firestore*/) {
     fun disapproveCategory(id: Int) {
         _categories.find { it.id == id }?.apply { isApproved = false }
     }
+    // ------  Approval Category (End) ------
 
+    // ------ Classification of Point (Start) ------
     fun addClassificationToPoint(pointOfInterestID: Int, classification: Int) {
-        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification =+ classification
-        _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications =+ 1
+        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification = _pointsOfInterest.find { it.id == pointOfInterestID }?.classification!! + classification
+    }
+
+    fun incrementNumberOfClassifications(pointOfInterestID: Int){
+        _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications = _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications!! + 1
     }
 
     fun removeClassificationToPoint(pointOfInterestID: Int, classification: Int) {
-        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification =- classification
-        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification =- 1
+        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification = _pointsOfInterest.find { it.id == pointOfInterestID }?.classification!! - classification
     }
+
+    fun decrementNumberOfClassifications(pointOfInterestID: Int){
+      _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications = _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications!! - 1
+    }
+    // -- Classification of Point (End) ------
 
 }

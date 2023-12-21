@@ -31,7 +31,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -120,11 +119,10 @@ fun LocationsScreen(
                 var isDetailExpanded by remember { mutableStateOf(false) }
                 var isVotedByUser by remember {
                     mutableStateOf(
-                        locationsViewModel.findVoteForApprovedLocation(it.id)
+                        locationsViewModel.findVoteForApprovedLocationByUser(it.id)
                     )
                 }
                 var isLocationApproved by remember { mutableStateOf(it.isApproved) }
-                var vostesOnLocattion by remember { mutableStateOf(it.votes) }
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
@@ -201,6 +199,14 @@ fun LocationsScreen(
                             ) {
                                 Spacer(modifier.height(8.dp))
                                 Text(
+                                    text = stringResource(
+                                        R.string.points_of_interest_description,
+                                        it.pointsOfInterest.toString()
+                                    ),
+                                    fontSize = 12.sp
+                                )
+                                Spacer(modifier.height(8.dp))
+                                Text(
                                     text = stringResource(R.string.latitude_description, it.lat),
                                     fontSize = 12.sp
                                 )
@@ -244,7 +250,7 @@ fun LocationsScreen(
                                         Button(
                                             onClick = {
                                                 isVotedByUser = true
-                                                locationsViewModel.voteForApprovalLocation(it.id)
+                                                locationsViewModel.voteForApprovalLocationByUser(it.id)
                                                 isLocationApproved = it.isApproved
                                             },
                                         ) {
@@ -262,7 +268,7 @@ fun LocationsScreen(
                                         Button(
                                             onClick = {
                                                 isVotedByUser = false
-                                                locationsViewModel.removeVoteForApprovalLocation(it.id)
+                                                locationsViewModel.removeVoteForApprovalLocationByUser(it.id)
                                                 isLocationApproved = it.isApproved
                                             },
                                         ) {

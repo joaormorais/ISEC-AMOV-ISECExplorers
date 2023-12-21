@@ -1,5 +1,6 @@
 package com.example.amovtp.ui.screens.infoScreens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,8 +24,10 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -36,6 +39,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -62,6 +67,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -253,7 +259,7 @@ fun PointsOfInterestScreen(
                 var isDetailExpanded by remember { mutableStateOf(false) }
                 var isVotedByUser by remember {
                     mutableStateOf(
-                        pointsOfInterestViewModel.findVoteForApprovedPointOfInterest(it.id)
+                        pointsOfInterestViewModel.findVoteForApprovedPointOfInterestByUser(it.id)
                     )
                 }
                 var isPointOfInterestApproved by remember { mutableStateOf(it.isApproved) }
@@ -374,7 +380,7 @@ fun PointsOfInterestScreen(
                                 )
                                 Spacer(modifier.height(8.dp))
                                 if (!isPointOfInterestApproved) {
-                                    //TODO: quem criou o ponto não deve poder aprovar a mesma
+                                    //TODO: quem criou o ponto não deve poder aprovar o mesmo
                                     Divider(color = Color.DarkGray, thickness = 1.dp)
                                     Spacer(modifier.height(8.dp))
                                     Text(
@@ -385,39 +391,43 @@ fun PointsOfInterestScreen(
                                     Spacer(modifier.height(8.dp))
                                     Text(
                                         text = stringResource(
-                                            R.string.votes_for_approval
-                                        )+it.votes,
+                                            R.string.votes_for_approval,
+                                            it.votes
+                                        ),
                                         fontSize = 12.sp
                                     )
-                                    Spacer(modifier.height(8.dp))
-                                    Button(
-                                        onClick = {
-                                            isVotedByUser = !isVotedByUser
-
-                                            if (!isVotedByUser) {
-                                                pointsOfInterestViewModel.voteForApprovalPointOfInterest(
+                                    if (!isVotedByUser) {
+                                        Spacer(modifier.height(8.dp))
+                                        Button(
+                                            onClick = {
+                                                isVotedByUser = true
+                                                pointsOfInterestViewModel.voteForApprovalPointOfInterestByUser(
                                                     it.id
                                                 )
                                                 isPointOfInterestApproved = it.isApproved
-                                            } else {
-                                                pointsOfInterestViewModel.removeVoteForApprovalPointOfInterest(
-                                                    it.id
-                                                )
-                                                isPointOfInterestApproved = it.isApproved
-                                            }
-
-                                        },
-                                    ) {
-                                        Row {
-
-                                            if (!isVotedByUser) {
+                                            },
+                                        ) {
+                                            Row {
                                                 Text(stringResource(R.string.approve))
                                                 Icon(
                                                     Icons.Rounded.ThumbUp,
                                                     "Approve",
                                                     modifier = modifier.padding(start = 8.dp)
                                                 )
-                                            } else {
+                                            }
+                                        }
+                                    } else {
+                                        Spacer(modifier.height(8.dp))
+                                        Button(
+                                            onClick = {
+                                                isVotedByUser = false
+                                                pointsOfInterestViewModel.removeVoteForApprovalPointOfInterestByUser(
+                                                    it.id
+                                                )
+                                                isPointOfInterestApproved = it.isApproved
+                                            },
+                                        ) {
+                                            Row {
                                                 Text(stringResource(R.string.disapprove))
                                                 Icon(
                                                     Icons.Rounded.Close,
@@ -427,14 +437,31 @@ fun PointsOfInterestScreen(
                                             }
                                         }
                                     }
-                                } else {
-                                    //TODO: fazer a classificação
                                     Spacer(modifier.height(8.dp))
+                                } else {
+
                                     val listOfClassifications = listOf(
-                                        Consts.ONE_STAR_CLASSIFICATION.toString(),
-                                        Consts.TWO_STAR_CLASSIFICATION.toString(),
-                                        Consts.THREE_STAR_CLASSIFICATION.toString()
+                                        Consts.ONE_STAR_CLASSIFICATION,
+                                        Consts.TWO_STAR_CLASSIFICATION,
+                                        Consts.THREE_STAR_CLASSIFICATION
                                     )
+                                    var mediaClassification by remember {
+                                        mutableFloatStateOf(
+                                            pointsOfInterestViewModel.calculateMediaClassification(
+                                                it.id
+                                            )
+                                        )
+                                    }
+
+                                    var isClassifiedByUser by remember {
+                                        mutableIntStateOf(
+                                            pointsOfInterestViewModel.findClassificationFromUser(
+                                                it.id
+                                            )
+                                        )
+                                    }
+
+                                    Spacer(modifier.height(8.dp))
                                     Row(
                                         modifier = modifier
                                             .fillMaxWidth()
@@ -446,29 +473,77 @@ fun PointsOfInterestScreen(
                                             text = stringResource(R.string.classify),
                                             fontSize = 12.sp
                                         )
-                                        /*var isClassificationSelected by remember{ mutableStateOf(false)}
                                         for (i in listOfClassifications) {
+                                            Log.d("PointsOfInterestScreen","primeira vez isClassifiedByUser = ["+isClassifiedByUser+"]")
                                             Button(
+                                                colors =
+                                                if (isClassifiedByUser == i){
+                                                    ButtonDefaults.buttonColors(
+                                                    containerColor = MaterialTheme.colorScheme.inversePrimary,
+                                                    contentColor = Color.White
+                                                    )
+                                                }else{
+                                                    ButtonDefaults.buttonColors(
+                                                    containerColor = MaterialTheme.colorScheme.primary,
+                                                    contentColor = Color.White
+                                                    )
+                                                },
                                                 onClick = {
                                                     when (i) {
 
-                                                        Consts.ONE_STAR_CLASSIFICATION.toString() -> {
-                                                            pointsOfInterestViewModel.addPo
+                                                        Consts.ONE_STAR_CLASSIFICATION -> {
+                                                            if (isClassifiedByUser == Consts.ONE_STAR_CLASSIFICATION) {
+                                                                pointsOfInterestViewModel.removeClassificationToPointByUser(
+                                                                    it.id
+                                                                )
+                                                            } else {
+                                                                pointsOfInterestViewModel.addClassificationToPointByUser(
+                                                                    it.id,
+                                                                    Consts.ONE_STAR_CLASSIFICATION
+                                                                )
+                                                            }
+                                                            isClassifiedByUser = pointsOfInterestViewModel.findClassificationFromUser(it.id)
+                                                            Log.d("PointsOfInterestScreen","isClassifiedByUser = ["+isClassifiedByUser+"]")
+                                                            mediaClassification = pointsOfInterestViewModel.calculateMediaClassification(it.id)
                                                         }
 
-                                                        Consts.TWO_STAR_CLASSIFICATION.toString() -> {
-
+                                                        Consts.TWO_STAR_CLASSIFICATION -> {
+                                                            if (isClassifiedByUser == Consts.TWO_STAR_CLASSIFICATION) {
+                                                                pointsOfInterestViewModel.removeClassificationToPointByUser(
+                                                                    it.id
+                                                                )
+                                                            } else {
+                                                                pointsOfInterestViewModel.addClassificationToPointByUser(
+                                                                    it.id,
+                                                                    Consts.TWO_STAR_CLASSIFICATION
+                                                                )
+                                                            }
+                                                            isClassifiedByUser = pointsOfInterestViewModel.findClassificationFromUser(it.id)
+                                                            Log.d("PointsOfInterestScreen","isClassifiedByUser = ["+isClassifiedByUser+"]")
+                                                            mediaClassification = pointsOfInterestViewModel.calculateMediaClassification(it.id)
                                                         }
 
-                                                        Consts.THREE_STAR_CLASSIFICATION.toString() -> {
-
+                                                        Consts.THREE_STAR_CLASSIFICATION -> {
+                                                            if (isClassifiedByUser == Consts.THREE_STAR_CLASSIFICATION) {
+                                                                pointsOfInterestViewModel.removeClassificationToPointByUser(
+                                                                    it.id
+                                                                )
+                                                            } else {
+                                                                pointsOfInterestViewModel.addClassificationToPointByUser(
+                                                                    it.id,
+                                                                    Consts.THREE_STAR_CLASSIFICATION
+                                                                )
+                                                            }
+                                                            isClassifiedByUser = pointsOfInterestViewModel.findClassificationFromUser(it.id)
+                                                            Log.d("PointsOfInterestScreen","isClassifiedByUser = ["+isClassifiedByUser+"]")
+                                                            mediaClassification = pointsOfInterestViewModel.calculateMediaClassification(it.id)
                                                         }
 
                                                     }
                                                 },
                                             ) {
                                                 Row {
-                                                    Text(i)
+                                                    Text(i.toString())
                                                     Icon(
                                                         Icons.Rounded.Star,
                                                         "Classification",
@@ -476,8 +551,15 @@ fun PointsOfInterestScreen(
                                                     )
                                                 }
                                             }
-                                        }*/
+                                        }
                                     }
+                                    Text(
+                                        text = stringResource(
+                                            R.string.classification_media,
+                                            mediaClassification
+                                        ),
+                                        fontSize = 12.sp
+                                    )
                                 }
                                 Spacer(modifier.height(8.dp))
                             }

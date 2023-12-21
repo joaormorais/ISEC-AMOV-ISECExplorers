@@ -38,10 +38,7 @@
     <string name="unknown_error">Unknown error</string>
     <string name="votes_for_approval">Votes for approval: %1$s</string>
     <string name="not_approved_category">This category hasn\'t been approved by at least 2 users!</string>
-    <string name="location_voted">You already voted on this location!</string>
-    <string name="point_of_interest_voted">You already voted on this point of interest!</string>
     <string name="approve">Vote to approval</string>
-    <string name="category_voted">You already voted on this category!</string>
     <string name="manual_coordinates">These coordinates were manually introduced</string>
     <string name="automatically_coordinates">These coordinates were automatically introduced</string>
     <string name="classify">Classify:</string>
@@ -52,5 +49,7 @@
     <string name="invalid_location">You have to choose location!</string>
     <string name="invalid_category">You have to choose category!</string>
     <string name="disapprove">Remove vote to approval</string>
-    <string name="locations_description">Locations: %1Sa</string>
+    <string name="locations_description">Locations: %1$s</string>
+    <string name="points_of_interest_description">Points Of Interest: %1$s</string>
+    <string name="classification_media">Classification given by users: %1$s</string>
 </resources>

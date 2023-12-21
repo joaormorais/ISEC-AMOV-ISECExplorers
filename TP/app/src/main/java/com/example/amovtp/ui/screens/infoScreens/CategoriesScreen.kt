@@ -10,15 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.material3.Button
@@ -31,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,7 +62,7 @@ fun CategoriesScreen(
                 var isDetailExpanded by remember { mutableStateOf(false) }
                 var isVotedByUser by remember {
                     mutableStateOf(
-                        categoriesViewModel.findVoteForApprovedCategory(it.id)
+                        categoriesViewModel.findVoteForApprovedCategoryByUser(it.id)
                     )
                 }
                 var isCategoryApproved by remember { mutableStateOf(it.isApproved) }
@@ -124,7 +120,7 @@ fun CategoriesScreen(
                             AsyncImage(
                                 model = it.img,
                                 modifier = modifier
-                                    .fillMaxWidth()
+                                    .wrapContentWidth()
                                     .height(200.dp)
                                     .background(Color.White)
                                     .padding(bottom = 3.dp, top = 3.dp),
@@ -159,9 +155,7 @@ fun CategoriesScreen(
                                         Button(
                                             onClick = {
                                                 isVotedByUser = true
-                                                categoriesViewModel.voteForApprovalCategory(
-                                                    it.id
-                                                )
+                                                categoriesViewModel.voteForApprovalCategoryByUser(it.id)
                                                 isCategoryApproved = it.isApproved
                                             },
                                         ) {
@@ -169,18 +163,29 @@ fun CategoriesScreen(
                                                 Text(stringResource(R.string.approve))
                                                 Icon(
                                                     Icons.Rounded.ThumbUp,
-                                                    "Details",
+                                                    "Approve",
                                                     modifier = modifier.padding(start = 8.dp)
                                                 )
                                             }
                                         }
                                     } else {
                                         Spacer(modifier.height(8.dp))
-                                        Text(
-                                            text = stringResource(R.string.category_voted),
-                                            fontSize = 12.sp,
-                                            color = Consts.CONFIRMATION_COLOR
-                                        )
+                                        Button(
+                                            onClick = {
+                                                isVotedByUser = false
+                                                categoriesViewModel.removeVoteForApprovalCategoryByUser(it.id)
+                                                isCategoryApproved = it.isApproved
+                                            },
+                                        ) {
+                                            Row {
+                                                Text(stringResource(R.string.disapprove))
+                                                Icon(
+                                                    Icons.Rounded.Close,
+                                                    "Disapprove",
+                                                    modifier = modifier.padding(start = 8.dp)
+                                                )
+                                            }
+                                        }
                                     }
                                     Spacer(modifier.height(8.dp))
                                 }

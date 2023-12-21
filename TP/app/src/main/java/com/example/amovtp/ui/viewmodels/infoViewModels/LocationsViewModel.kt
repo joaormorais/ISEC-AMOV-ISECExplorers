@@ -70,18 +70,18 @@ class LocationsViewModel(
         }
     }
 
-    fun findVoteForApprovedLocation(locationId: Int): Boolean {
+    fun findVoteForApprovedLocationByUser(locationId: Int): Boolean {
         return usersData.locationsApproved.any { it == locationId }
     }
 
-    fun voteForApprovalLocation(locationId: Int) {
+    fun voteForApprovalLocationByUser(locationId: Int) {
         geoData.voteForApprovalLocation(locationId)
         usersData.addLocationApproved(locationId)
         if (geoData.locations.find { it.id == locationId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
             geoData.approveLocation(locationId)
     }
 
-    fun removeVoteForApprovalLocation(locationId: Int) {
+    fun removeVoteForApprovalLocationByUser(locationId: Int) {
         geoData.removeVoteForApprovalLocation(locationId)
         usersData.removeLocationApproved(locationId)
     }
