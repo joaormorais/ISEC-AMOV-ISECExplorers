@@ -35,6 +35,7 @@ import com.example.amovtp.R
 import com.example.amovtp.ui.screens.Screens
 import com.example.amovtp.ui.theme.AMOVTPTheme
 import com.example.amovtp.ui.viewmodels.usersViewModels.LoginViewModel
+import com.example.amovtp.ui.viewmodels.utils.FirebaseViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -47,10 +48,8 @@ fun LoginScreen(
 
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val snackBarHostState = remember { SnackbarHostState() }
-    //val coroutineScope = rememberCoroutineScope()
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    val snackbarHostState = remember { SnackbarHostState() } //para mostrar as mensagens de erro
+    val snackbarHostState = remember { SnackbarHostState() }
     var showSnackBar by remember { mutableStateOf(false) }
     val unkownError = stringResource(R.string.unknown_error)
     val namePwNeeded = stringResource(R.string.name_pw_needed)

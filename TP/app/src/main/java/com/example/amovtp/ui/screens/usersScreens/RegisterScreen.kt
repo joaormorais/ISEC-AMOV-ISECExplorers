@@ -35,6 +35,7 @@ import com.example.amovtp.R
 import com.example.amovtp.ui.screens.Screens
 import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModel
 import com.example.amovtp.ui.viewmodels.usersViewModels.RegisterViewModelFactory
+import com.example.amovtp.ui.viewmodels.utils.FirebaseViewModel
 
 @Composable
 fun RegisterScreen(
@@ -49,7 +50,7 @@ fun RegisterScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    val snackbarHostState = remember { SnackbarHostState() } //para mostrar as mensagens de erro
+    val snackbarHostState = remember { SnackbarHostState() }
     var showSnackBar by remember { mutableStateOf(false) }
     val unkownError = stringResource(R.string.unknown_error)
     val fillEveryFieldError = stringResource(R.string.fill_every_field)

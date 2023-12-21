@@ -88,7 +88,8 @@ fun MainScreen(
         addPointOfInterest = (destination.route == Screens.POINTS_OF_INTEREST.route)
         addCategory = (destination.route == Screens.CATEGORIES.route)
 
-        screenTitle = if(destination.route == Screens.POINTS_OF_INTEREST.route) Consts.POINTS_OF_INTEREST else destination.route.toString()
+        screenTitle =
+            if (destination.route == Screens.POINTS_OF_INTEREST.route) Consts.POINTS_OF_INTEREST else destination.route.toString()
     }
 
     AMOVTPTheme() {
@@ -175,7 +176,11 @@ fun MainScreen(
                     composable(Screens.REGISTER.route) {
                         registerViewModel =
                             viewModel(factory = RegisterViewModelFactory(app.userData))
-                        RegisterScreen(registerViewModel!!, navController, Screens.LOGIN)
+                        RegisterScreen(
+                            registerViewModel!!,
+                            navController,
+                            Screens.LOGIN
+                        )
                     }
 
                     composable(Screens.LOCATIONS.route) {

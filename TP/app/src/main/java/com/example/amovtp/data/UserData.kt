@@ -1,10 +1,14 @@
 package com.example.amovtp.data
 
 import android.location.Location
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 
-class UserData(/*firestore*/) {
+class UserData() {
 
+    private var _userId = mutableStateOf("")
+    private lateinit var _name: String
+    private lateinit var _email: String
     private val _currentLocation = MutableLiveData(Location(null))
     private var _locationsApproved = mutableListOf<Int>()
     private var _pointsOfInterestApproved = mutableListOf<Int>()

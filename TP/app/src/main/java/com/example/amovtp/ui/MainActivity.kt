@@ -15,8 +15,8 @@ import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.example.amovtp.MyApplication
 import com.example.amovtp.ui.screens.MainScreen
-import com.example.amovtp.ui.viewmodels.GPSViewModel
-import com.example.amovtp.ui.viewmodels.GPSViewModelFactory
+import com.example.amovtp.ui.viewmodels.utils.GPSViewModel
+import com.example.amovtp.ui.viewmodels.utils.GPSViewModelFactory
 import org.osmdroid.config.Configuration
 
 class MainActivity : ComponentActivity() {
