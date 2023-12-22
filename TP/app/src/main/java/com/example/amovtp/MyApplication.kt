@@ -16,10 +16,10 @@ class MyApplication : Application() {
         FusedLocationHandler(locationProvider)
     }
 
-    val fAuthUtil: FAuthUtil by lazy { FAuthUtil() }
-    val fStorageUtil: FStorageUtil by lazy { FStorageUtil() }
+    private val fAuthUtil: FAuthUtil by lazy { FAuthUtil() }
+    private val fStorageUtil: FStorageUtil by lazy { FStorageUtil() }
 
-    val geoData by lazy { GeoData(/*fstorageutil*/) }
+    val geoData by lazy { GeoData(fStorageUtil) }
     val userData by lazy { UserData(fAuthUtil) }
 
 }

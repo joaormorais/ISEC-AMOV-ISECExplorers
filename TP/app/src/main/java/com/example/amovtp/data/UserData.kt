@@ -7,7 +7,7 @@ import com.example.amovtp.utils.fb.FAuthUtil
 
 class UserData(private val fAuthUtil: FAuthUtil) {
 
-    private var _userId = mutableStateOf("")
+    private var _userId = mutableStateOf("") //TODO: fazer o observer no init e dar listen a este valor
     private val _currentLocation = MutableLiveData(Location(null))
     private var _locationsApproved = mutableListOf<Int>()
     private var _pointsOfInterestApproved = mutableListOf<Int>()

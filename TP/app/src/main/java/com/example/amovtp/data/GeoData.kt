@@ -1,5 +1,7 @@
 package com.example.amovtp.data
 
+import com.example.amovtp.utils.fb.FStorageUtil
+
 /**
  * Represents a location with N points of interest
  */
@@ -10,7 +12,7 @@ data class Location(
     val lat: Double,
     val long: Double,
     val isManualCoords: Boolean,
-    val pointsOfInterest: MutableList<String>,
+    val pointsOfInterest: List<String>,
     val imgs: List<String>,
     var votes: Int,
     var isApproved: Boolean
@@ -42,7 +44,7 @@ data class PointOfInterest(
     val category: String,
     val imgs: List<String>,
     var classification: Int,
-    var nClassifications:Int,
+    var nClassifications: Int,
     var votes: Int,
     var isApproved: Boolean
 )
@@ -50,7 +52,7 @@ data class PointOfInterest(
 /**
  * Locations, Points of interest and categories
  */
-class GeoData(/*firestore*/) {
+class GeoData(private val fStorageUtil: FStorageUtil) {
 
     companion object {
         private var _currentLocationId = 0
@@ -62,7 +64,9 @@ class GeoData(/*firestore*/) {
     private val _pointsOfInterest = mutableListOf<PointOfInterest>()
     private val _categories = mutableListOf<Category>()
 
-    init { //TODO: apagar
+    //TODO: para receber informação, fazer o observer no init; ouvir da cloud objetos de Loc, Cat e Ponto
+
+    /*init { //TODO: apagar
 
         val museumCategory = Category(
             _currentCategoryId++,
@@ -187,6 +191,39 @@ class GeoData(/*firestore*/) {
             _pointsOfInterest.add(tempPointOfInterest)
             location.pointsOfInterest.add(tempPointOfInterest.name)
         }
+    }*/
+    init {
+
+        fStorageUtil.startObserverGeoData(
+            onNewLocations = { locMapList ->
+
+                for (locMap in locMapList)
+                    for (i in locMap) {
+                        _locations.add(
+                            Location(
+                                id = locMap["id"] as Int,
+                                name = locMap["name"] as String,
+                                description = locMap["description"] as String,
+                                lat = locMap["lat"] as Double,
+                                long = locMap["long"] as Double,
+                                isManualCoords = locMap["isManualCoords"] as Boolean,
+                                pointsOfInterest = locMap["pointsOfInterest"] as List<String>,
+                                imgs = locMap["imgs"] as List<String>,
+                                votes = locMap["votes"] as Int,
+                                isApproved = locMap["isApproved"] as Boolean
+                            )
+                        )
+                    }
+
+            },
+            onNewPointsOfInterest = { locPoints ->
+
+            },
+            onNewCategories = { locCats ->
+
+            }
+        )
+
     }
 
     val locations: List<Location>
@@ -209,7 +246,7 @@ class GeoData(/*firestore*/) {
         imgs: List<String>
     ) {
 
-        _locations.add(
+        fStorageUtil.addLocationToFirestore(
             Location(
                 _currentLocationId++,
                 name,
@@ -222,7 +259,8 @@ class GeoData(/*firestore*/) {
                 0,
                 false
             )
-        )
+        ) {}
+
 
     }
 
@@ -237,7 +275,7 @@ class GeoData(/*firestore*/) {
         imgs: List<String>
     ) {
 
-        _pointsOfInterest.add(
+        fStorageUtil.addPointOfInterestToFirestore(
             PointOfInterest(
                 _currentPointsOfInterestId++,
                 name,
@@ -253,7 +291,7 @@ class GeoData(/*firestore*/) {
                 0,
                 false
             )
-        )
+        ) {}
 
     }
 
@@ -263,7 +301,7 @@ class GeoData(/*firestore*/) {
         img: String,
     ) {
 
-        _categories.add(
+        fStorageUtil.addCategoryToFirestore(
             Category(
                 _currentCategoryId++,
                 name,
@@ -272,7 +310,7 @@ class GeoData(/*firestore*/) {
                 0,
                 false
             )
-        )
+        ) {}
 
     }
 
@@ -334,19 +372,23 @@ class GeoData(/*firestore*/) {
 
     /* ------------------------  Point classification (Start) ------------------------ */
     fun addClassificationToPoint(pointOfInterestID: Int, classification: Int) {
-        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification = _pointsOfInterest.find { it.id == pointOfInterestID }?.classification!! + classification
+        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification =
+            _pointsOfInterest.find { it.id == pointOfInterestID }?.classification!! + classification
     }
 
-    fun incrementNumberOfClassifications(pointOfInterestID: Int){
-        _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications = _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications!! + 1
+    fun incrementNumberOfClassifications(pointOfInterestID: Int) {
+        _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications =
+            _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications!! + 1
     }
 
     fun removeClassificationToPoint(pointOfInterestID: Int, classification: Int) {
-        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification = _pointsOfInterest.find { it.id == pointOfInterestID }?.classification!! - classification
+        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification =
+            _pointsOfInterest.find { it.id == pointOfInterestID }?.classification!! - classification
     }
 
-    fun decrementNumberOfClassifications(pointOfInterestID: Int){
-      _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications = _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications!! - 1
+    fun decrementNumberOfClassifications(pointOfInterestID: Int) {
+        _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications =
+            _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications!! - 1
     }
     /* ------------------------  Point classification (End) ------------------------ */
 }
