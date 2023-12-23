@@ -7,12 +7,15 @@ import com.example.amovtp.utils.fb.FAuthUtil
 
 class UserData(private val fAuthUtil: FAuthUtil) {
 
-    private var _userId = mutableStateOf("") //TODO: fazer o observer no init e dar listen a este valor
+    private var _userId: String? = null
     private val _currentLocation = MutableLiveData(Location(null))
     private var _locationsApproved = mutableListOf<Int>()
     private var _pointsOfInterestApproved = mutableListOf<Int>()
     private var _categoriesApproved = mutableListOf<Int>()
     private var _pointsOfInterestClassified = mutableMapOf<Int, Int>()
+
+    val userId: String?
+        get() = _userId
 
     val currentLocation: MutableLiveData<Location>
         get() = _currentLocation
@@ -30,20 +33,25 @@ class UserData(private val fAuthUtil: FAuthUtil) {
         get() = _pointsOfInterestClassified.toMap()
 
     /* ------------------------  Login and register (Start) ------------------------ */
+
     fun register(email: String, pw: String, onResult: (Throwable?) -> Unit) {
-        fAuthUtil.createUserWithEmail(email, pw) {exception ->
+        fAuthUtil.createUserWithEmail(email, pw) { exception ->
             onResult(exception)
         }
     }
 
     fun login(email: String, pw: String, onResult: (Throwable?) -> Unit) {
-        fAuthUtil.signInWithEmail(email, pw) {exception ->
+        fAuthUtil.signInWithEmail(email, pw) { exception ->
             onResult(exception)
         }
     }
 
     fun signOut() {
         fAuthUtil.signOut()
+    }
+
+    fun updateUserId() {
+        _userId = fAuthUtil.userId
     }
     /* ------------------------  Login and register (End) ------------------------ */
 

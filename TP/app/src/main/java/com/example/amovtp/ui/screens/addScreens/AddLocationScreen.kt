@@ -135,9 +135,9 @@ fun AddLocationScreen(
                         }
 
                         if(validationResult){
-                            //a validação foi bem sucedida
                             val mixedImgs = imgsGallery + imgsCamera
 
+                            //TODO: receber os erros e mostrar na toast (sandra)
                             addLocationViewModel.addLocation(
                                 name,
                                 description,

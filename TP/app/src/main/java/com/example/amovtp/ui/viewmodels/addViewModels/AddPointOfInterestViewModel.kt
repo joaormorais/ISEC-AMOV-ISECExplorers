@@ -47,14 +47,18 @@ class AddPointOfInterestViewModel(
         imgs: List<String>
     ): String {
         val tempPointsOfInterest = geoData.pointsOfInterest
+        val tempUserId = userData.userId
 
         if (tempPointsOfInterest.any { it.name == name })
             return Consts.ERROR_EXISTING_NAME
         else if (tempPointsOfInterest.any { it.lat == lat && it.long == long })
             return Consts.ERROR_EXISTING_POINT_OF_INTEREST
+        else if(tempUserId==null)
+            return Consts.ERROR_NEED_LOGIN
 
         geoData.addPointOfInterest(
             name,
+            tempUserId,
             description,
             lat,
             long,

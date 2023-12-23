@@ -246,6 +246,8 @@ fun AddPointOfInterestScreen(
 
                         if (validationResult) {
                             val mixedImgs = imgsGallery + imgsCamera
+
+                            //TODO: receber os erros e mostrar na toast (sandra)
                             addPointOfInterestViewModel.addPointOfInterest(
                                 name,
                                 description,

@@ -110,8 +110,10 @@ fun MainScreen(
                                 IconButton(onClick = {
                                     navController.navigateUp()
 
-                                    if(isLocation)
+                                    if (isLocation) {
                                         app.userData.signOut()
+                                        app.userData.updateUserId()
+                                    }
 
                                 }) {
                                     Icon(
@@ -261,7 +263,12 @@ fun MainScreen(
 
                     composable(Screens.ADD_CATEGORY.route) {
                         addCategoryViewModel =
-                            viewModel(factory = AddCategoryViewModelFactory(app.geoData))
+                            viewModel(
+                                factory = AddCategoryViewModelFactory(
+                                    app.geoData,
+                                    app.userData
+                                )
+                            )
                         AddCategoryScreen(addCategoryViewModel!!, navController)
                     }
 

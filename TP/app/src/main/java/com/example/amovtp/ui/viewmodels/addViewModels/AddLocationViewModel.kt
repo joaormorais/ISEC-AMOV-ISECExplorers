@@ -38,13 +38,16 @@ class AddLocationViewModel(
     ): String {
 
         val tempLocations = geoData.locations
+        val tempUserId = userData.userId
 
         if (tempLocations.any { it.name == name })
             return Consts.ERROR_EXISTING_NAME
         else if (tempLocations.any { it.lat == lat && it.long == long })
             return Consts.ERROR_EXISTING_LOCATION
+        else if(tempUserId==null)
+            return Consts.ERROR_NEED_LOGIN
 
-        geoData.addLocation(name, description, lat, long, isManualCoords, imgs)
+        geoData.addLocation(name,tempUserId, description, lat, long, isManualCoords, imgs)
 
         return Consts.SUCCESS
     }

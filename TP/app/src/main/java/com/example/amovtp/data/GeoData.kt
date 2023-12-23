@@ -7,6 +7,7 @@ import com.example.amovtp.utils.fb.FStorageUtil
  */
 data class Location(
     val id: Int,
+    val userId:String,
     val name: String,
     val description: String,
     val lat: Double,
@@ -23,6 +24,7 @@ data class Location(
  */
 data class Category(
     val id: Int,
+    val userId:String,
     val name: String,
     val description: String,
     val img: String,
@@ -35,6 +37,7 @@ data class Category(
  */
 data class PointOfInterest(
     val id: Int,
+    val userId:String,
     val name: String,
     val description: String,
     val lat: Double,
@@ -64,134 +67,6 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
     private val _pointsOfInterest = mutableListOf<PointOfInterest>()
     private val _categories = mutableListOf<Category>()
 
-    //TODO: para receber informação, fazer o observer no init; ouvir da cloud objetos de Loc, Cat e Ponto
-
-    /*init { //TODO: apagar
-
-        val museumCategory = Category(
-            _currentCategoryId++,
-            "Museus",
-            "Locais dedicados à exposição e preservação de artefatos culturais.",
-            "",
-            2,
-            true
-        )
-        val monumentsCategory = Category(
-            _currentCategoryId++,
-            "Monumentos & Locais de Culto",
-            "Locais históricos e religiosos notáveis.",
-            "",
-            2,
-            true
-        )
-        val gardensCategory = Category(
-            _currentCategoryId++,
-            "Jardins",
-            "Áreas verdes planejadas para fins estéticos e de lazer.",
-            "",
-            2,
-            true
-        )
-        val viewpointsCategory =
-            Category(
-                _currentCategoryId++,
-                "Miradouros",
-                "Locais com vistas panorâmicas.",
-                "",
-                2,
-                true
-            )
-
-        val restaurantsBarsCategory = Category(
-            _currentCategoryId++,
-            "Restaurantes & Bares",
-            "Locais para refeições e entretenimento.",
-            "",
-            1,
-            false
-        )
-        val accommodationCategory = Category(
-            _currentCategoryId++,
-            "Alojamento",
-            "Hospedagem e acomodações para estadias temporárias.",
-            "",
-            0,
-            false
-        )
-
-        _categories.addAll(
-            listOf(
-                museumCategory,
-                monumentsCategory,
-                gardensCategory,
-                viewpointsCategory,
-                restaurantsBarsCategory,
-                accommodationCategory
-            )
-        )
-
-        val locationNames = arrayOf(
-            "Lisboa", "Porto", "Braga", "Aveiro", "Coimbra",
-            "Faro", "Setubal", "Leiria", "Viseu", "Viana do Castelo",
-            "Santarem", "Evora", "Guarda", "Portalegre", "Beja",
-            "Bragança", "Vila Real", "Castelo Branco"
-        )
-
-        val locationDescriptions =
-            Array(locationNames.size) { "Descrição para ${locationNames[it]}" }
-
-        val latitudes = doubleArrayOf(
-            38.7223, 41.1579, 41.5331, 40.6443, 40.2105,
-            37.0194, 38.5250, 39.7443, 40.6575, 41.6946,
-            39.2364, 38.5719, 40.5371, 39.2904, 38.0156,
-            41.8089, 41.2974, 39.8234
-        )
-
-        val longitudes = doubleArrayOf(
-            -9.1393, -8.6291, -8.6215, -8.6455, -8.4293,
-            -7.9306, -8.8909, -8.8072, -7.9142, -8.8304,
-            -8.6850, -7.9135, -7.2656, -7.4283, -7.8652,
-            -6.7579, -7.7463, -7.4914
-        )
-
-        for (i in locationNames.indices) {
-            _locations.add(
-                Location(
-                    _currentLocationId++,
-                    locationNames[i],
-                    locationDescriptions[i],
-                    latitudes[i],
-                    longitudes[i],
-                    false,
-                    mutableListOf(),
-                    mutableListOf(),
-                    0,
-                    false
-                )
-            )
-        }
-
-        for (location in _locations) {
-            val tempPointOfInterest = PointOfInterest(
-                _currentPointsOfInterestId++,
-                "Ponto de Interesse em ${location.name}",
-                "Descrição do ponto de interesse em ${location.name}",
-                location.lat,
-                location.long,
-                false,
-                listOf(location.name),
-                _categories.random().name,
-                mutableListOf(),
-                12,
-                5,
-                1,
-                false
-            )
-
-            _pointsOfInterest.add(tempPointOfInterest)
-            location.pointsOfInterest.add(tempPointOfInterest.name)
-        }
-    }*/
     init {
 
         fStorageUtil.startObserverGeoData(
@@ -202,6 +77,7 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
                         _locations.add(
                             Location(
                                 id = locMap["id"] as Int,
+                                userId = locMap["userId"] as String,
                                 name = locMap["name"] as String,
                                 description = locMap["description"] as String,
                                 lat = locMap["lat"] as Double,
@@ -239,6 +115,7 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
 
     fun addLocation(
         name: String,
+        userId:String?,
         description: String,
         lat: Double,
         long: Double,
@@ -250,6 +127,7 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
             Location(
                 _currentLocationId++,
                 name,
+                userId!!,
                 description,
                 lat,
                 long,
@@ -266,6 +144,7 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
 
     fun addPointOfInterest(
         name: String,
+        userId:String?,
         description: String,
         lat: Double,
         long: Double,
@@ -279,6 +158,7 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
             PointOfInterest(
                 _currentPointsOfInterestId++,
                 name,
+                userId!!,
                 description,
                 lat,
                 long,
@@ -297,6 +177,7 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
 
     fun addCategory(
         name: String,
+        userId:String?,
         description: String,
         img: String,
     ) {
@@ -305,6 +186,7 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
             Category(
                 _currentCategoryId++,
                 name,
+                userId!!,
                 description,
                 img,
                 0,

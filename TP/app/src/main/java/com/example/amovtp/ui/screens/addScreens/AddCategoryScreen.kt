@@ -104,7 +104,8 @@ fun AddCategoryScreen(
                         }
 
                         if (validationResult) {
-                            //a validação foi bem sucedida
+
+                            //TODO: receber os erros e mostrar na toast (sandra)
                             addCategoryViewModel.addCategory(
                                 name,
                                 description,

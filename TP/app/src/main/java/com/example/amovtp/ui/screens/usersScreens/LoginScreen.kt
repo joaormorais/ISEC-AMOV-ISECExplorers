@@ -59,7 +59,7 @@ fun LoginScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        modifier=modifier.padding(top = 32.dp)
+        modifier = modifier.padding(top = 32.dp)
     ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -105,11 +105,14 @@ fun LoginScreen(
                                         errorMessage = msg
                                     }
                                 ) {
-                                    loginViewModel.login(email,password){exception ->
-                                        if(exception!=null){
-                                            Log.d("LoginScreen", "exception recebida = " + exception.message)
+                                    loginViewModel.login(email, password) { exception ->
+                                        if (exception != null) {
+                                            Log.d(
+                                                "LoginScreen",
+                                                "exception recebida = " + exception.message
+                                            )
                                             errorMessage = exception.message
-                                        }else
+                                        } else
                                             navController?.navigate(Screens.LOCATIONS.route)
                                     }
                                 } else {
