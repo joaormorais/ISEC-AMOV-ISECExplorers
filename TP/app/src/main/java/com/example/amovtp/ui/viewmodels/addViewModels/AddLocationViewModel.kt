@@ -44,7 +44,7 @@ class AddLocationViewModel(
             return Consts.ERROR_EXISTING_NAME
         else if (tempLocations.any { it.lat == lat && it.long == long })
             return Consts.ERROR_EXISTING_LOCATION
-        else if(tempUserId==null)
+        else if(tempUserId.isBlank())
             return Consts.ERROR_NEED_LOGIN
 
         geoData.addLocation(name,tempUserId, description, lat, long, isManualCoords, imgs)

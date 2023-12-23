@@ -39,8 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -67,7 +66,6 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -446,15 +444,15 @@ fun PointsOfInterestScreen(
                                         Consts.THREE_STAR_CLASSIFICATION
                                     )
                                     var mediaClassification by remember {
-                                        mutableFloatStateOf(
+                                        mutableDoubleStateOf(
                                             pointsOfInterestViewModel.calculateMediaClassification(
                                                 it.id
                                             )
                                         )
                                     }
 
-                                    var isClassifiedByUser by remember {
-                                        mutableIntStateOf(
+                                    var classificationFromUser by remember {
+                                        mutableDoubleStateOf(
                                             pointsOfInterestViewModel.findClassificationFromUser(
                                                 it.id
                                             )
@@ -474,10 +472,9 @@ fun PointsOfInterestScreen(
                                             fontSize = 12.sp
                                         )
                                         for (i in listOfClassifications) {
-                                            Log.d("PointsOfInterestScreen","primeira vez isClassifiedByUser = ["+isClassifiedByUser+"]")
                                             Button(
                                                 colors =
-                                                if (isClassifiedByUser == i){
+                                                if (classificationFromUser == i){
                                                     ButtonDefaults.buttonColors(
                                                     containerColor = MaterialTheme.colorScheme.inversePrimary,
                                                     contentColor = Color.White
@@ -492,7 +489,7 @@ fun PointsOfInterestScreen(
                                                     when (i) {
 
                                                         Consts.ONE_STAR_CLASSIFICATION -> {
-                                                            if (isClassifiedByUser == Consts.ONE_STAR_CLASSIFICATION) {
+                                                            if (classificationFromUser == Consts.ONE_STAR_CLASSIFICATION) {
                                                                 pointsOfInterestViewModel.removeClassificationToPointByUser(
                                                                     it.id
                                                                 )
@@ -502,13 +499,12 @@ fun PointsOfInterestScreen(
                                                                     Consts.ONE_STAR_CLASSIFICATION
                                                                 )
                                                             }
-                                                            isClassifiedByUser = pointsOfInterestViewModel.findClassificationFromUser(it.id)
-                                                            Log.d("PointsOfInterestScreen","isClassifiedByUser = ["+isClassifiedByUser+"]")
+                                                            classificationFromUser = pointsOfInterestViewModel.findClassificationFromUser(it.id)
                                                             mediaClassification = pointsOfInterestViewModel.calculateMediaClassification(it.id)
                                                         }
 
                                                         Consts.TWO_STAR_CLASSIFICATION -> {
-                                                            if (isClassifiedByUser == Consts.TWO_STAR_CLASSIFICATION) {
+                                                            if (classificationFromUser == Consts.TWO_STAR_CLASSIFICATION) {
                                                                 pointsOfInterestViewModel.removeClassificationToPointByUser(
                                                                     it.id
                                                                 )
@@ -518,13 +514,12 @@ fun PointsOfInterestScreen(
                                                                     Consts.TWO_STAR_CLASSIFICATION
                                                                 )
                                                             }
-                                                            isClassifiedByUser = pointsOfInterestViewModel.findClassificationFromUser(it.id)
-                                                            Log.d("PointsOfInterestScreen","isClassifiedByUser = ["+isClassifiedByUser+"]")
+                                                            classificationFromUser = pointsOfInterestViewModel.findClassificationFromUser(it.id)
                                                             mediaClassification = pointsOfInterestViewModel.calculateMediaClassification(it.id)
                                                         }
 
                                                         Consts.THREE_STAR_CLASSIFICATION -> {
-                                                            if (isClassifiedByUser == Consts.THREE_STAR_CLASSIFICATION) {
+                                                            if (classificationFromUser == Consts.THREE_STAR_CLASSIFICATION) {
                                                                 pointsOfInterestViewModel.removeClassificationToPointByUser(
                                                                     it.id
                                                                 )
@@ -534,8 +529,7 @@ fun PointsOfInterestScreen(
                                                                     Consts.THREE_STAR_CLASSIFICATION
                                                                 )
                                                             }
-                                                            isClassifiedByUser = pointsOfInterestViewModel.findClassificationFromUser(it.id)
-                                                            Log.d("PointsOfInterestScreen","isClassifiedByUser = ["+isClassifiedByUser+"]")
+                                                            classificationFromUser = pointsOfInterestViewModel.findClassificationFromUser(it.id)
                                                             mediaClassification = pointsOfInterestViewModel.calculateMediaClassification(it.id)
                                                         }
 

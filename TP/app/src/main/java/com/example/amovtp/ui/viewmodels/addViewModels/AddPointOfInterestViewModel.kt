@@ -53,7 +53,7 @@ class AddPointOfInterestViewModel(
             return Consts.ERROR_EXISTING_NAME
         else if (tempPointsOfInterest.any { it.lat == lat && it.long == long })
             return Consts.ERROR_EXISTING_POINT_OF_INTEREST
-        else if(tempUserId==null)
+        else if(tempUserId.isBlank())
             return Consts.ERROR_NEED_LOGIN
 
         geoData.addPointOfInterest(

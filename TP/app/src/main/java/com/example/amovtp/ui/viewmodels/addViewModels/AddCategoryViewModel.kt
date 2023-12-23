@@ -30,7 +30,7 @@ class AddCategoryViewModel(
 
         if (tempCategories.any { it.name == name })
             return Consts.ERROR_EXISTING_NAME
-        else if (tempUserId == null)
+        else if (tempUserId.isBlank())
             return Consts.ERROR_NEED_LOGIN
 
         geoData.addCategory(name, tempUserId, description, img)

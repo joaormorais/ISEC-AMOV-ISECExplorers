@@ -15,12 +15,12 @@ import java.io.IOException
 import java.io.InputStream
 
 class FStorageUtil {
-    //companion object {
     fun addLocationToFirestore(newLocation:Location,onResult: (Throwable?) -> Unit) {
         val db = Firebase.firestore
 
         val locationToCloud = hashMapOf(
             "id" to newLocation.id,
+            "userID" to newLocation.userId,
             "name" to newLocation.name,
             "description" to newLocation.description,
             "lat" to newLocation.lat,
@@ -43,6 +43,7 @@ class FStorageUtil {
 
         val pointOfInterestToCloud = hashMapOf(
             "id" to newPointOfInterest.id,
+            "userID" to newPointOfInterest.userId,
             "name" to newPointOfInterest.name,
             "description" to newPointOfInterest.description,
             "lat" to newPointOfInterest.lat,
@@ -71,6 +72,7 @@ class FStorageUtil {
 
         val categoryToCloud = hashMapOf(
             "id" to newCategory.id,
+            "userID" to newCategory.userId,
             "name" to newCategory.name,
             "description" to newCategory.description,
             "img" to newCategory.img,
@@ -228,5 +230,4 @@ class FStorageUtil {
 
     }
 
-    //}
 }

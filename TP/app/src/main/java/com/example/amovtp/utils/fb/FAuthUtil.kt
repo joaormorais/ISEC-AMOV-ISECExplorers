@@ -8,8 +8,8 @@ import com.google.firebase.ktx.Firebase
 class FAuthUtil {
     private val auth by lazy { Firebase.auth }
 
-    private var _userId: String? = null
-    val userId: String?
+    private var _userId: String = ""
+    val userId: String
         get() = _userId
 
     fun createUserWithEmail(email: String, password: String, onResult: (Throwable?) -> Unit) {
@@ -22,9 +22,9 @@ class FAuthUtil {
     fun signInWithEmail(email: String, password: String, onResult: (Throwable?) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { result ->
-                if (result.isSuccessful) {
+                if (result.exception == null) {
+                    _userId = auth.currentUser?.uid!!
                     onResult(null)
-                    _userId = auth.currentUser?.uid
                 } else
                     onResult(result.exception)
 
@@ -34,7 +34,7 @@ class FAuthUtil {
     fun signOut() {
         if (auth.currentUser != null) {
             auth.signOut()
-            _userId = null
+            _userId = ""
         }
     }
 }

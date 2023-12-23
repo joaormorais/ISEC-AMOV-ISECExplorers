@@ -29,18 +29,18 @@ class CategoriesViewModel(
         return geoData.categories
     }
 
-    fun findVoteForApprovedCategoryByUser(categoryId: Int): Boolean {
+    fun findVoteForApprovedCategoryByUser(categoryId: Long): Boolean {
         return userData.categoriesApproved.any { it == categoryId }
     }
 
-    fun voteForApprovalCategoryByUser(categoryId: Int) {
+    fun voteForApprovalCategoryByUser(categoryId: Long) {
         geoData.voteForApprovalCategory(categoryId)
         userData.addCategoryApproved(categoryId)
         if (geoData.categories.find { it.id == categoryId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
             geoData.approveCategory(categoryId)
     }
 
-    fun removeVoteForApprovalCategoryByUser(categoryId: Int) {
+    fun removeVoteForApprovalCategoryByUser(categoryId: Long) {
         geoData.removeVoteForApprovalCategory(categoryId)
         userData.removeCategoryApproved(categoryId)
     }
