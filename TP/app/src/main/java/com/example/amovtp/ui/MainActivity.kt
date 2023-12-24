@@ -34,8 +34,8 @@ class MainActivity : ComponentActivity() {
             PreferenceManager.getDefaultSharedPreferences(this)
         )
 
-        verifyCameraPermissions()
         verifyGeoPermissions()
+        verifyCameraPermissions()
 
         setContent {
             MainScreen()

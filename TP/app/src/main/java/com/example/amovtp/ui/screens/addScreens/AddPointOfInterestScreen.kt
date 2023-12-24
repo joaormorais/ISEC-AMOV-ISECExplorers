@@ -140,7 +140,7 @@ fun AddPointOfInterestScreen(
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("Choose locations")
+                                Text(stringResource(R.string.choose_locations))
                                 Icon(Icons.Rounded.KeyboardArrowDown, "down")
                             }
                         }
@@ -156,16 +156,22 @@ fun AddPointOfInterestScreen(
                             locationList.value.forEach { location ->
 
                                 //TODO: terminar + pintar o fundo
-                                val itemBackgroundColor by remember { mutableStateOf(Color.White) }
+                                var isLocationPicked by remember { mutableStateOf(selectedLocations.contains(location.name)) }
 
                                 DropdownMenuItem(
-                                    text = { Text(location.name) },
-                                    //colors = MenuItemColors(),
+                                    text = {
+                                        if (isLocationPicked) Text(
+                                            location.name,
+                                            color = Color.Green
+                                        ) else Text(location.name)
+                                    },
                                     onClick = {
                                         if (!selectedLocations.removeAll { it == location.name }) {
                                             selectedLocations.add(location.name)
+                                            isLocationPicked = true
                                         } else {
-
+                                            selectedLocations.remove(location.name)
+                                            isLocationPicked = false
                                         }
                                     })
                             }
@@ -183,7 +189,7 @@ fun AddPointOfInterestScreen(
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(if (selectedCategory.isEmpty()) "Choose a category" else selectedCategory)
+                                Text(if (selectedCategory.isEmpty()) stringResource(R.string.choose_a_category) else selectedCategory)
                                 Icon(Icons.Rounded.KeyboardArrowDown, "down")
                             }
                         }
@@ -304,7 +310,7 @@ fun isAddPointOfInterestValid(
         errorMessage(fillCoordinatesError)
         return false
     }
-    if (selectedLocations.isNullOrEmpty()) {
+    if (selectedLocations.isEmpty()) {
         errorMessage(fillLocationError)
         return false
     }

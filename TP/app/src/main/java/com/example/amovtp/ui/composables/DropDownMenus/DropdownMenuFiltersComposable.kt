@@ -179,8 +179,6 @@ fun DropdownMenuFilters(
                         text = {
                             Column {
                                 Text(text = category.name)
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text(text = category.description, fontSize = 6.sp)
                             }
                         },
                         onClick = {

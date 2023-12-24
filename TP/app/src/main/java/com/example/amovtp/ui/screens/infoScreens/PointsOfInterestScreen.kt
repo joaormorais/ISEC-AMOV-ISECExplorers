@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.screens.infoScreens
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -76,32 +75,30 @@ fun PointsOfInterestScreen(
     modifier: Modifier = Modifier
 ) {
 
-    // Common
-    var isHelperExpanded by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-
-    // Main vars and vals
-    val currentLocation by remember { mutableStateOf(pointsOfInterestViewModel.getCurrentLocation()) } // current location (being updated)
+    var isHelperExpanded by remember { mutableStateOf(false) }
+    val currentLocation by remember { mutableStateOf(pointsOfInterestViewModel.getCurrentLocation()) }
     var geoPoint by remember {
         mutableStateOf(
             GeoPoint(
-                0.0,
-                0.0
+                currentLocation.value!!.latitude,
+                currentLocation.value!!.longitude
             )
         )
-    } // used to mark a location on the map
-    var locations by remember { pointsOfInterestViewModel.getLocations() }
-    var pointsOfInterest by remember { pointsOfInterestViewModel.getPointsOfInterest() } // points of interest being shown to the user (with or without filters)
-
-
-    LaunchedEffect(key1 = currentLocation) {
-        geoPoint = GeoPoint(currentLocation.value!!.latitude, currentLocation.value!!.longitude)
     }
+    val locations by remember { pointsOfInterestViewModel.getLocations() }
+    val pointsOfInterestDM = pointsOfInterestViewModel.getPointsOfInterest()
+    var pointsOfInterestUI by remember {
+        mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest().value)
+    }
+    LaunchedEffect(key1 = pointsOfInterestDM.value, block = {
+        pointsOfInterestUI=pointsOfInterestDM.value
+    })
 
     LaunchedEffect(key1 = itemName) {
         if (itemName != Consts.DEFAULT_VALUE) {
-            pointsOfInterest = pointsOfInterestViewModel.getPointsFromLocation(itemName)
+            pointsOfInterestUI = pointsOfInterestViewModel.getPointsFromLocation(itemName)
             val tempLoc = locations.find { it.name == itemName }
             geoPoint = GeoPoint(tempLoc!!.lat, tempLoc.long)
         }
@@ -146,17 +143,17 @@ fun PointsOfInterestScreen(
                         itemPicked = { itemPicked ->
                             when (itemPicked) {
                                 Consts.ORDER_BY_NAME -> {
-                                    pointsOfInterest = pointsOfInterest.sortedBy { it.name }
+                                    pointsOfInterestUI = pointsOfInterestUI.sortedBy { it.name }
                                 }
 
                                 Consts.ORDER_BY_CATEGORY -> {
-                                    pointsOfInterest = pointsOfInterest.sortedBy { it.category }
+                                    pointsOfInterestUI = pointsOfInterestUI.sortedBy { it.category }
                                 }
 
                                 Consts.ORDER_BY_DISTANCE -> {
-                                    pointsOfInterest =
+                                    pointsOfInterestUI =
                                         pointsOfInterestViewModel.getPointsOfInterestOrderedByDistance(
-                                            pointsOfInterest
+                                            pointsOfInterestUI
                                         )
                                 }
 
@@ -178,7 +175,7 @@ fun PointsOfInterestScreen(
                         itemNameForLocation = itemName,
                         itemsLocations = locations,
                         itemPicked = { itemPicked ->
-                            pointsOfInterest =
+                            pointsOfInterestUI =
                                 pointsOfInterestViewModel.getPointsWithFilters(itemPicked, null)
                         },
                         newGeoPoint = { newGeoPoint ->
@@ -196,7 +193,7 @@ fun PointsOfInterestScreen(
                             itemNameForLocation = null,
                             itemsLocations = null,
                             itemPicked = { itemPicked ->
-                                pointsOfInterest =
+                                pointsOfInterestUI =
                                     pointsOfInterestViewModel.getPointsWithFilters(null, itemPicked)
                             },
                             newGeoPoint = {}
@@ -254,7 +251,7 @@ fun PointsOfInterestScreen(
                 .fillMaxSize()
                 .padding(top = 8.dp)
         ) {
-            items(pointsOfInterest, key = { it.name }) {
+            items(pointsOfInterestUI, key = { it.name }) {
 
                 var isDetailExpanded by remember { mutableStateOf(false) }
                 var isVotedByUser by remember {

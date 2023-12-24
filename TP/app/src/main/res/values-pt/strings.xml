@@ -54,4 +54,6 @@
     <string name="points_of_interest_description">Pontos de interesse: %1$s</string>
     <string name="classification_media">Classificação dada por utilizadores: %1$s</string>
     <string name="order_by_category_name">Ordenar por categoria</string>
+    <string name="choose_a_category">Escolher uma categoria</string>
+    <string name="choose_locations">Associar localizações</string>
 </resources>

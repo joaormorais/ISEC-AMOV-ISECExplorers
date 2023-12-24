@@ -1,5 +1,6 @@
 package com.example.amovtp.ui.screens.infoScreens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,10 +62,15 @@ fun LocationsScreen(
     modifier: Modifier = Modifier
 ) {
 
+    val locationsDM = locationsViewModel.getLocations()
+    var locationsUI by remember {
+        mutableStateOf(locationsViewModel.getLocations().value)
+    }
+    LaunchedEffect(key1 = locationsDM.value, block = {
+        locationsUI = locationsDM.value
+    })
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-
-    var locations by remember { locationsViewModel.getLocations() }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -88,21 +95,31 @@ fun LocationsScreen(
             DropdownMenuOrders(
                 orderFor = Consts.ORDER_FOR_LOCATIONS,
                 itemPicked = { itemPicked ->
-                when (itemPicked) {
-                    Consts.ORDER_BY_NAME -> {
-                        locations = locations.sortedBy { it.name }
-                    }
+                    when (itemPicked) {
+                        Consts.ORDER_BY_NAME -> {
+                            locationsUI = locationsUI.sortedBy { it.name }
+                            /*Log.d("LocationnsScreen", "locations aqui = " + locationsUI)
+                            Log.d(
+                                "LocationnsScreen",
+                                "locations no modelo de dados = " + locationsViewModel.getLocations()
+                            )*/
+                        }
 
-                    Consts.ORDER_BY_DISTANCE -> {
-                        locations = locationsViewModel.getLocationsOrderedByDistance()
-                    }
+                        Consts.ORDER_BY_DISTANCE -> {
+                            locationsUI = locationsViewModel.getLocationsOrderedByDistance()
+                            /*Log.d("LocationnsScreen", "locations aqui = " + locationsUI)
+                            Log.d(
+                                "LocationnsScreen",
+                                "locations no modelo de dados = " + locationsViewModel.getLocations()
+                            )*/
+                        }
 
-                    else -> {}
-                }
-                coroutineScope.launch {
-                    listState.animateScrollToItem(index = 0)
-                }
-            })
+                        else -> {}
+                    }
+                    coroutineScope.launch {
+                        listState.animateScrollToItem(index = 0)
+                    }
+                })
         }
 
         LazyColumn(
@@ -111,7 +128,7 @@ fun LocationsScreen(
                 .fillMaxSize()
                 .padding(top = 8.dp)
         ) {
-            items(locations, key = { it.name }) {
+            items(locationsUI, key = { it.name }) {
 
                 var isDetailExpanded by remember { mutableStateOf(false) }
                 var isVotedByUser by remember {

@@ -53,4 +53,6 @@
     <string name="points_of_interest_description">Points Of Interest: %1$s</string>
     <string name="classification_media">Classification given by users: %1$s</string>
     <string name="order_by_category_name">Order by category name</string>
+    <string name="choose_a_category">Choose a category</string>
+    <string name="choose_locations">Associate locations</string>
 </resources>
