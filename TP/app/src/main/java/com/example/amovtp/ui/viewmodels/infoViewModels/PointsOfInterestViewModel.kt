@@ -96,12 +96,11 @@ class PointsOfInterestViewModel(
         else if (categoryName == null)
             _filterLocationName.value = locationName
 
-        val filteredPoints: List<PointOfInterest>
-
-        if (_filterLocationName.value == Consts.ALL_LOCATIONS)
-            filteredPoints = geoData.pointsOfInterest.value
-        else
-            filteredPoints = getPointsFromLocation(_filterLocationName.value)
+        val filteredPoints: List<PointOfInterest> =
+            if (_filterLocationName.value == Consts.ALL_LOCATIONS)
+                geoData.pointsOfInterest.value
+            else
+                getPointsFromLocation(_filterLocationName.value)
 
         if (_filterCategoryName.value == Consts.ALL_CATEGORIES)
             return filteredPoints
@@ -142,9 +141,9 @@ class PointsOfInterestViewModel(
         userData.removePointOfInterestApproved(pointOfInterestName)
     }
 
-    fun findClassificationFromUser(pointOfInterestName: String):Double{
+    fun findClassificationFromUser(pointOfInterestName: String): Double {
 
-        return if(userData.pointsOfInterestClassified.value.keys.contains(pointOfInterestName))
+        return if (userData.pointsOfInterestClassified.value.keys.contains(pointOfInterestName))
             userData.pointsOfInterestClassified.value.getValue(pointOfInterestName)
         else
             Consts.NO_START_CLASSIFICATION
@@ -158,7 +157,7 @@ class PointsOfInterestViewModel(
 
         geoData.addClassificationToPoint(pointOfInterestName, classification)
         geoData.incrementNumberOfClassifications(pointOfInterestName)
-        userData.addPointOfInterestClassified(pointOfInterestName,classification)
+        userData.addPointOfInterestClassified(pointOfInterestName, classification)
     }
 
     fun removeClassificationToPointByUser(pointOfInterestName: String) {

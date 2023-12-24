@@ -4,9 +4,9 @@ import android.location.Location
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
-import com.example.amovtp.utils.fb.FAuthUtil
+import com.example.amovtp.services.FAuthService
 
-class UserData(private val fAuthUtil: FAuthUtil) {
+class UserData(private val fAuthService: FAuthService) {
 
     private var _userId: String = ""
     private val _currentLocation = MutableLiveData(Location(null))
@@ -36,23 +36,23 @@ class UserData(private val fAuthUtil: FAuthUtil) {
     /* ------------------------  Login and register (Start) ------------------------ */
 
     fun register(email: String, pw: String, onResult: (Throwable?) -> Unit) {
-        fAuthUtil.createUserWithEmail(email, pw) { exception ->
+        fAuthService.createUserWithEmail(email, pw) { exception ->
             onResult(exception)
         }
     }
 
     fun login(email: String, pw: String, onResult: (Throwable?) -> Unit) {
-        fAuthUtil.signInWithEmail(email, pw) { exception ->
+        fAuthService.signInWithEmail(email, pw) { exception ->
             onResult(exception)
         }
     }
 
     fun signOut() {
-        fAuthUtil.signOut()
+        fAuthService.signOut()
     }
 
     fun updateUserId() {
-        _userId = fAuthUtil.userId
+        _userId = fAuthService.userId
     }
     /* ------------------------  Login and register (End) ------------------------ */
 

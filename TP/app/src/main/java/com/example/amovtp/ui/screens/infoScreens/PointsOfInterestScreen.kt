@@ -91,9 +91,7 @@ fun PointsOfInterestScreen(
             )
         )
     } // used to mark a location on the map
-    //val locations by remember { mutableStateOf(pointsOfInterestViewModel.getLocations()) } // locations used to filter the points of interest
     var locations by remember { pointsOfInterestViewModel.getLocations() }
-    //var pointsOfInterest by remember { mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest()) } // points of interest being shown to the user (with or without filters)
     var pointsOfInterest by remember { pointsOfInterestViewModel.getPointsOfInterest() } // points of interest being shown to the user (with or without filters)
 
 
@@ -143,25 +141,31 @@ fun PointsOfInterestScreen(
                     modifier = modifier
                         .wrapContentSize(Alignment.TopStart)
                 ) {
-                    DropdownMenuOrders(itemPicked = { itemPicked ->
-                        when (itemPicked) {
-                            Consts.ORDER_BY_NAME -> {
-                                pointsOfInterest = pointsOfInterest.sortedBy { it.name }
-                            }
+                    DropdownMenuOrders(
+                        orderFor = Consts.ORDER_FOR_POINTS_OF_INTEREST,
+                        itemPicked = { itemPicked ->
+                            when (itemPicked) {
+                                Consts.ORDER_BY_NAME -> {
+                                    pointsOfInterest = pointsOfInterest.sortedBy { it.name }
+                                }
 
-                            Consts.ORDER_BY_DISTANCE -> {
-                                pointsOfInterest =
-                                    pointsOfInterestViewModel.getPointsOfInterestOrderedByDistance(
-                                        pointsOfInterest
-                                    )
-                            }
+                                Consts.ORDER_BY_CATEGORY -> {
+                                    pointsOfInterest = pointsOfInterest.sortedBy { it.category }
+                                }
 
-                            else -> {}
-                        }
-                        coroutineScope.launch {
-                            listState.animateScrollToItem(index = 0)
-                        }
-                    })
+                                Consts.ORDER_BY_DISTANCE -> {
+                                    pointsOfInterest =
+                                        pointsOfInterestViewModel.getPointsOfInterestOrderedByDistance(
+                                            pointsOfInterest
+                                        )
+                                }
+
+                                else -> {}
+                            }
+                            coroutineScope.launch {
+                                listState.animateScrollToItem(index = 0)
+                            }
+                        })
                 }
                 Text(stringResource(R.string.filters), modifier = modifier.padding(top = 8.dp))
                 Box(
@@ -472,15 +476,15 @@ fun PointsOfInterestScreen(
                                         for (i in listOfClassifications) {
                                             Button(
                                                 colors =
-                                                if (classificationFromUser == i){
+                                                if (classificationFromUser == i) {
                                                     ButtonDefaults.buttonColors(
-                                                    containerColor = MaterialTheme.colorScheme.inversePrimary,
-                                                    contentColor = Color.White
+                                                        containerColor = MaterialTheme.colorScheme.inversePrimary,
+                                                        contentColor = Color.White
                                                     )
-                                                }else{
+                                                } else {
                                                     ButtonDefaults.buttonColors(
-                                                    containerColor = MaterialTheme.colorScheme.primary,
-                                                    contentColor = Color.White
+                                                        containerColor = MaterialTheme.colorScheme.primary,
+                                                        contentColor = Color.White
                                                     )
                                                 },
                                                 onClick = {
@@ -497,8 +501,14 @@ fun PointsOfInterestScreen(
                                                                     Consts.ONE_STAR_CLASSIFICATION
                                                                 )
                                                             }
-                                                            classificationFromUser = pointsOfInterestViewModel.findClassificationFromUser(it.name)
-                                                            mediaClassification = pointsOfInterestViewModel.calculateMediaClassification(it.name)
+                                                            classificationFromUser =
+                                                                pointsOfInterestViewModel.findClassificationFromUser(
+                                                                    it.name
+                                                                )
+                                                            mediaClassification =
+                                                                pointsOfInterestViewModel.calculateMediaClassification(
+                                                                    it.name
+                                                                )
                                                         }
 
                                                         Consts.TWO_STAR_CLASSIFICATION -> {
@@ -512,8 +522,14 @@ fun PointsOfInterestScreen(
                                                                     Consts.TWO_STAR_CLASSIFICATION
                                                                 )
                                                             }
-                                                            classificationFromUser = pointsOfInterestViewModel.findClassificationFromUser(it.name)
-                                                            mediaClassification = pointsOfInterestViewModel.calculateMediaClassification(it.name)
+                                                            classificationFromUser =
+                                                                pointsOfInterestViewModel.findClassificationFromUser(
+                                                                    it.name
+                                                                )
+                                                            mediaClassification =
+                                                                pointsOfInterestViewModel.calculateMediaClassification(
+                                                                    it.name
+                                                                )
                                                         }
 
                                                         Consts.THREE_STAR_CLASSIFICATION -> {
@@ -527,8 +543,14 @@ fun PointsOfInterestScreen(
                                                                     Consts.THREE_STAR_CLASSIFICATION
                                                                 )
                                                             }
-                                                            classificationFromUser = pointsOfInterestViewModel.findClassificationFromUser(it.name)
-                                                            mediaClassification = pointsOfInterestViewModel.calculateMediaClassification(it.name)
+                                                            classificationFromUser =
+                                                                pointsOfInterestViewModel.findClassificationFromUser(
+                                                                    it.name
+                                                                )
+                                                            mediaClassification =
+                                                                pointsOfInterestViewModel.calculateMediaClassification(
+                                                                    it.name
+                                                                )
                                                         }
 
                                                     }

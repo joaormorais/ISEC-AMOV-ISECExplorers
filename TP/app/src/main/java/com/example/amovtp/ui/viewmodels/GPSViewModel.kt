@@ -1,4 +1,4 @@
-package com.example.amovtp.ui.viewmodels.utils
+package com.example.amovtp.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

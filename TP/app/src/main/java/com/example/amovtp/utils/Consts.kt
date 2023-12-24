@@ -13,8 +13,11 @@ class Consts {
         const val ERROR_EXISTING_POINT_OF_INTEREST: String = "ERROR_EXISTING_POINT_OF_INTEREST"
         const val ERROR_EXISTING_LOCATION: String = "ERROR_EXISTING_LOCATION"
         const val ERROR_NEED_LOGIN: String = "ERROR_NEED_LOGIN"
+        const val ORDER_FOR_LOCATIONS: String = "ORDER_FOR_LOCATIONS"
+        const val ORDER_FOR_POINTS_OF_INTEREST: String = "ORDER_FOR_POINTS_OF_INTEREST"
         const val ORDER_BY_NAME: String = "ORDER_BY_NAME"
         const val ORDER_BY_DISTANCE: String = "ORDER_BY_DISTANCE"
+        const val ORDER_BY_CATEGORY: String = "ORDER_BY_CATEGORY"
         const val VOTES_NEEDED_FOR_APPROVAL: Long = 2
         const val NO_START_CLASSIFICATION: Double = 0.0
         const val ONE_STAR_CLASSIFICATION: Double = 1.0

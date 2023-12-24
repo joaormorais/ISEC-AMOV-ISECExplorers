@@ -1,4 +1,4 @@
-package com.example.amovtp.utils.fb
+package com.example.amovtp.services
 
 import android.content.res.AssetManager
 import android.util.Log
@@ -14,7 +14,7 @@ import com.google.firebase.storage.ktx.storage
 import java.io.IOException
 import java.io.InputStream
 
-class FStorageUtil {
+class FStorageService {
 
     private var listenerRegistrationLocations: ListenerRegistration? = null
     private var listenerRegistrationPointOfInterest: ListenerRegistration? = null

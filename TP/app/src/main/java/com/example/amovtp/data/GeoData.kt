@@ -2,7 +2,7 @@ package com.example.amovtp.data
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.example.amovtp.utils.fb.FStorageUtil
+import com.example.amovtp.services.FStorageService
 
 /**
  * Represents a location with N points of interest
@@ -51,7 +51,7 @@ data class PointOfInterest(
     var isApproved: Boolean
 )
 
-class GeoData(private val fStorageUtil: FStorageUtil) {
+class GeoData(private val fStorageService: FStorageService) {
 
     private val _locations = mutableStateOf(emptyList<Location>())
     private val _pointsOfInterest = mutableStateOf(emptyList<PointOfInterest>())
@@ -69,7 +69,7 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
 
     init {
 
-        fStorageUtil.startObserverGeoData(
+        fStorageService.startObserverGeoData(
             onNewLocations = { locMapList ->
 
                 if (locMapList.isNotEmpty()) {
@@ -148,7 +148,7 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
         imgs: List<String>
     ) {
 
-        fStorageUtil.addLocationToFirestore(
+        fStorageService.addLocationToFirestore(
             Location(
                 userId,
                 name,
@@ -178,7 +178,7 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
         imgs: List<String>
     ) {
 
-        fStorageUtil.addPointOfInterestToFirestore(
+        fStorageService.addPointOfInterestToFirestore(
             PointOfInterest(
                 userId,
                 name,
@@ -205,7 +205,7 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
         img: String,
     ) {
 
-        fStorageUtil.addCategoryToFirestore(
+        fStorageService.addCategoryToFirestore(
             Category(
                 userId,
                 name,

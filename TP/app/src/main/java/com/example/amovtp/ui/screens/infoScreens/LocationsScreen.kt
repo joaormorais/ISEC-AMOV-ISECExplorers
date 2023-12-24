@@ -63,7 +63,7 @@ fun LocationsScreen(
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    var locations by remember { locationsViewModel.getLocations() } //TODO: testar com order
+    var locations by remember { locationsViewModel.getLocations() }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -85,10 +85,12 @@ fun LocationsScreen(
             modifier = modifier
                 .wrapContentSize(Alignment.TopStart)
         ) {
-            DropdownMenuOrders(itemPicked = { itemPicked ->
+            DropdownMenuOrders(
+                orderFor = Consts.ORDER_FOR_LOCATIONS,
+                itemPicked = { itemPicked ->
                 when (itemPicked) {
                     Consts.ORDER_BY_NAME -> {
-                        locations.sortedBy { it.name }
+                        locations = locations.sortedBy { it.name }
                     }
 
                     Consts.ORDER_BY_DISTANCE -> {

@@ -1,11 +1,9 @@
-package com.example.amovtp.utils.fb
+package com.example.amovtp.services
 
-import android.util.Log
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class FAuthUtil {
+class FAuthService {
     private val auth by lazy { Firebase.auth }
 
     private var _userId: String = ""
