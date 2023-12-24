@@ -163,7 +163,7 @@ fun DropdownMenuFilters(
                 }
             )
 
-            categories.sortedBy { it.name }.forEachIndexed { index, category ->
+            categories.value.sortedBy { it.name }.forEachIndexed { index, category ->
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

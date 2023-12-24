@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,10 +64,10 @@ fun AddPointOfInterestScreen(
 
     var selectedLocations by remember { mutableStateOf(mutableListOf<String>()) }
     var expanded1 by remember { mutableStateOf(false) }
-    var locationList: List<Location> = addPointOfInterestViewModel.getLocations()
+    var locationList: MutableState<List<Location>> = addPointOfInterestViewModel.getLocations()
     var selectedCategory by remember { mutableStateOf("") }
     var expanded2 by remember { mutableStateOf(false) }
-    var categoryList: List<Category> = addPointOfInterestViewModel.getCategories()
+    var categoryList: MutableState<List<Category>> = addPointOfInterestViewModel.getCategories()
 
     val snackbarHostState = remember { SnackbarHostState() }
     var showSnackBar by remember { mutableStateOf(false) }
@@ -152,7 +153,7 @@ fun AddPointOfInterestScreen(
                                 .heightIn(max = 200.dp)
                                 .wrapContentHeight(Alignment.Top)
                         ) {
-                            locationList.forEach { location ->
+                            locationList.value.forEach { location ->
 
                                 //TODO: terminar + pintar o fundo
                                 val itemBackgroundColor by remember { mutableStateOf(Color.White) }
@@ -194,7 +195,7 @@ fun AddPointOfInterestScreen(
                                 .heightIn(max = 200.dp)
                                 .wrapContentHeight(Alignment.Top)
                         ) {
-                            categoryList.forEach { category ->
+                            categoryList.value.forEach { category ->
                                 DropdownMenuItem(
                                     text = { Text(category.name) },
                                     onClick = {

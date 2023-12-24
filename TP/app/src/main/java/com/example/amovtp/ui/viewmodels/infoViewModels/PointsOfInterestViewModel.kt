@@ -1,5 +1,6 @@
 package com.example.amovtp.ui.viewmodels.infoViewModels
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,10 @@ import com.example.amovtp.data.Location
 import com.example.amovtp.data.PointOfInterest
 import com.example.amovtp.data.UserData
 import com.example.amovtp.utils.Consts
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class PointsOfInterestViewModelFactory(
     private val geoData: GeoData,
@@ -40,56 +45,21 @@ class PointsOfInterestViewModel(
     ): Double {
 
         val earthRadius = 6371
-        var latDistance = Math.toRadians(locLat - currLat)
-        var longDistance = Math.toRadians(locLong - currLong)
+        val latDistance = Math.toRadians(locLat - currLat)
+        val longDistance = Math.toRadians(locLong - currLong)
 
-        val a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
-                Math.cos(Math.toRadians(currLat)) * Math.cos(Math.toRadians(locLat)) *
-                Math.sin(longDistance / 2) * Math.sin(longDistance / 2)
+        val a = sin(latDistance / 2) * sin(latDistance / 2) +
+                cos(Math.toRadians(currLat)) * cos(Math.toRadians(locLat)) *
+                sin(longDistance / 2) * sin(longDistance / 2)
 
-        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
         return earthRadius * c
 
     }
 
     /**
-     * Gets the current location of the android device
-     */
-    fun getCurrentLocation(): MutableLiveData<android.location.Location> {
-        return userData.currentLocation
-    }
-
-    /**
-     * Gets every location
-     */
-    fun getLocations(): List<Location> {
-        return geoData.locations
-    }
-
-    /**
-     * Gets every category
-     */
-    fun getCategories(): List<Category> {
-        return geoData.categories
-    }
-
-    /**
-     * Gets every point of interest
-     */
-    fun getPointsOfInterest(): List<PointOfInterest> {
-        return geoData.pointsOfInterest
-    }
-
-    /**
-     * Gets every point of interest with a specific location
-     */
-    fun getPointsFromLocation(locationName: String): List<PointOfInterest> {
-        return geoData.pointsOfInterest.filter { it.locations.contains(locationName) }
-    }
-
-    /**
-     * Gets every point of interest with a specific category
+     * Gets every point of interest from a specific category
      */
     private fun getPointsFromCategory(
         categoryName: String,
@@ -98,9 +68,27 @@ class PointsOfInterestViewModel(
         return listOfCurrentPoints.filter { it.category == categoryName }
     }
 
-    /**
-     * Gets every point of interest with a specific location and a specific category
-     */
+
+    fun getCurrentLocation(): MutableLiveData<android.location.Location> {
+        return userData.currentLocation
+    }
+
+    fun getLocations(): MutableState<List<Location>> {
+        return geoData.locations
+    }
+
+    fun getCategories(): MutableState<List<Category>> {
+        return geoData.categories
+    }
+
+    fun getPointsOfInterest(): MutableState<List<PointOfInterest>> {
+        return geoData.pointsOfInterest
+    }
+
+    fun getPointsFromLocation(locationName: String): List<PointOfInterest> {
+        return geoData.pointsOfInterest.value.filter { it.locations.contains(locationName) }
+    }
+
     fun getPointsWithFilters(locationName: String?, categoryName: String?): List<PointOfInterest> {
 
         if (locationName == null)
@@ -108,10 +96,10 @@ class PointsOfInterestViewModel(
         else if (categoryName == null)
             _filterLocationName.value = locationName
 
-        var filteredPoints: List<PointOfInterest>
+        val filteredPoints: List<PointOfInterest>
 
         if (_filterLocationName.value == Consts.ALL_LOCATIONS)
-            filteredPoints = geoData.pointsOfInterest
+            filteredPoints = geoData.pointsOfInterest.value
         else
             filteredPoints = getPointsFromLocation(_filterLocationName.value)
 
@@ -122,9 +110,6 @@ class PointsOfInterestViewModel(
 
     }
 
-    /**
-     * Calculates the distance between every point of interest, and the current location
-     */
     fun getPointsOfInterestOrderedByDistance(pointsOfInterest: List<PointOfInterest>): List<PointOfInterest> {
 
         val currentLocation = userData.currentLocation
@@ -141,52 +126,52 @@ class PointsOfInterestViewModel(
         }
     }
 
-    fun findVoteForApprovedPointOfInterestByUser(pointOfInterestId: Long): Boolean {
-        return userData.pointsOfInterestApproved.any { it == pointOfInterestId }
+    fun findVoteForApprovedPointOfInterestByUser(pointOfInterestName: String): Boolean {
+        return userData.pointsOfInterestApproved.value.any { it == pointOfInterestName }
     }
 
-    fun voteForApprovalPointOfInterestByUser(pointOfInterestId: Long) {
-        geoData.voteForApprovalPointOfInterest(pointOfInterestId)
-        userData.addPointOfInterestApproved(pointOfInterestId)
-        if (geoData.pointsOfInterest.find { it.id == pointOfInterestId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
-            geoData.approvePointOfInterest(pointOfInterestId)
+    fun voteForApprovalPointOfInterestByUser(pointOfInterestName: String) {
+        geoData.voteForApprovalPointOfInterest(pointOfInterestName)
+        userData.addPointOfInterestApproved(pointOfInterestName)
+        if (geoData.pointsOfInterest.value.find { it.name == pointOfInterestName }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
+            geoData.approvePointOfInterest(pointOfInterestName)
     }
 
-    fun removeVoteForApprovalPointOfInterestByUser(pointOfInterestId: Long) {
-        geoData.removeVoteForApprovalPointOfInterest(pointOfInterestId)
-        userData.removePointOfInterestApproved(pointOfInterestId)
+    fun removeVoteForApprovalPointOfInterestByUser(pointOfInterestName: String) {
+        geoData.removeVoteForApprovalPointOfInterest(pointOfInterestName)
+        userData.removePointOfInterestApproved(pointOfInterestName)
     }
 
-    fun findClassificationFromUser(pointOfInterestID: Long):Double{
+    fun findClassificationFromUser(pointOfInterestName: String):Double{
 
-        return if(userData.pointsOfInterestClassified.keys.contains(pointOfInterestID))
-            userData.pointsOfInterestClassified.getValue(pointOfInterestID)
+        return if(userData.pointsOfInterestClassified.value.keys.contains(pointOfInterestName))
+            userData.pointsOfInterestClassified.value.getValue(pointOfInterestName)
         else
             Consts.NO_START_CLASSIFICATION
 
     }
 
-    fun addClassificationToPointByUser(pointOfInterestID: Long, classification: Double) {
-        if (userData.pointsOfInterestClassified.containsKey(pointOfInterestID)) {
-            removeClassificationToPointByUser(pointOfInterestID)
+    fun addClassificationToPointByUser(pointOfInterestName: String, classification: Double) {
+        if (userData.pointsOfInterestClassified.value.containsKey(pointOfInterestName)) {
+            removeClassificationToPointByUser(pointOfInterestName)
         }
 
-        geoData.addClassificationToPoint(pointOfInterestID, classification)
-        geoData.incrementNumberOfClassifications(pointOfInterestID)
-        userData.addPointOfInterestClassified(pointOfInterestID,classification)
+        geoData.addClassificationToPoint(pointOfInterestName, classification)
+        geoData.incrementNumberOfClassifications(pointOfInterestName)
+        userData.addPointOfInterestClassified(pointOfInterestName,classification)
     }
 
-    fun removeClassificationToPointByUser(pointOfInterestID: Long) {
+    fun removeClassificationToPointByUser(pointOfInterestName: String) {
         geoData.removeClassificationToPoint(
-            pointOfInterestID,
-            findClassificationFromUser(pointOfInterestID)
+            pointOfInterestName,
+            findClassificationFromUser(pointOfInterestName)
         )
-        geoData.decrementNumberOfClassifications(pointOfInterestID)
-        userData.removePointOfInterestClassified(pointOfInterestID)
+        geoData.decrementNumberOfClassifications(pointOfInterestName)
+        userData.removePointOfInterestClassified(pointOfInterestName)
     }
 
-    fun calculateMediaClassification(pointOfInterestID: Long): Double {
-        val tempPoint = geoData.pointsOfInterest.find { it.id == pointOfInterestID }
+    fun calculateMediaClassification(pointOfInterestName: String): Double {
+        val tempPoint = geoData.pointsOfInterest.value.find { it.name == pointOfInterestName }
         return tempPoint!!.classification.div(tempPoint.nClassifications)
     }
 

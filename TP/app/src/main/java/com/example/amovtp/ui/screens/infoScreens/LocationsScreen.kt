@@ -60,11 +60,10 @@ fun LocationsScreen(
     modifier: Modifier = Modifier
 ) {
 
-    var locations by remember {
-        mutableStateOf(locationsViewModel.getLocations())
-    }
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+
+    var locations by remember { locationsViewModel.getLocations() } //TODO: testar com order
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -88,12 +87,8 @@ fun LocationsScreen(
         ) {
             DropdownMenuOrders(itemPicked = { itemPicked ->
                 when (itemPicked) {
-                    Consts.ORDER_BY_VOTES -> {
-                        locations = locationsViewModel.getLocations().sortedBy { it.votes }
-                    }
-
                     Consts.ORDER_BY_NAME -> {
-                        locations = locationsViewModel.getLocationsOrderedByName()
+                        locations.sortedBy { it.name }
                     }
 
                     Consts.ORDER_BY_DISTANCE -> {
@@ -114,12 +109,12 @@ fun LocationsScreen(
                 .fillMaxSize()
                 .padding(top = 8.dp)
         ) {
-            items(locations, key = { it.id }) {
+            items(locations, key = { it.name }) {
 
                 var isDetailExpanded by remember { mutableStateOf(false) }
                 var isVotedByUser by remember {
                     mutableStateOf(
-                        locationsViewModel.findVoteForApprovedLocationByUser(it.id)
+                        locationsViewModel.findVoteForApprovedLocationByUser(it.name)
                     )
                 }
                 var isLocationApproved by remember { mutableStateOf(it.isApproved) }
@@ -242,7 +237,10 @@ fun LocationsScreen(
                                     )
                                     Spacer(modifier.height(8.dp))
                                     Text(
-                                        text = stringResource(R.string.votes_for_approval,it.votes),
+                                        text = stringResource(
+                                            R.string.votes_for_approval,
+                                            it.votes
+                                        ),
                                         fontSize = 12.sp
                                     )
                                     if (!isVotedByUser) {
@@ -250,7 +248,7 @@ fun LocationsScreen(
                                         Button(
                                             onClick = {
                                                 isVotedByUser = true
-                                                locationsViewModel.voteForApprovalLocationByUser(it.id)
+                                                locationsViewModel.voteForApprovalLocationByUser(it.name)
                                                 isLocationApproved = it.isApproved
                                             },
                                         ) {
@@ -268,7 +266,9 @@ fun LocationsScreen(
                                         Button(
                                             onClick = {
                                                 isVotedByUser = false
-                                                locationsViewModel.removeVoteForApprovalLocationByUser(it.id)
+                                                locationsViewModel.removeVoteForApprovalLocationByUser(
+                                                    it.name
+                                                )
                                                 isLocationApproved = it.isApproved
                                             },
                                         ) {
@@ -282,45 +282,11 @@ fun LocationsScreen(
                                             }
                                         }
                                     }
-                                    //TODO: perceber pq que isto n funciona
-                                    /*Button(
-                                        onClick = {
-                                            if (!isVotedByUser) {
-                                                locationsViewModel.voteForApprovalLocation(it.id)
-                                                isLocationApproved = it.isApproved
-                                            } else {
-                                                locationsViewModel.removeVoteForApprovalLocation(it.id)
-                                                isLocationApproved = it.isApproved
-                                            }
-                                            isVotedByUser = !isVotedByUser
-                                        },
-                                    ) {
-                                        Row {
-
-                                            if (!isVotedByUser) {
-                                                Text(stringResource(R.string.approve))
-                                                Icon(
-                                                    Icons.Rounded.ThumbUp,
-                                                    "Approve",
-                                                    modifier = modifier.padding(start = 8.dp)
-                                                )
-                                            } else {
-                                                Text(stringResource(R.string.disapprove))
-                                                Icon(
-                                                    Icons.Rounded.Close,
-                                                    "Disapprove",
-                                                    modifier = modifier.padding(start = 8.dp)
-                                                )
-                                            }
-                                        }
-                                    }*/
                                     Spacer(modifier.height(8.dp))
                                 }
                             }
                         }
-
                 }
-
             }
         }
     }

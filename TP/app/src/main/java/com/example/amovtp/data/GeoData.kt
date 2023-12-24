@@ -1,12 +1,13 @@
 package com.example.amovtp.data
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import com.example.amovtp.utils.fb.FStorageUtil
 
 /**
  * Represents a location with N points of interest
  */
 data class Location(
-    val id: Long,
     val userId: String,
     val name: String,
     val description: String,
@@ -23,7 +24,6 @@ data class Location(
  * Represents a category for points of interest
  */
 data class Category(
-    val id: Long,
     val userId: String,
     val name: String,
     val description: String,
@@ -36,7 +36,6 @@ data class Category(
  * Represents a point of interest from N locations, that has a category
  */
 data class PointOfInterest(
-    val id: Long,
     val userId: String,
     val name: String,
     val description: String,
@@ -52,65 +51,90 @@ data class PointOfInterest(
     var isApproved: Boolean
 )
 
-/**
- * Locations, Points of interest and categories
- */
 class GeoData(private val fStorageUtil: FStorageUtil) {
 
-    companion object {
-        private var _currentLocationId: Long = 0L
-        private var _currentCategoryId: Long = 0L
-        private var _currentPointsOfInterestId: Long = 0L
-    }
+    private val _locations = mutableStateOf(emptyList<Location>())
+    private val _pointsOfInterest = mutableStateOf(emptyList<PointOfInterest>())
+    private val _categories = mutableStateOf(emptyList<Category>())
 
-    private val _locations = mutableListOf<Location>()
-    private val _pointsOfInterest = mutableListOf<PointOfInterest>()
-    private val _categories = mutableListOf<Category>()
+    val locations: MutableState<List<Location>>
+        get() = _locations
+
+    val pointsOfInterest: MutableState<List<PointOfInterest>>
+        get() = _pointsOfInterest
+
+    val categories: MutableState<List<Category>>
+        get() = _categories
+
 
     init {
 
         fStorageUtil.startObserverGeoData(
             onNewLocations = { locMapList ->
 
-                /*if(locMapList.isNotEmpty())
-                for (locMap in locMapList)
-                    for (i in locMap) {
-                        _locations.add(
-                            Location(
-                                id = locMap["id"] as Long,
-                                userId = locMap["userId"] as String,
-                                name = locMap["name"] as String,
-                                description = locMap["description"] as String,
-                                lat = locMap["lat"] as Double,
-                                long = locMap["long"] as Double,
-                                isManualCoords = locMap["isManualCoords"] as Boolean,
-                                pointsOfInterest = locMap["pointsOfInterest"] as List<String>,
-                                imgs = locMap["imgs"] as List<String>,
-                                votes = locMap["votes"] as Long,
-                                isApproved = locMap["isApproved"] as Boolean
-                            )
+                if (locMapList.isNotEmpty()) {
+                    val newLocations = locMapList.map { i ->
+                        Location(
+                            userId = i["userID"] as String,
+                            name = i["name"] as String,
+                            description = i["description"] as String,
+                            lat = i["lat"] as Double,
+                            long = i["long"] as Double,
+                            isManualCoords = i["isManualCoords"] as Boolean,
+                            pointsOfInterest = i["pointsOfInterest"] as List<String>,
+                            imgs = i["imgs"] as List<String>,
+                            votes = i["votes"] as Long,
+                            isApproved = i["isApproved"] as Boolean
                         )
                     }
-*/
-            },
-            onNewPointsOfInterest = { locPoints ->
+                    _locations.value = newLocations
+                }
 
             },
-            onNewCategories = { locCats ->
+            onNewPointsOfInterest = { locPointsList ->
+
+                if (locPointsList.isNotEmpty()) {
+                    val newPointsOfInterest = locPointsList.map { i ->
+                        PointOfInterest(
+                            userId = i["userID"] as String,
+                            name = i["name"] as String,
+                            description = i["description"] as String,
+                            lat = i["lat"] as Double,
+                            long = i["long"] as Double,
+                            isManualCoords = i["isManualCoords"] as Boolean,
+                            locations = i["locations"] as List<String>,
+                            category=i["category"] as String,
+                            imgs = i["imgs"] as List<String>,
+                            classification = i["classification"] as Double,
+                            nClassifications = i["nClassifications"] as Long,
+                            votes = i["votes"] as Long,
+                            isApproved = i["isApproved"] as Boolean
+                        )
+                    }
+                    _pointsOfInterest.value = newPointsOfInterest
+                }
+
+            },
+            onNewCategories = { locCatsList ->
+
+                if(locCatsList.isNotEmpty()){
+                    val newCategories = locCatsList.map { i ->
+                        Category(
+                            userId = i["userID"] as String,
+                            name = i["name"] as String,
+                            description = i["description"] as String,
+                            img = i["img"] as String,
+                            votes = i["votes"] as Long,
+                            isApproved = i["isApproved"] as Boolean
+                        )
+                    }
+                    _categories.value = newCategories
+                }
 
             }
         )
 
     }
-
-    val locations: List<Location>
-        get() = _locations.toList()
-
-    val pointsOfInterest: List<PointOfInterest>
-        get() = _pointsOfInterest.toList()
-
-    val categories: List<Category>
-        get() = _categories.toList()
 
     /* ------------------------  Add, remove, and edit info (Start) ------------------------ */
 
@@ -126,7 +150,6 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
 
         fStorageUtil.addLocationToFirestore(
             Location(
-                _currentLocationId++,
                 userId,
                 name,
                 description,
@@ -157,7 +180,6 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
 
         fStorageUtil.addPointOfInterestToFirestore(
             PointOfInterest(
-                _currentPointsOfInterestId++,
                 userId,
                 name,
                 description,
@@ -185,7 +207,6 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
 
         fStorageUtil.addCategoryToFirestore(
             Category(
-                _currentCategoryId++,
                 userId,
                 name,
                 description,
@@ -200,78 +221,80 @@ class GeoData(private val fStorageUtil: FStorageUtil) {
     /* ------------------------  Add, remove, and edit info (End) ------------------------ */
 
     /* ------------------------  Location approval (Start) ------------------------ */
-    fun voteForApprovalLocation(id: Long) {
-        _locations.find { it.id == id }?.apply { votes++ }
+    fun voteForApprovalLocation(locationName: String) {
+        _locations.value.find { it.name == locationName }?.apply { votes++ }
     }
 
-    fun removeVoteForApprovalLocation(id: Long) {
-        _locations.find { it.id == id }?.apply { votes-- }
+    fun removeVoteForApprovalLocation(locationName: String) {
+        _locations.value.find { it.name == locationName }?.apply { votes-- }
     }
 
-    fun approveLocation(id: Long) {
-        _locations.find { it.id == id }?.apply { isApproved = true }
+    fun approveLocation(locationName: String) {
+        _locations.value.find { it.name == locationName }?.apply { isApproved = true }
     }
 
-    fun disapproveLocation(id: Long) {
-        _locations.find { it.id == id }?.apply { isApproved = false }
+    fun disapproveLocation(locationName: String) {
+        _locations.value.find { it.name == locationName }?.apply { isApproved = false }
     }
     /* ------------------------  Location approval (End) ------------------------ */
 
     /* ------------------------  Point of interest approval (Start) ------------------------ */
-    fun voteForApprovalPointOfInterest(id: Long) {
-        _pointsOfInterest.find { it.id == id }?.apply { votes++ }
+    fun voteForApprovalPointOfInterest(pointOfInterestName: String) {
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.apply { votes++ }
     }
 
-    fun removeVoteForApprovalPointOfInterest(id: Long) {
-        _pointsOfInterest.find { it.id == id }?.apply { votes-- }
+    fun removeVoteForApprovalPointOfInterest(pointOfInterestName: String) {
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.apply { votes-- }
     }
 
-    fun approvePointOfInterest(id: Long) {
-        _pointsOfInterest.find { it.id == id }?.apply { isApproved = true }
+    fun approvePointOfInterest(pointOfInterestName: String) {
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }
+            ?.apply { isApproved = true }
     }
 
-    fun disapprovePointOfInterest(id: Long) {
-        _pointsOfInterest.find { it.id == id }?.apply { isApproved = false }
+    fun disapprovePointOfInterest(pointOfInterestName: String) {
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }
+            ?.apply { isApproved = false }
     }
     /* ------------------------  Point of interest approval (End) ------------------------ */
 
     /* ------------------------  Category approval (Start) ------------------------ */
-    fun voteForApprovalCategory(id: Long) {
-        _categories.find { it.id == id }?.apply { votes++ }
+    fun voteForApprovalCategory(categoryName: String) {
+        _categories.value.find { it.name == categoryName }?.apply { votes++ }
     }
 
-    fun removeVoteForApprovalCategory(id: Long) {
-        _categories.find { it.id == id }?.apply { votes-- }
+    fun removeVoteForApprovalCategory(categoryName: String) {
+        _categories.value.find { it.name == categoryName }?.apply { votes-- }
     }
 
-    fun approveCategory(id: Long) {
-        _categories.find { it.id == id }?.apply { isApproved = true }
+    fun approveCategory(categoryName: String) {
+        _categories.value.find { it.name == categoryName }?.apply { isApproved = true }
     }
 
-    fun disapproveCategory(id: Long) {
-        _categories.find { it.id == id }?.apply { isApproved = false }
+    fun disapproveCategory(categoryName: String) {
+        _categories.value.find { it.name == categoryName }?.apply { isApproved = false }
     }
     /* ------------------------  Category approval (End) ------------------------ */
 
     /* ------------------------  Point classification (Start) ------------------------ */
-    fun addClassificationToPoint(pointOfInterestID: Long, classification: Double) {
-        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification =
-            _pointsOfInterest.find { it.id == pointOfInterestID }?.classification!! + classification
+    fun addClassificationToPoint(pointOfInterestName: String, classification: Double) {
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.classification =
+            _pointsOfInterest.value.find { it.name == pointOfInterestName }?.classification!! + classification
     }
 
-    fun incrementNumberOfClassifications(pointOfInterestID: Long) {
-        _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications =
-            _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications!! + 1
+    fun incrementNumberOfClassifications(pointOfInterestName: String) {
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.nClassifications =
+            _pointsOfInterest.value.find { it.name == pointOfInterestName }?.nClassifications!! + 1
     }
 
-    fun removeClassificationToPoint(pointOfInterestID: Long, classification: Double) {
-        _pointsOfInterest.find { it.id == pointOfInterestID }?.classification =
-            _pointsOfInterest.find { it.id == pointOfInterestID }?.classification!! - classification
+    fun removeClassificationToPoint(pointOfInterestName: String, classification: Double) {
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.classification =
+            _pointsOfInterest.value.find { it.name == pointOfInterestName }?.classification!! - classification
     }
 
-    fun decrementNumberOfClassifications(pointOfInterestID: Long) {
-        _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications =
-            _pointsOfInterest.find { it.id == pointOfInterestID }?.nClassifications!! - 1
+    fun decrementNumberOfClassifications(pointOfInterestName: String) {
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.nClassifications =
+            _pointsOfInterest.value.find { it.name == pointOfInterestName }?.nClassifications!! - 1
     }
     /* ------------------------  Point classification (End) ------------------------ */
 }

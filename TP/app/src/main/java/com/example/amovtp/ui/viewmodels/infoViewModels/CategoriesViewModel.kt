@@ -1,5 +1,6 @@
 package com.example.amovtp.ui.viewmodels.infoViewModels
 
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.Category
@@ -25,24 +26,24 @@ class CategoriesViewModel(
     /**
      * Gets every category
      */
-    fun getCategories(): List<Category> {
+    fun getCategories(): MutableState<List<Category>> {
         return geoData.categories
     }
 
-    fun findVoteForApprovedCategoryByUser(categoryId: Long): Boolean {
-        return userData.categoriesApproved.any { it == categoryId }
+    fun findVoteForApprovedCategoryByUser(categoryName: String): Boolean {
+        return userData.categoriesApproved.value.any { it == categoryName }
     }
 
-    fun voteForApprovalCategoryByUser(categoryId: Long) {
-        geoData.voteForApprovalCategory(categoryId)
-        userData.addCategoryApproved(categoryId)
-        if (geoData.categories.find { it.id == categoryId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
-            geoData.approveCategory(categoryId)
+    fun voteForApprovalCategoryByUser(categoryName: String) {
+        geoData.voteForApprovalCategory(categoryName)
+        userData.addCategoryApproved(categoryName)
+        if (geoData.categories.value.find { it.name == categoryName }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
+            geoData.approveCategory(categoryName)
     }
 
-    fun removeVoteForApprovalCategoryByUser(categoryId: Long) {
-        geoData.removeVoteForApprovalCategory(categoryId)
-        userData.removeCategoryApproved(categoryId)
+    fun removeVoteForApprovalCategoryByUser(categoryName: String) {
+        geoData.removeVoteForApprovalCategory(categoryName)
+        userData.removeCategoryApproved(categoryName)
     }
 
 }

@@ -28,12 +28,12 @@ class AddCategoryViewModel(
         val tempCategories = geoData.categories
         val tempUserId = userData.userId
 
-        if (tempCategories.any { it.name == name })
+        if (tempCategories.value.any { it.name == name })
             return Consts.ERROR_EXISTING_NAME
         else if (tempUserId.isBlank())
             return Consts.ERROR_NEED_LOGIN
 
-        geoData.addCategory(name, tempUserId, description, img)
+        geoData.addCategory(tempUserId, name, description, img)
 
         return Consts.SUCCESS
     }

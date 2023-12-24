@@ -1,11 +1,17 @@
 package com.example.amovtp.ui.viewmodels.infoViewModels
 
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.GeoData
 import com.example.amovtp.data.Location
+import com.example.amovtp.data.PointOfInterest
 import com.example.amovtp.data.UserData
 import com.example.amovtp.utils.Consts
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class LocationsViewModelFactory(
     private val geoData: GeoData,
@@ -33,57 +39,51 @@ class LocationsViewModel(
     ): Double {
 
         val earthRadius = 6371
-        var latDistance = Math.toRadians(locLat - currLat)
-        var longDistance = Math.toRadians(locLong - currLong)
+        val latDistance = Math.toRadians(locLat - currLat)
+        val longDistance = Math.toRadians(locLong - currLong)
 
-        val a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
-                Math.cos(Math.toRadians(currLat)) * Math.cos(Math.toRadians(locLat)) *
-                Math.sin(longDistance / 2) * Math.sin(longDistance / 2)
+        val a = sin(latDistance / 2) * sin(latDistance / 2) +
+                cos(Math.toRadians(currLat)) * cos(Math.toRadians(locLat)) *
+                sin(longDistance / 2) * sin(longDistance / 2)
 
-        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
         return earthRadius * c
 
     }
 
-    fun getLocations(): List<Location> {
+    fun getLocations(): MutableState<List<Location>> {
         return geoData.locations
-    }
-
-    fun getLocationsOrderedByName(): List<Location> {
-        return geoData.locations.sortedBy { it.name }
     }
 
     fun getLocationsOrderedByDistance(): List<Location> {
 
         val currentLocation = userData.currentLocation
 
-        return geoData.locations.sortedBy { location ->
-
+        return geoData.locations.value.sortedBy { location ->
             calculateDistance(
                 currentLocation.value!!.latitude,
                 currentLocation.value!!.longitude,
                 location.lat,
                 location.long
             )
-
         }
     }
 
-    fun findVoteForApprovedLocationByUser(locationId: Long): Boolean {
-        return userData.locationsApproved.any { it == locationId }
+    fun findVoteForApprovedLocationByUser(locationName: String): Boolean {
+        return userData.locationsApproved.value.any { it == locationName }
     }
 
-    fun voteForApprovalLocationByUser(locationId: Long) {
-        geoData.voteForApprovalLocation(locationId)
-        userData.addLocationApproved(locationId)
-        if (geoData.locations.find { it.id == locationId }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
-            geoData.approveLocation(locationId)
+    fun voteForApprovalLocationByUser(locationName: String) {
+        geoData.voteForApprovalLocation(locationName)
+        userData.addLocationApproved(locationName)
+        if (geoData.locations.value.find { it.name == locationName }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
+            geoData.approveLocation(locationName)
     }
 
-    fun removeVoteForApprovalLocationByUser(locationId: Long) {
-        geoData.removeVoteForApprovalLocation(locationId)
-        userData.removeLocationApproved(locationId)
+    fun removeVoteForApprovalLocationByUser(locationName: String) {
+        geoData.removeVoteForApprovalLocation(locationName)
+        userData.removeLocationApproved(locationName)
     }
 
 }

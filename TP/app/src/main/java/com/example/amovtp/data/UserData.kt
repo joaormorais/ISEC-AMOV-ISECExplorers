@@ -1,6 +1,7 @@
 package com.example.amovtp.data
 
 import android.location.Location
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import com.example.amovtp.utils.fb.FAuthUtil
@@ -9,10 +10,10 @@ class UserData(private val fAuthUtil: FAuthUtil) {
 
     private var _userId: String = ""
     private val _currentLocation = MutableLiveData(Location(null))
-    private var _locationsApproved = mutableListOf<Long>()
-    private var _pointsOfInterestApproved = mutableListOf<Long>()
-    private var _categoriesApproved = mutableListOf<Long>()
-    private var _pointsOfInterestClassified = mutableMapOf<Long, Double>()
+    private var _locationsApproved = mutableStateOf(emptyList<String>())
+    private var _pointsOfInterestApproved = mutableStateOf(emptyList<String>())
+    private var _categoriesApproved = mutableStateOf(emptyList<String>())
+    private var _pointsOfInterestClassified = mutableStateOf(emptyMap<String, Double>())
 
     val userId: String
         get() = _userId
@@ -20,17 +21,17 @@ class UserData(private val fAuthUtil: FAuthUtil) {
     val currentLocation: MutableLiveData<Location>
         get() = _currentLocation
 
-    val locationsApproved: List<Long>
-        get() = _locationsApproved.toList()
+    val locationsApproved: MutableState<List<String>>
+        get() = _locationsApproved
 
-    val pointsOfInterestApproved: List<Long>
-        get() = _pointsOfInterestApproved.toList()
+    val pointsOfInterestApproved: MutableState<List<String>>
+        get() = _pointsOfInterestApproved
 
-    val categoriesApproved: List<Long>
-        get() = _categoriesApproved.toList()
+    val categoriesApproved: MutableState<List<String>>
+        get() = _categoriesApproved
 
-    val pointsOfInterestClassified: Map<Long, Double>
-        get() = _pointsOfInterestClassified.toMap()
+    val pointsOfInterestClassified: MutableState<Map<String, Double>>
+        get() = _pointsOfInterestClassified
 
     /* ------------------------  Login and register (Start) ------------------------ */
 
@@ -62,42 +63,44 @@ class UserData(private val fAuthUtil: FAuthUtil) {
     /* ------------------------  Device location (End) ------------------------ */
 
     /* ------------------------  Location approval (Start) ------------------------ */
-    fun addLocationApproved(locationId: Long) {
-        _locationsApproved.add(locationId)
+    fun addLocationApproved(locationName: String) {
+        _locationsApproved.value = _locationsApproved.value + locationName
     }
 
-    fun removeLocationApproved(locationId: Long) {
-        _locationsApproved.remove(locationId)
+    fun removeLocationApproved(locationName: String) {
+        _locationsApproved.value = _locationsApproved.value - locationName
     }
     /* ------------------------  Location approval (End) ------------------------ */
 
     /* ------------------------  Point of interest approval (Start) ------------------------ */
-    fun addPointOfInterestApproved(pointOfInterestId: Long) {
-        _pointsOfInterestApproved.add(pointOfInterestId)
+    fun addPointOfInterestApproved(pointOfInterestName: String) {
+        _pointsOfInterestApproved.value = _pointsOfInterestApproved.value + pointOfInterestName
     }
 
-    fun removePointOfInterestApproved(pointOfInterestId: Long) {
-        _pointsOfInterestApproved.remove(pointOfInterestId)
+    fun removePointOfInterestApproved(pointOfInterestName: String) {
+        _pointsOfInterestApproved.value = _pointsOfInterestApproved.value - pointOfInterestName
     }
     /* ------------------------  Point of interest approval (End) ------------------------ */
 
     /* ------------------------  Point of interest approval (Start) ------------------------ */
-    fun addCategoryApproved(categoryId: Long) {
-        _categoriesApproved.add(categoryId)
+    fun addCategoryApproved(categoryName: String) {
+        _categoriesApproved.value = _categoriesApproved.value + categoryName
     }
 
-    fun removeCategoryApproved(categoryId: Long) {
-        _categoriesApproved.add(categoryId)
+    fun removeCategoryApproved(categoryName: String) {
+        _categoriesApproved.value = _categoriesApproved.value - categoryName
     }
     /* ------------------------  Point of interest approval (End) ------------------------ */
 
     /* ------------------------  Point classification (Start) ------------------------ */
-    fun addPointOfInterestClassified(pointOfInterestId: Long, classification: Double) {
-        _pointsOfInterestClassified[pointOfInterestId] = classification
+    fun addPointOfInterestClassified(pointOfInterestName: String, classification: Double) {
+        _pointsOfInterestClassified.value =
+            _pointsOfInterestClassified.value + (pointOfInterestName to classification)
     }
 
-    fun removePointOfInterestClassified(pointOfInterestId: Long) {
-        _pointsOfInterestClassified.remove(pointOfInterestId)
+    fun removePointOfInterestClassified(pointOfInterestName: String) {
+        _pointsOfInterestClassified.value =
+            _pointsOfInterestClassified.value.filterNot { it.key == pointOfInterestName }
     }
     /* ------------------------  Point classification (End) ------------------------ */
 }

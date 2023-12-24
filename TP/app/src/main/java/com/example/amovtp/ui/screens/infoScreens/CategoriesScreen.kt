@@ -47,22 +47,22 @@ fun CategoriesScreen(
     modifier: Modifier = Modifier
 ) {
 
-    val categories by remember { mutableStateOf(categoriesViewModel.getCategories().sortedBy { it.name }) }
+    val categories by remember { categoriesViewModel.getCategories() }
 
     Box(
-        modifier=modifier.fillMaxSize()
-    ){
+        modifier = modifier.fillMaxSize()
+    ) {
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
                 .padding(top = 8.dp)
         ) {
-            items(categories, key = { it.id }) {
+            items(categories, key = { it.name }) {
 
                 var isDetailExpanded by remember { mutableStateOf(false) }
                 var isVotedByUser by remember {
                     mutableStateOf(
-                        categoriesViewModel.findVoteForApprovedCategoryByUser(it.id)
+                        categoriesViewModel.findVoteForApprovedCategoryByUser(it.name)
                     )
                 }
                 var isCategoryApproved by remember { mutableStateOf(it.isApproved) }
@@ -147,7 +147,10 @@ fun CategoriesScreen(
                                     )
                                     Spacer(modifier.height(8.dp))
                                     Text(
-                                        text = stringResource(R.string.votes_for_approval,it.votes),
+                                        text = stringResource(
+                                            R.string.votes_for_approval,
+                                            it.votes
+                                        ),
                                         fontSize = 12.sp
                                     )
                                     if (!isVotedByUser) {
@@ -155,7 +158,7 @@ fun CategoriesScreen(
                                         Button(
                                             onClick = {
                                                 isVotedByUser = true
-                                                categoriesViewModel.voteForApprovalCategoryByUser(it.id)
+                                                categoriesViewModel.voteForApprovalCategoryByUser(it.name)
                                                 isCategoryApproved = it.isApproved
                                             },
                                         ) {
@@ -173,7 +176,9 @@ fun CategoriesScreen(
                                         Button(
                                             onClick = {
                                                 isVotedByUser = false
-                                                categoriesViewModel.removeVoteForApprovalCategoryByUser(it.id)
+                                                categoriesViewModel.removeVoteForApprovalCategoryByUser(
+                                                    it.name
+                                                )
                                                 isCategoryApproved = it.isApproved
                                             },
                                         ) {

@@ -1,6 +1,7 @@
 package com.example.amovtp.ui.viewmodels.addViewModels
 
 import android.location.Location
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -28,11 +29,11 @@ class AddPointOfInterestViewModel(
         return userData.currentLocation
     }
 
-    fun getLocations(): List<com.example.amovtp.data.Location> {
+    fun getLocations(): MutableState<List<com.example.amovtp.data.Location>> {
         return geoData.locations
     }
 
-    fun getCategories() : List<Category>{
+    fun getCategories(): MutableState<List<Category>> {
         return geoData.categories
     }
 
@@ -49,16 +50,16 @@ class AddPointOfInterestViewModel(
         val tempPointsOfInterest = geoData.pointsOfInterest
         val tempUserId = userData.userId
 
-        if (tempPointsOfInterest.any { it.name == name })
+        if (tempPointsOfInterest.value.any { it.name == name })
             return Consts.ERROR_EXISTING_NAME
-        else if (tempPointsOfInterest.any { it.lat == lat && it.long == long })
+        else if (tempPointsOfInterest.value.any { it.lat == lat && it.long == long })
             return Consts.ERROR_EXISTING_POINT_OF_INTEREST
-        else if(tempUserId.isBlank())
+        else if (tempUserId.isBlank())
             return Consts.ERROR_NEED_LOGIN
 
         geoData.addPointOfInterest(
-            name,
             tempUserId,
+            name,
             description,
             lat,
             long,

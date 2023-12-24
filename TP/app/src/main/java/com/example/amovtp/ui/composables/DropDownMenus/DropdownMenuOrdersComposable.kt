@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,12 +28,11 @@ fun DropdownMenuOrders(
     itemPicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val orderVotesString = stringResource(R.string.ordered_by_votes)
     val orderNameString = stringResource(R.string.ordered_by_name)
     val orderDistanceString = stringResource(R.string.ordered_by_distance)
-    val items = listOf(orderVotesString, orderNameString, orderDistanceString)
+    val items = listOf(orderNameString, orderDistanceString)
     var isExpanded by remember { mutableStateOf(false) }
-    var selectedIndex by remember { mutableStateOf(0) }
+    var selectedIndex by remember { mutableIntStateOf(0) }
 
     Button(
         onClick = {
@@ -67,10 +67,6 @@ fun DropdownMenuOrders(
                     isExpanded = false
 
                     when (s) {
-                        orderVotesString -> {
-                            itemPicked(Consts.ORDER_BY_VOTES)
-                        }
-
                         orderNameString -> {
                             itemPicked(Consts.ORDER_BY_NAME)
                         }

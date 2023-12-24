@@ -15,11 +15,60 @@ import java.io.IOException
 import java.io.InputStream
 
 class FStorageUtil {
+
+    private var listenerRegistrationLocations: ListenerRegistration? = null
+    private var listenerRegistrationPointOfInterest: ListenerRegistration? = null
+    private var listenerRegistrationCategory: ListenerRegistration? = null
+
+    fun startObserverGeoData(
+        onNewLocations: (List<Map<String, Any>>) -> Unit,
+        onNewPointsOfInterest: (List<Map<String, Any>>) -> Unit,
+        onNewCategories: (List<Map<String, Any>>) -> Unit
+    ) {
+        stopObserver()
+        val db = Firebase.firestore
+        listenerRegistrationLocations =
+            db.collection("GeoDataLocation").addSnapshotListener { value, e ->
+                if (e != null)
+                    return@addSnapshotListener
+                val everyLocation = mutableListOf<Map<String, Any>>()
+                for (doc in value!!) {
+                    everyLocation.add(doc.data)
+                }
+                onNewLocations(everyLocation)
+            }
+        listenerRegistrationPointOfInterest =
+            db.collection("GeoDataPointOfInterest").addSnapshotListener { value, e ->
+                if (e != null)
+                    return@addSnapshotListener
+                val everyPointOfInterest = mutableListOf<Map<String, Any>>()
+                for (doc in value!!) {
+                    everyPointOfInterest.add(doc.data)
+                }
+                onNewPointsOfInterest(everyPointOfInterest)
+            }
+        listenerRegistrationCategory =
+            db.collection("GeoDataCategory").addSnapshotListener { value, e ->
+                if (e != null)
+                    return@addSnapshotListener
+                val everyCategory = mutableListOf<Map<String, Any>>()
+                for (doc in value!!) {
+                    everyCategory.add(doc.data)
+                }
+                onNewCategories(everyCategory)
+            }
+    }
+
+    fun stopObserver() {
+        listenerRegistrationLocations?.remove()
+        listenerRegistrationPointOfInterest?.remove()
+        listenerRegistrationCategory?.remove()
+    }
+
     fun addLocationToFirestore(newLocation:Location,onResult: (Throwable?) -> Unit) {
         val db = Firebase.firestore
 
         val locationToCloud = hashMapOf(
-            "id" to newLocation.id,
             "userID" to newLocation.userId,
             "name" to newLocation.name,
             "description" to newLocation.description,
@@ -42,7 +91,6 @@ class FStorageUtil {
         val db = Firebase.firestore
 
         val pointOfInterestToCloud = hashMapOf(
-            "id" to newPointOfInterest.id,
             "userID" to newPointOfInterest.userId,
             "name" to newPointOfInterest.name,
             "description" to newPointOfInterest.description,
@@ -62,16 +110,12 @@ class FStorageUtil {
             .addOnCompleteListener { result ->
                 onResult(result.exception)
             }
-
-
-
     }
 
     fun addCategoryToFirestore(newCategory: Category,onResult: (Throwable?) -> Unit) {
         val db = Firebase.firestore
 
         val categoryToCloud = hashMapOf(
-            "id" to newCategory.id,
             "userID" to newCategory.userId,
             "name" to newCategory.name,
             "description" to newCategory.description,
@@ -137,56 +181,6 @@ class FStorageUtil {
             .addOnCompleteListener { onResult(it.exception) }
     }
 
-    private var listenerRegistrationLocations: ListenerRegistration? = null
-    private var listenerRegistrationPointOfInterest: ListenerRegistration? = null
-    private var listenerRegistrationCategory: ListenerRegistration? = null
-
-    fun startObserverGeoData(
-        onNewLocations: (List<Map<String, Any>>) -> Unit,
-        onNewPointsOfInterest: (List<Map<String, Any>>) -> Unit,
-        onNewCategories: (List<Map<String, Any>>) -> Unit
-    ) {
-        stopObserver()
-        val db = Firebase.firestore
-        listenerRegistrationLocations =
-            db.collection("GeoDataLocation").addSnapshotListener { value, e ->
-                if (e != null)
-                    return@addSnapshotListener
-                val everyLocation = mutableListOf<Map<String, Any>>()
-                for (doc in value!!) {
-                    everyLocation.add(doc.data)
-                }
-                onNewLocations(everyLocation)
-            }
-        listenerRegistrationPointOfInterest =
-            db.collection("GeoDataPointOfInterest").addSnapshotListener { value, e ->
-                if (e != null)
-                    return@addSnapshotListener
-                val everyPointOfInterest = mutableListOf<Map<String, Any>>()
-                for (doc in value!!) {
-                    everyPointOfInterest.add(doc.data)
-                }
-                onNewPointsOfInterest(everyPointOfInterest)
-            }
-        listenerRegistrationCategory =
-            db.collection("GeoDataCategory").addSnapshotListener { value, e ->
-                if (e != null)
-                    return@addSnapshotListener
-                val everyCategory = mutableListOf<Map<String, Any>>()
-                for (doc in value!!) {
-                    everyCategory.add(doc.data)
-                }
-                onNewCategories(everyCategory)
-            }
-
-    }
-
-    fun stopObserver() {
-        listenerRegistrationLocations?.remove()
-        listenerRegistrationPointOfInterest?.remove()
-        listenerRegistrationCategory?.remove()
-    }
-
 // Storage
 
     fun getFileFromAsset(assetManager: AssetManager, strName: String): InputStream? {
@@ -226,8 +220,6 @@ class FStorageUtil {
                 // ...
             }
         }
-
-
     }
 
 }
