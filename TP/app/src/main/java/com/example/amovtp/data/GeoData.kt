@@ -1,8 +1,9 @@
 package com.example.amovtp.data
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.example.amovtp.services.FStorageService
+import com.example.amovtp.services.FirebaseGeoDataService
 
 /**
  * Represents a location with N points of interest
@@ -14,7 +15,7 @@ data class Location(
     val lat: Double,
     val long: Double,
     val isManualCoords: Boolean,
-    val pointsOfInterest: List<String>,
+    var pointsOfInterest: List<String>,
     val imgs: List<String>,
     var votes: Long,
     var isApproved: Boolean
@@ -51,7 +52,7 @@ data class PointOfInterest(
     var isApproved: Boolean
 )
 
-class GeoData(private val fStorageService: FStorageService) {
+class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
 
     private val _locations = mutableStateOf(emptyList<Location>())
     private val _pointsOfInterest = mutableStateOf(emptyList<PointOfInterest>())
@@ -69,7 +70,7 @@ class GeoData(private val fStorageService: FStorageService) {
 
     init {
 
-        fStorageService.startObserverGeoData(
+        firebaseGeoDataService.startObserverGeoData(
             onNewLocations = { locMapList ->
 
                 if (locMapList.isNotEmpty()) {
@@ -103,7 +104,7 @@ class GeoData(private val fStorageService: FStorageService) {
                             long = i["long"] as Double,
                             isManualCoords = i["isManualCoords"] as Boolean,
                             locations = i["locations"] as List<String>,
-                            category=i["category"] as String,
+                            category = i["category"] as String,
                             imgs = i["imgs"] as List<String>,
                             classification = i["classification"] as Double,
                             nClassifications = i["nClassifications"] as Long,
@@ -117,7 +118,7 @@ class GeoData(private val fStorageService: FStorageService) {
             },
             onNewCategories = { locCatsList ->
 
-                if(locCatsList.isNotEmpty()){
+                if (locCatsList.isNotEmpty()) {
                     val newCategories = locCatsList.map { i ->
                         Category(
                             userId = i["userID"] as String,
@@ -148,7 +149,7 @@ class GeoData(private val fStorageService: FStorageService) {
         imgs: List<String>
     ) {
 
-        fStorageService.addLocationToFirestore(
+        firebaseGeoDataService.addLocationToFirestore(
             Location(
                 userId,
                 name,
@@ -178,7 +179,7 @@ class GeoData(private val fStorageService: FStorageService) {
         imgs: List<String>
     ) {
 
-        fStorageService.addPointOfInterestToFirestore(
+        firebaseGeoDataService.addPointOfInterestToFirestore(
             PointOfInterest(
                 userId,
                 name,
@@ -196,6 +197,15 @@ class GeoData(private val fStorageService: FStorageService) {
             )
         ) {}
 
+        for (i in _locations.value)
+            if (locations.any { i.name == it }) {
+                val newLocation = i
+                newLocation.pointsOfInterest = newLocation.pointsOfInterest + name
+                Log.d("GeoData", "Vou dar update à loc " + i.name)
+                Log.d("GeoData", "Vou dar update com " + newLocation.toString())
+                firebaseGeoDataService.updateLocationToFirestore(i.name, newLocation) {}
+            }
+
     }
 
     fun addCategory(
@@ -205,7 +215,7 @@ class GeoData(private val fStorageService: FStorageService) {
         img: String,
     ) {
 
-        fStorageService.addCategoryToFirestore(
+        firebaseGeoDataService.addCategoryToFirestore(
             Category(
                 userId,
                 name,

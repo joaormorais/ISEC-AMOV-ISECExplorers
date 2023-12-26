@@ -71,7 +71,7 @@ class LocationsViewModel(
     }
 
     fun findVoteForApprovedLocationByUser(locationName: String): Boolean {
-        return userData.locationsApproved.value.any { it == locationName }
+        return userData.savedVotes.value.locationsApproved.any { it == locationName }
     }
 
     fun voteForApprovalLocationByUser(locationName: String) {

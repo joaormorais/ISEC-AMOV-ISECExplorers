@@ -1,59 +1,78 @@
 package com.example.amovtp.data
 
 import android.location.Location
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
-import com.example.amovtp.services.FAuthService
+import com.example.amovtp.services.FirebaseUserDataService
 
-class UserData(private val fAuthService: FAuthService) {
+data class SavedVotes(
+    var userId: String = "",
+    var locationsApproved: List<String> = emptyList(),
+    var pointsOfInterestApproved: List<String> = emptyList(),
+    var categoriesApproved: List<String> = emptyList(),
+    var pointsOfInterestClassified: Map<String, Double> = emptyMap()
+)
 
-    private var _userId: String = ""
+class UserData(private val firebaseUserDataService: FirebaseUserDataService) {
+
     private val _currentLocation = MutableLiveData(Location(null))
-    private var _locationsApproved = mutableStateOf(emptyList<String>())
-    private var _pointsOfInterestApproved = mutableStateOf(emptyList<String>())
-    private var _categoriesApproved = mutableStateOf(emptyList<String>())
-    private var _pointsOfInterestClassified = mutableStateOf(emptyMap<String, Double>())
-
-    val userId: String
-        get() = _userId
+    private val _savedVotes = mutableStateOf(SavedVotes())
 
     val currentLocation: MutableLiveData<Location>
         get() = _currentLocation
 
-    val locationsApproved: MutableState<List<String>>
-        get() = _locationsApproved
-
-    val pointsOfInterestApproved: MutableState<List<String>>
-        get() = _pointsOfInterestApproved
-
-    val categoriesApproved: MutableState<List<String>>
-        get() = _categoriesApproved
-
-    val pointsOfInterestClassified: MutableState<Map<String, Double>>
-        get() = _pointsOfInterestClassified
+    val savedVotes: MutableState<SavedVotes>
+        get() = _savedVotes
 
     /* ------------------------  Login and register (Start) ------------------------ */
 
     fun register(email: String, pw: String, onResult: (Throwable?) -> Unit) {
-        fAuthService.createUserWithEmail(email, pw) { exception ->
+        firebaseUserDataService.createUserWithEmail(email, pw) { exception ->
             onResult(exception)
         }
     }
 
     fun login(email: String, pw: String, onResult: (Throwable?) -> Unit) {
-        fAuthService.signInWithEmail(email, pw) { exception ->
+        firebaseUserDataService.signInWithEmail(email, pw) { exception ->
             onResult(exception)
         }
     }
 
     fun signOut() {
-        fAuthService.signOut()
+        firebaseUserDataService.signOut()
     }
 
     fun updateUserId() {
-        _userId = fAuthService.userId
+        _savedVotes.value.userId = firebaseUserDataService.userId
     }
+
+    fun resetUserId(){
+        _savedVotes.value.userId = ""
+    }
+
+    fun createUser(){
+        firebaseUserDataService.addSavedVotesToFirestore(_savedVotes.value) {}
+        firebaseUserDataService.clearUserId()
+    }
+
+    fun searchUser() {
+        firebaseUserDataService.locateUserFirestore(
+            onFoundUser = { foundUser ->
+                if (foundUser.isNotEmpty()) {
+                    _savedVotes.value = SavedVotes(
+                        userId = foundUser["userId"] as String,
+                        locationsApproved = foundUser["locationsApproved"] as List<String>,
+                        pointsOfInterestApproved = foundUser["pointsOfInterestApproved"] as List<String>,
+                        categoriesApproved = foundUser["categoriesApproved"] as List<String>,
+                        pointsOfInterestClassified = foundUser["pointsOfInterestClassified"] as Map<String, Double>,
+                    )
+                }
+            }
+        )
+    }
+
     /* ------------------------  Login and register (End) ------------------------ */
 
     /* ------------------------  Device location (Start) ------------------------ */
@@ -64,43 +83,45 @@ class UserData(private val fAuthService: FAuthService) {
 
     /* ------------------------  Location approval (Start) ------------------------ */
     fun addLocationApproved(locationName: String) {
-        _locationsApproved.value = _locationsApproved.value + locationName
+        _savedVotes.value.locationsApproved = _savedVotes.value.locationsApproved + locationName
     }
 
     fun removeLocationApproved(locationName: String) {
-        _locationsApproved.value = _locationsApproved.value - locationName
+        _savedVotes.value.locationsApproved = _savedVotes.value.locationsApproved - locationName
     }
     /* ------------------------  Location approval (End) ------------------------ */
 
     /* ------------------------  Point of interest approval (Start) ------------------------ */
     fun addPointOfInterestApproved(pointOfInterestName: String) {
-        _pointsOfInterestApproved.value = _pointsOfInterestApproved.value + pointOfInterestName
+        _savedVotes.value.pointsOfInterestApproved =
+            _savedVotes.value.pointsOfInterestApproved + pointOfInterestName
     }
 
     fun removePointOfInterestApproved(pointOfInterestName: String) {
-        _pointsOfInterestApproved.value = _pointsOfInterestApproved.value - pointOfInterestName
+        _savedVotes.value.pointsOfInterestApproved =
+            _savedVotes.value.pointsOfInterestApproved - pointOfInterestName
     }
     /* ------------------------  Point of interest approval (End) ------------------------ */
 
     /* ------------------------  Point of interest approval (Start) ------------------------ */
     fun addCategoryApproved(categoryName: String) {
-        _categoriesApproved.value = _categoriesApproved.value + categoryName
+        _savedVotes.value.categoriesApproved = _savedVotes.value.categoriesApproved + categoryName
     }
 
     fun removeCategoryApproved(categoryName: String) {
-        _categoriesApproved.value = _categoriesApproved.value - categoryName
+        _savedVotes.value.categoriesApproved = _savedVotes.value.categoriesApproved - categoryName
     }
     /* ------------------------  Point of interest approval (End) ------------------------ */
 
     /* ------------------------  Point classification (Start) ------------------------ */
     fun addPointOfInterestClassified(pointOfInterestName: String, classification: Double) {
-        _pointsOfInterestClassified.value =
-            _pointsOfInterestClassified.value + (pointOfInterestName to classification)
+        _savedVotes.value.pointsOfInterestClassified =
+            _savedVotes.value.pointsOfInterestClassified + (pointOfInterestName to classification)
     }
 
     fun removePointOfInterestClassified(pointOfInterestName: String) {
-        _pointsOfInterestClassified.value =
-            _pointsOfInterestClassified.value.filterNot { it.key == pointOfInterestName }
+        _savedVotes.value.pointsOfInterestClassified =
+            _savedVotes.value.pointsOfInterestClassified.filterNot { it.key == pointOfInterestName }
     }
     /* ------------------------  Point classification (End) ------------------------ */
 }

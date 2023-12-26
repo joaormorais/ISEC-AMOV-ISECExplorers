@@ -14,7 +14,7 @@ import com.google.firebase.storage.ktx.storage
 import java.io.IOException
 import java.io.InputStream
 
-class FStorageService {
+class FirebaseGeoDataService {
 
     private var listenerRegistrationLocations: ListenerRegistration? = null
     private var listenerRegistrationPointOfInterest: ListenerRegistration? = null
@@ -130,7 +130,55 @@ class FStorageService {
             }
     }
 
-    fun updateLocationDataInFirestore(onResult: (Throwable?) -> Unit) {
+    fun updateLocationToFirestore(currentLocationName:String,updatedLocation:Location,onResult: (Throwable?) -> Unit) {
+        val db = Firebase.firestore
+        val document = db.collection("GeoDataLocation").document(currentLocationName)
+
+        db.runTransaction { transaction ->
+            val doc = transaction.get(document)
+            if (doc.exists()) {
+                Log.d("Firebase","doc existe!")
+                val data = doc.data
+                if (data?.get("name") != updatedLocation.name) {
+                    transaction.update(document, "name", updatedLocation.name)
+                }
+                if (data?.get("description") != updatedLocation.description) {
+                    transaction.update(document, "description", updatedLocation.description)
+                }
+                if (data?.get("lat") != updatedLocation.lat) {
+                    transaction.update(document, "lat", updatedLocation.lat)
+                }
+                if (data?.get("long") != updatedLocation.long) {
+                    transaction.update(document, "long", updatedLocation.long)
+                }
+                if (data?.get("isManualCoords") != updatedLocation.isManualCoords) {
+                    transaction.update(document, "isManualCoords", updatedLocation.isManualCoords)
+                }
+                if (data?.get("pointsOfInterest") != updatedLocation.pointsOfInterest) {
+                    transaction.update(document, "pointsOfInterest", updatedLocation.pointsOfInterest)
+                }
+                if (data?.get("imgs") != updatedLocation.imgs) {
+                    transaction.update(document, "imgs", updatedLocation.imgs)
+                }
+                if (data?.get("votes") != updatedLocation.votes) {
+                    transaction.update(document, "votes", updatedLocation.votes)
+                }
+                if (data?.get("isApproved") != updatedLocation.isApproved) {
+                    transaction.update(document, "isApproved", updatedLocation.isApproved)
+                }
+                null
+            } else
+                throw FirebaseFirestoreException(
+                    "Doesn't exist",
+                    FirebaseFirestoreException.Code.UNAVAILABLE
+                )
+        }.addOnCompleteListener { result ->
+            Log.d("GeoData", "result --> " + result.exception)
+            onResult(result.exception)
+        }
+    }
+
+    /*fun updateLocationDataInFirestore(onResult: (Throwable?) -> Unit) {
         val db = Firebase.firestore
         val v = db.collection("Scores").document("Level1")
 
@@ -171,7 +219,7 @@ class FStorageService {
         }.addOnCompleteListener { result ->
             onResult(result.exception)
         }
-    }
+    }*/
 
     fun removeDataFromFirestore(onResult: (Throwable?) -> Unit) {
         val db = Firebase.firestore

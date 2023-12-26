@@ -48,7 +48,8 @@ class AddPointOfInterestViewModel(
         imgs: List<String>
     ): String {
         val tempPointsOfInterest = geoData.pointsOfInterest
-        val tempUserId = userData.userId
+        //val tempUserId = userData.userId
+        val tempUserId = userData.savedVotes.value.userId
 
         if (tempPointsOfInterest.value.any { it.name == name })
             return Consts.ERROR_EXISTING_NAME

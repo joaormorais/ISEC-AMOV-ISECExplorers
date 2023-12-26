@@ -38,7 +38,8 @@ class AddLocationViewModel(
     ): String {
 
         val tempLocations = geoData.locations
-        val tempUserId = userData.userId
+        //val tempUserId = userData.userId
+        val tempUserId = userData.savedVotes.value.userId
 
         if (tempLocations.value.any { it.name == name })
             return Consts.ERROR_EXISTING_NAME

@@ -3,8 +3,8 @@ package com.example.amovtp
 import android.app.Application
 import com.example.amovtp.data.GeoData
 import com.example.amovtp.data.UserData
-import com.example.amovtp.services.FAuthService
-import com.example.amovtp.services.FStorageService
+import com.example.amovtp.services.FirebaseUserDataService
+import com.example.amovtp.services.FirebaseGeoDataService
 import com.google.android.gms.location.LocationServices
 import pt.isec.ans.locationmaps.utils.FusedLocationHandler
 import pt.isec.ans.locationmaps.utils.LocationHandler
@@ -16,10 +16,10 @@ class MyApplication : Application() {
         FusedLocationHandler(locationProvider)
     }
 
-    private val fAuthService: FAuthService by lazy { FAuthService() }
-    private val fStorageService: FStorageService by lazy { FStorageService() }
+    private val firebaseUserDataService: FirebaseUserDataService by lazy { FirebaseUserDataService() }
+    private val firebaseGeoDataService: FirebaseGeoDataService by lazy { FirebaseGeoDataService() }
 
-    val geoData by lazy { GeoData(fStorageService) }
-    val userData by lazy { UserData(fAuthService) }
+    val geoData by lazy { GeoData(firebaseGeoDataService) }
+    val userData by lazy { UserData(firebaseUserDataService) }
 
 }
