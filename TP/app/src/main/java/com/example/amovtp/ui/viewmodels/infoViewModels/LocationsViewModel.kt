@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.GeoData
 import com.example.amovtp.data.Location
-import com.example.amovtp.data.PointOfInterest
 import com.example.amovtp.data.UserData
 import com.example.amovtp.utils.Consts
 import kotlin.math.atan2
@@ -71,7 +70,7 @@ class LocationsViewModel(
     }
 
     fun findVoteForApprovedLocationByUser(locationName: String): Boolean {
-        return userData.savedVotes.value.locationsApproved.any { it == locationName }
+        return userData.localUser.value.locationsApproved.any { it == locationName }
     }
 
     fun voteForApprovalLocationByUser(locationName: String) {

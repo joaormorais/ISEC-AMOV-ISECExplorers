@@ -164,7 +164,6 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
             )
         ) {}
 
-
     }
 
     fun addPointOfInterest(

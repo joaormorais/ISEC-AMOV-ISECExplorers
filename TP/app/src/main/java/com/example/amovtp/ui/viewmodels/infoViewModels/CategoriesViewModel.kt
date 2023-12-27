@@ -31,7 +31,7 @@ class CategoriesViewModel(
     }
 
     fun findVoteForApprovedCategoryByUser(categoryName: String): Boolean {
-        return userData.savedVotes.value.categoriesApproved.any { it == categoryName }
+        return userData.localUser.value.categoriesApproved.any { it == categoryName }
     }
 
     fun voteForApprovalCategoryByUser(categoryName: String) {

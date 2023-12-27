@@ -126,7 +126,7 @@ class PointsOfInterestViewModel(
     }
 
     fun findVoteForApprovedPointOfInterestByUser(pointOfInterestName: String): Boolean {
-        return userData.savedVotes.value.pointsOfInterestApproved.any { it == pointOfInterestName }
+        return userData.localUser.value.pointsOfInterestApproved.any { it == pointOfInterestName }
     }
 
     fun voteForApprovalPointOfInterestByUser(pointOfInterestName: String) {
@@ -143,15 +143,15 @@ class PointsOfInterestViewModel(
 
     fun findClassificationFromUser(pointOfInterestName: String): Double {
 
-        return if (userData.savedVotes.value.pointsOfInterestClassified.keys.contains(pointOfInterestName))
-            userData.savedVotes.value.pointsOfInterestClassified.getValue(pointOfInterestName)
+        return if (userData.localUser.value.pointsOfInterestClassified.keys.contains(pointOfInterestName))
+            userData.localUser.value.pointsOfInterestClassified.getValue(pointOfInterestName)
         else
             Consts.NO_START_CLASSIFICATION
 
     }
 
     fun addClassificationToPointByUser(pointOfInterestName: String, classification: Double) {
-        if (userData.savedVotes.value.pointsOfInterestClassified.containsKey(pointOfInterestName)) {
+        if (userData.localUser.value.pointsOfInterestClassified.containsKey(pointOfInterestName)) {
             removeClassificationToPointByUser(pointOfInterestName)
         }
 

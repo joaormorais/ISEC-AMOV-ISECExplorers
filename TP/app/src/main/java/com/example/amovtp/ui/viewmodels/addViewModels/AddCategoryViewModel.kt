@@ -26,7 +26,7 @@ class AddCategoryViewModel(
         img: String,
     ): String {
         val tempCategories = geoData.categories
-        val tempUserId = userData.savedVotes.value.userId
+        val tempUserId = userData.localUser.value.userId
 
         if (tempCategories.value.any { it.name == name })
             return Consts.ERROR_EXISTING_NAME

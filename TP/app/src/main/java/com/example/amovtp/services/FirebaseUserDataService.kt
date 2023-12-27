@@ -1,6 +1,6 @@
 package com.example.amovtp.services
 
-import com.example.amovtp.data.SavedVotes
+import com.example.amovtp.data.LocalUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
@@ -69,7 +69,7 @@ class FirebaseUserDataService {
             listenerUserData.remove()
     }
 
-    fun addSavedVotesToFirestore(newVotes: SavedVotes, onResult: (Throwable?) -> Unit) {
+    fun addSavedVotesToFirestore(newVotes: LocalUser, onResult: (Throwable?) -> Unit) {
         //val db = Firebase.firestore
 
         val savedVotesToCloud = hashMapOf(

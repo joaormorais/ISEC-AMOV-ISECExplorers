@@ -178,49 +178,6 @@ class FirebaseGeoDataService {
         }
     }
 
-    /*fun updateLocationDataInFirestore(onResult: (Throwable?) -> Unit) {
-        val db = Firebase.firestore
-        val v = db.collection("Scores").document("Level1")
-
-        v.get(Source.SERVER)
-            .addOnSuccessListener {
-                val exists = it.exists()
-                Log.i("Firestore", "updateDataInFirestore: Success? $exists")
-                if (!exists) {
-                    onResult(Exception("Doesn't exist"))
-                    return@addOnSuccessListener
-                }
-                val value = it.getLong("nrgames") ?: 0
-                v.update("nrgames", value + 1)
-                onResult(null)
-            }
-            .addOnFailureListener { e ->
-                onResult(e)
-            }
-    }
-
-    fun updateDataInFirestoreTrans(onResult: (Throwable?) -> Unit) {
-        val db = Firebase.firestore
-        val v = db.collection("Scores").document("Level1")
-
-        db.runTransaction { transaction ->
-            val doc = transaction.get(v)
-            if (doc.exists()) {
-                val newnrgames = (doc.getLong("nrgames") ?: 0) + 1
-                val newtopscore = (doc.getLong("topscore") ?: 0) + 100
-                transaction.update(v, "nrgames", newnrgames)
-                transaction.update(v, "topscore", newtopscore)
-                null
-            } else
-                throw FirebaseFirestoreException(
-                    "Doesn't exist",
-                    FirebaseFirestoreException.Code.UNAVAILABLE
-                )
-        }.addOnCompleteListener { result ->
-            onResult(result.exception)
-        }
-    }*/
-
     fun removeDataFromFirestore(onResult: (Throwable?) -> Unit) {
         val db = Firebase.firestore
         val v = db.collection("Scores").document("Level1")
