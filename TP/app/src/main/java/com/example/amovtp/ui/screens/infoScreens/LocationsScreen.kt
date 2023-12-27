@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.amovtp.R
+import com.example.amovtp.data.Location
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuOrders
 import com.example.amovtp.ui.screens.Screens
 import com.example.amovtp.ui.viewmodels.infoViewModels.LocationsViewModel
@@ -64,10 +65,10 @@ fun LocationsScreen(
 
     val locationsDM = locationsViewModel.getLocations()
     var locationsUI by remember {
-        mutableStateOf(locationsViewModel.getLocations().value)
+        mutableStateOf<List<Location>>(emptyList())
     }
     LaunchedEffect(key1 = locationsDM.value, block = {
-        locationsUI = locationsDM.value
+        locationsUI = locationsDM.value.toList()
     })
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -128,7 +129,7 @@ fun LocationsScreen(
                 .fillMaxSize()
                 .padding(top = 8.dp)
         ) {
-            items(locationsUI, key = { it.name }) {
+            items(locationsUI) {
 
                 var isDetailExpanded by remember { mutableStateOf(false) }
                 var isVotedByUser by remember {
@@ -258,7 +259,7 @@ fun LocationsScreen(
                                     Text(
                                         text = stringResource(
                                             R.string.votes_for_approval,
-                                            it.votes
+                                            it.votesForApproval
                                         ),
                                         fontSize = 12.sp
                                     )

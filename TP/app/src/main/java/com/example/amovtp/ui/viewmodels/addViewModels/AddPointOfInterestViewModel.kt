@@ -48,7 +48,6 @@ class AddPointOfInterestViewModel(
         imgs: List<String>
     ): String {
         val tempPointsOfInterest = geoData.pointsOfInterest
-        //val tempUserId = userData.userId
         val tempUserId = userData.localUser.value.userId
 
         if (tempPointsOfInterest.value.any { it.name == name })

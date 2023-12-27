@@ -3,6 +3,7 @@ package com.example.amovtp.data
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import com.example.amovtp.services.FirebaseGeoDataService
 
 /**
@@ -17,8 +18,10 @@ data class Location(
     val isManualCoords: Boolean,
     var pointsOfInterest: List<String>,
     val imgs: List<String>,
-    var votes: Long,
-    var isApproved: Boolean
+    var votesForApproval: Long,
+    var isApproved: Boolean,
+    var votesForRemoval: Long,
+    var isBeingRemoved: Boolean,
 )
 
 /**
@@ -29,8 +32,10 @@ data class Category(
     val name: String,
     val description: String,
     val img: String,
-    var votes: Long,
-    var isApproved: Boolean
+    var votesForApproval: Long,
+    var isApproved: Boolean,
+    var votesForRemoval: Long,
+    var isBeingRemoved: Boolean,
 )
 
 /**
@@ -48,8 +53,10 @@ data class PointOfInterest(
     val imgs: List<String>,
     var classification: Double,
     var nClassifications: Long,
-    var votes: Long,
-    var isApproved: Boolean
+    var votesForApproval: Long,
+    var isApproved: Boolean,
+    var votesForRemoval: Long,
+    var isBeingRemoved: Boolean,
 )
 
 class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
@@ -74,23 +81,35 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
             onNewLocations = { locMapList ->
 
                 if (locMapList.isNotEmpty()) {
-                    val newLocations = locMapList.map { i ->
-                        Location(
-                            userId = i["userID"] as String,
-                            name = i["name"] as String,
-                            description = i["description"] as String,
-                            lat = i["lat"] as Double,
-                            long = i["long"] as Double,
-                            isManualCoords = i["isManualCoords"] as Boolean,
-                            pointsOfInterest = i["pointsOfInterest"] as List<String>,
-                            imgs = i["imgs"] as List<String>,
-                            votes = i["votes"] as Long,
-                            isApproved = i["isApproved"] as Boolean
-                        )
+                    val newLocations: MutableList<Location> = mutableListOf()
+                    locMapList.map { i ->
+                        firebaseGeoDataService.downloadImages(
+                            "locations/" + i["name"],
+                            i["imgs"] as List<String>
+                        ) { paths ->
+                            if (paths.isNotEmpty()) {
+                                newLocations.add(
+                                    Location(
+                                        userId = i["userID"] as String,
+                                        name = i["name"] as String,
+                                        description = i["description"] as String,
+                                        lat = i["lat"] as Double,
+                                        long = i["long"] as Double,
+                                        isManualCoords = i["isManualCoords"] as Boolean,
+                                        pointsOfInterest = i["pointsOfInterest"] as List<String>,
+                                        imgs = paths,
+                                        votesForApproval = i["votesForApproval"] as Long,
+                                        isApproved = i["isApproved"] as Boolean,
+                                        votesForRemoval = i["votesForRemoval"] as Long,
+                                        isBeingRemoved = i["isBeingRemoved"] as Boolean
+                                    )
+                                )
+                            }
+                            if(locMapList.size==newLocations.size)
+                                _locations.value = newLocations.toList()
+                        }
                     }
-                    _locations.value = newLocations
                 }
-
             },
             onNewPointsOfInterest = { locPointsList ->
 
@@ -108,8 +127,10 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                             imgs = i["imgs"] as List<String>,
                             classification = i["classification"] as Double,
                             nClassifications = i["nClassifications"] as Long,
-                            votes = i["votes"] as Long,
-                            isApproved = i["isApproved"] as Boolean
+                            votesForApproval = i["votesForApproval"] as Long,
+                            isApproved = i["isApproved"] as Boolean,
+                            votesForRemoval = i["votesForRemoval"] as Long,
+                            isBeingRemoved = i["isBeingRemoved"] as Boolean
                         )
                     }
                     _pointsOfInterest.value = newPointsOfInterest
@@ -125,8 +146,10 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                             name = i["name"] as String,
                             description = i["description"] as String,
                             img = i["img"] as String,
-                            votes = i["votes"] as Long,
-                            isApproved = i["isApproved"] as Boolean
+                            votesForApproval = i["votesForApproval"] as Long,
+                            isApproved = i["isApproved"] as Boolean,
+                            votesForRemoval = i["votesForRemoval"] as Long,
+                            isBeingRemoved = i["isBeingRemoved"] as Boolean
                         )
                     }
                     _categories.value = newCategories
@@ -160,6 +183,8 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 mutableListOf(),
                 imgs,
                 0L,
+                false,
+                0L,
                 false
             )
         ) {}
@@ -192,6 +217,8 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 0.0,
                 0L,
                 0L,
+                false,
+                0L,
                 false
             )
         ) {}
@@ -200,8 +227,6 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
             if (locations.any { i.name == it }) {
                 val newLocation = i
                 newLocation.pointsOfInterest = newLocation.pointsOfInterest + name
-                Log.d("GeoData", "Vou dar update à loc " + i.name)
-                Log.d("GeoData", "Vou dar update com " + newLocation.toString())
                 firebaseGeoDataService.updateLocationToFirestore(i.name, newLocation) {}
             }
 
@@ -221,6 +246,8 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 description,
                 img,
                 0L,
+                false,
+                0L,
                 false
             )
         ) {}
@@ -231,11 +258,11 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
 
     /* ------------------------  Location approval (Start) ------------------------ */
     fun voteForApprovalLocation(locationName: String) {
-        _locations.value.find { it.name == locationName }?.apply { votes++ }
+        _locations.value.find { it.name == locationName }?.apply { votesForApproval++ }
     }
 
     fun removeVoteForApprovalLocation(locationName: String) {
-        _locations.value.find { it.name == locationName }?.apply { votes-- }
+        _locations.value.find { it.name == locationName }?.apply { votesForApproval-- }
     }
 
     fun approveLocation(locationName: String) {
@@ -249,11 +276,13 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
 
     /* ------------------------  Point of interest approval (Start) ------------------------ */
     fun voteForApprovalPointOfInterest(pointOfInterestName: String) {
-        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.apply { votes++ }
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }
+            ?.apply { votesForApproval++ }
     }
 
     fun removeVoteForApprovalPointOfInterest(pointOfInterestName: String) {
-        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.apply { votes-- }
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }
+            ?.apply { votesForApproval-- }
     }
 
     fun approvePointOfInterest(pointOfInterestName: String) {
@@ -269,11 +298,11 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
 
     /* ------------------------  Category approval (Start) ------------------------ */
     fun voteForApprovalCategory(categoryName: String) {
-        _categories.value.find { it.name == categoryName }?.apply { votes++ }
+        _categories.value.find { it.name == categoryName }?.apply { votesForApproval++ }
     }
 
     fun removeVoteForApprovalCategory(categoryName: String) {
-        _categories.value.find { it.name == categoryName }?.apply { votes-- }
+        _categories.value.find { it.name == categoryName }?.apply { votesForApproval-- }
     }
 
     fun approveCategory(categoryName: String) {

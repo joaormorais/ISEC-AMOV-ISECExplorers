@@ -389,7 +389,7 @@ fun PointsOfInterestScreen(
                                     Text(
                                         text = stringResource(
                                             R.string.votes_for_approval,
-                                            it.votes
+                                            it.votesForApproval
                                         ),
                                         fontSize = 12.sp
                                     )

@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.composables.AddInfoComposables
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,12 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -25,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.amovtp.R
 import com.example.amovtp.utils.file.FileUtils
-import kotlinx.coroutines.launch
 
 @Composable
 fun GalleryImage(

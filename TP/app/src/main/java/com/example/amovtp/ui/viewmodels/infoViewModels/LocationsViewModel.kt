@@ -76,7 +76,7 @@ class LocationsViewModel(
     fun voteForApprovalLocationByUser(locationName: String) {
         geoData.voteForApprovalLocation(locationName)
         userData.addLocationApproved(locationName)
-        if (geoData.locations.value.find { it.name == locationName }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
+        if (geoData.locations.value.find { it.name == locationName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
             geoData.approveLocation(locationName)
     }
 

@@ -37,7 +37,7 @@ class CategoriesViewModel(
     fun voteForApprovalCategoryByUser(categoryName: String) {
         geoData.voteForApprovalCategory(categoryName)
         userData.addCategoryApproved(categoryName)
-        if (geoData.categories.value.find { it.name == categoryName }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
+        if (geoData.categories.value.find { it.name == categoryName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
             geoData.approveCategory(categoryName)
     }
 

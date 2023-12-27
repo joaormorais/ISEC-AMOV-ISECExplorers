@@ -132,7 +132,7 @@ class PointsOfInterestViewModel(
     fun voteForApprovalPointOfInterestByUser(pointOfInterestName: String) {
         geoData.voteForApprovalPointOfInterest(pointOfInterestName)
         userData.addPointOfInterestApproved(pointOfInterestName)
-        if (geoData.pointsOfInterest.value.find { it.name == pointOfInterestName }?.votes!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
+        if (geoData.pointsOfInterest.value.find { it.name == pointOfInterestName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
             geoData.approvePointOfInterest(pointOfInterestName)
     }
 
