@@ -170,6 +170,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         long: Double,
         isManualCoords: Boolean,
         imgs: List<String>
+        // onResult: (Throwable?) -> Unit
     ) {
 
         firebaseGeoDataService.addLocationToFirestore(
@@ -187,7 +188,9 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 0L,
                 false
             )
-        ) {}
+        ) {
+        //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
+         }
 
     }
 
@@ -201,6 +204,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         locations: List<String>,
         category: String,
         imgs: List<String>
+        // onResult: (Throwable?) -> Unit
     ) {
 
         firebaseGeoDataService.addPointOfInterestToFirestore(
@@ -221,7 +225,9 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 0L,
                 false
             )
-        ) {}
+        ) {
+            //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
+        }
 
         for (i in _locations.value)
             if (locations.any { i.name == it }) {
@@ -237,6 +243,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         name: String,
         description: String,
         img: String,
+        // onResult: (Throwable?) -> Unit
     ) {
 
         firebaseGeoDataService.addCategoryToFirestore(
@@ -250,7 +257,9 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 0L,
                 false
             )
-        ) {}
+        ) {
+            //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
+        }
 
     }
 

@@ -47,7 +47,11 @@ class AddLocationViewModel(
         else if (tempUserId.isBlank())
             return Consts.ERROR_NEED_LOGIN
 
-        geoData.addLocation(tempUserId, name, description, lat, long, isManualCoords, imgs)
+        geoData.addLocation(tempUserId, name, description, lat, long, isManualCoords, imgs) // TODO: metter aqui parenteses e mandar o erro para a UI (return erro)
+        /*{
+            if exception != null
+            return exception.tostring()
+        }*/
 
         return Consts.SUCCESS
     }

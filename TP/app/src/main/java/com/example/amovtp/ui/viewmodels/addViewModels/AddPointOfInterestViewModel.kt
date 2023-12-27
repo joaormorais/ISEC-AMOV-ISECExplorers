@@ -67,7 +67,11 @@ class AddPointOfInterestViewModel(
             location,
             category,
             imgs
-        )
+        )// TODO: metter aqui parenteses e mandar o erro para a UI (return erro)
+        /*{
+            if exception != null
+            return exception.tostring()
+        }*/
 
         return Consts.SUCCESS
     }
