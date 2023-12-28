@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.GeoData
+import com.example.amovtp.data.LocalUser
 import com.example.amovtp.data.Location
 import com.example.amovtp.data.UserData
 import com.example.amovtp.utils.Consts
@@ -51,6 +52,10 @@ class LocationsViewModel(
 
     }
 
+    fun getLocalUser(): MutableState<LocalUser> {
+        return userData.localUser
+    }
+
     fun getLocations(): MutableState<List<Location>> {
         return geoData.locations
     }
@@ -76,13 +81,16 @@ class LocationsViewModel(
     fun voteForApprovalLocationByUser(locationName: String) {
         geoData.voteForApprovalLocation(locationName)
         userData.addLocationApproved(locationName)
-        if (geoData.locations.value.find { it.name == locationName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
+        if (geoData.locations.value.find { it.name == locationName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
             geoData.approveLocation(locationName)
+
+        geoData.editLocation(locationName)
     }
 
     fun removeVoteForApprovalLocationByUser(locationName: String) {
         geoData.removeVoteForApprovalLocation(locationName)
         userData.removeLocationApproved(locationName)
+        geoData.editLocation(locationName)
     }
 
 }

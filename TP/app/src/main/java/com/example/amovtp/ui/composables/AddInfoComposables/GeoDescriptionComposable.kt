@@ -70,7 +70,7 @@ fun GeoDescription(
                 label = { Text(stringResource(R.string.latitude)) },
                 modifier = modifier.padding(bottom = 16.dp),
                 enabled = isManual,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 isError = !isLatValid
             )
             OutlinedTextField(
@@ -89,7 +89,7 @@ fun GeoDescription(
                 label = { Text(stringResource(R.string.longitude)) },
                 modifier = modifier.padding(bottom = 16.dp),
                 enabled = isManual,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 isError = !isLongValid
             )
         }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.Category
 import com.example.amovtp.data.GeoData
+import com.example.amovtp.data.LocalUser
 import com.example.amovtp.data.UserData
 import com.example.amovtp.utils.Consts
 
@@ -23,9 +24,10 @@ class CategoriesViewModel(
     private val userData: UserData
 ) : ViewModel() {
 
-    /**
-     * Gets every category
-     */
+    fun getLocalUser(): MutableState<LocalUser> {
+        return userData.localUser
+    }
+
     fun getCategories(): MutableState<List<Category>> {
         return geoData.categories
     }
@@ -39,11 +41,13 @@ class CategoriesViewModel(
         userData.addCategoryApproved(categoryName)
         if (geoData.categories.value.find { it.name == categoryName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
             geoData.approveCategory(categoryName)
+        geoData.editCategory(categoryName)
     }
 
     fun removeVoteForApprovalCategoryByUser(categoryName: String) {
         geoData.removeVoteForApprovalCategory(categoryName)
         userData.removeCategoryApproved(categoryName)
+        geoData.editCategory(categoryName)
     }
 
 }

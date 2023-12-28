@@ -9,7 +9,7 @@ import com.google.firebase.ktx.Firebase
 class FirebaseUserDataService {
     private val auth by lazy { Firebase.auth }
     private val db by lazy { Firebase.firestore }
-    //private var listenerUserData: ListenerRegistration? = null
+    private var listenerUserData: ListenerRegistration? = null
 
     private var _userId: String = ""
     val userId: String
@@ -69,9 +69,8 @@ class FirebaseUserDataService {
             listenerUserData.remove()
     }
 
-    fun addSavedVotesToFirestore(newVotes: LocalUser, onResult: (Throwable?) -> Unit) {
+    fun addLocalUserToFirestore(newVotes: LocalUser, onResult: (Throwable?) -> Unit) {
         //val db = Firebase.firestore
-
         val savedVotesToCloud = hashMapOf(
             "userId" to newVotes.userId,
             "locationsApproved" to newVotes.locationsApproved,

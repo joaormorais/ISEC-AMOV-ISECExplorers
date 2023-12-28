@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.Category
 import com.example.amovtp.data.GeoData
+import com.example.amovtp.data.LocalUser
 import com.example.amovtp.data.Location
 import com.example.amovtp.data.PointOfInterest
 import com.example.amovtp.data.UserData
@@ -68,6 +69,9 @@ class PointsOfInterestViewModel(
         return listOfCurrentPoints.filter { it.category == categoryName }
     }
 
+    fun getLocalUser(): MutableState<LocalUser> {
+        return userData.localUser
+    }
 
     fun getCurrentLocation(): MutableLiveData<android.location.Location> {
         return userData.currentLocation
@@ -134,11 +138,13 @@ class PointsOfInterestViewModel(
         userData.addPointOfInterestApproved(pointOfInterestName)
         if (geoData.pointsOfInterest.value.find { it.name == pointOfInterestName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
             geoData.approvePointOfInterest(pointOfInterestName)
+        geoData.editPointOfInterest(pointOfInterestName)
     }
 
     fun removeVoteForApprovalPointOfInterestByUser(pointOfInterestName: String) {
         geoData.removeVoteForApprovalPointOfInterest(pointOfInterestName)
         userData.removePointOfInterestApproved(pointOfInterestName)
+        geoData.editPointOfInterest(pointOfInterestName)
     }
 
     fun findClassificationFromUser(pointOfInterestName: String): Double {
@@ -154,10 +160,10 @@ class PointsOfInterestViewModel(
         if (userData.localUser.value.pointsOfInterestClassified.containsKey(pointOfInterestName)) {
             removeClassificationToPointByUser(pointOfInterestName)
         }
-
         geoData.addClassificationToPoint(pointOfInterestName, classification)
         geoData.incrementNumberOfClassifications(pointOfInterestName)
         userData.addPointOfInterestClassified(pointOfInterestName, classification)
+        geoData.editPointOfInterest(pointOfInterestName)
     }
 
     fun removeClassificationToPointByUser(pointOfInterestName: String) {
@@ -167,6 +173,7 @@ class PointsOfInterestViewModel(
         )
         geoData.decrementNumberOfClassifications(pointOfInterestName)
         userData.removePointOfInterestClassified(pointOfInterestName)
+        geoData.editPointOfInterest(pointOfInterestName)
     }
 
     fun calculateMediaClassification(pointOfInterestName: String): Double {

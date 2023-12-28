@@ -41,7 +41,7 @@ fun AddCategoryScreen(
     var description by remember { mutableStateOf("") }
     var image by remember { mutableStateOf("")}
 
-    val snackbarHostState = remember { SnackbarHostState() } //para mostrar as mensagens de erro
+    val snackbarHostState = remember { SnackbarHostState() }
     var showSnackBar by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     val unkownError = stringResource(R.string.unknown_error)
