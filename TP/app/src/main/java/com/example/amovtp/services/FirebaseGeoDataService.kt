@@ -83,7 +83,6 @@ class FirebaseGeoDataService {
                     "votesForRemoval" to newLocation.votesForRemoval,
                     "isBeingRemoved" to newLocation.isBeingRemoved
                 )
-
                 db.collection("GeoDataLocations").document(newLocation.name).set(locationToCloud)
                     .addOnCompleteListener { result ->
                         onResult(result.exception)
@@ -224,7 +223,7 @@ class FirebaseGeoDataService {
 
         imgsToUpload.forEachIndexed { index, img ->
             val file = Uri.fromFile(File(img))
-            val imgPath = "img" + (index + 1) + ".img"
+            val imgPath = "img" + (index + 1)
             val imgUploadPath = ref.child(imgPath)
             val uploadTask = imgUploadPath.putFile(file)
             uploadTask.addOnFailureListener {

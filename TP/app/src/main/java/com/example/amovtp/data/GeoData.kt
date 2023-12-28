@@ -78,11 +78,11 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
     init {
 
         firebaseGeoDataService.startObserverGeoData(
-            onNewLocations = { locMapList ->
+            onNewLocations = { locsMapList ->
 
-                if (locMapList.isNotEmpty()) {
+                if (locsMapList.isNotEmpty()) {
                     val newLocations: MutableList<Location> = mutableListOf()
-                    locMapList.map { i ->
+                    locsMapList.map { i ->
                         firebaseGeoDataService.downloadImages(
                             "locations/" + i["name"],
                             i["imgs"] as List<String>
@@ -105,13 +105,82 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                                     )
                                 )
                             }
-                            if(locMapList.size==newLocations.size)
+                            if (locsMapList.size == newLocations.size)
                                 _locations.value = newLocations.toList()
                         }
                     }
                 }
             },
-            onNewPointsOfInterest = { locPointsList ->
+            onNewPointsOfInterest = { pointsMapList ->
+
+                if (pointsMapList.isNotEmpty()) {
+                    val newPointsOfInterest: MutableList<PointOfInterest> = mutableListOf()
+                    pointsMapList.map { i ->
+
+                        firebaseGeoDataService.downloadImages(
+                            "pointsofinterest/" + i["name"],
+                            i["imgs"] as List<String>
+                        ) { paths ->
+                            if (paths.isNotEmpty()) {
+                                newPointsOfInterest.add(
+                                    PointOfInterest(
+                                        userId = i["userID"] as String,
+                                        name = i["name"] as String,
+                                        description = i["description"] as String,
+                                        lat = i["lat"] as Double,
+                                        long = i["long"] as Double,
+                                        isManualCoords = i["isManualCoords"] as Boolean,
+                                        locations = i["locations"] as List<String>,
+                                        category = i["category"] as String,
+                                        imgs = paths,
+                                        classification = i["classification"] as Double,
+                                        nClassifications = i["nClassifications"] as Long,
+                                        votesForApproval = i["votesForApproval"] as Long,
+                                        isApproved = i["isApproved"] as Boolean,
+                                        votesForRemoval = i["votesForRemoval"] as Long,
+                                        isBeingRemoved = i["isBeingRemoved"] as Boolean
+                                    )
+                                )
+                            }
+                            if (pointsMapList.size == newPointsOfInterest.size)
+                                _pointsOfInterest.value = newPointsOfInterest.toList()
+                        }
+                    }
+                }
+
+            },
+            onNewCategories = { catsMapList ->
+
+                if (catsMapList.isNotEmpty()) {
+                    val newCategories: MutableList<Category> = mutableListOf()
+                    catsMapList.map { i ->
+
+                        firebaseGeoDataService.downloadImages(
+                            "categories/" + i["name"],
+                            i["img"] as List<String>
+                        ) { paths ->
+                            if (paths.isNotEmpty()) {
+                                newCategories.add(
+                                    Category(
+                                        userId = i["userID"] as String,
+                                        name = i["name"] as String,
+                                        description = i["description"] as String,
+                                        img = paths[0],
+                                        votesForApproval = i["votesForApproval"] as Long,
+                                        isApproved = i["isApproved"] as Boolean,
+                                        votesForRemoval = i["votesForRemoval"] as Long,
+                                        isBeingRemoved = i["isBeingRemoved"] as Boolean
+                                    )
+                                )
+                            }
+                            if (catsMapList.size == newCategories.size)
+                                _categories.value = newCategories.toList()
+                        }
+                    }
+                }
+
+            }
+            /*onNewPointsOfInterest = { locPointsList ->
 
                 if (locPointsList.isNotEmpty()) {
                     val newPointsOfInterest = locPointsList.map { i ->
@@ -155,7 +224,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                     _categories.value = newCategories
                 }
 
-            }
+            }*/
         )
 
     }
@@ -189,8 +258,8 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 false
             )
         ) {
-        //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
-         }
+            //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
+        }
 
     }
 
