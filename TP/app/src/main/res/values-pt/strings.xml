@@ -36,6 +36,8 @@
     <string name="not_approved_point">Este ponto de interesse ainda não foi aprovada por pelo menos 2 utilizadores!</string>
     <string name="category_description">Categoria: %1$s</string>
     <string name="name_pw_needed">Nome de utilizador e password necessários</string>
+    <string name="email_needed">Email necessário!</string>
+    <string name="pw_needed">Password necessária!</string>
     <string name="unknown_error">Erro descohecido</string>
     <string name="votes_for_approval">Votos para aprovação: %1$s</string>
     <string name="not_approved_category">Esta categoria ainda não foi aprovada por pelo menos 2 utilizadores!</string>

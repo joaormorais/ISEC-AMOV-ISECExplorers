@@ -43,7 +43,8 @@ fun RegisterScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var showSnackBar by remember { mutableStateOf(false) }
     val unkownError = stringResource(R.string.unknown_error)
-    val fillEveryFieldError = stringResource(R.string.fill_every_field)
+    val emailNeeded = stringResource(R.string.email_needed)
+    val pwNeeded = stringResource(R.string.pw_needed)
     val invalidEmailError = stringResource(R.string.invalid_email)
     val passwordsDontMatchError = stringResource(R.string.pws_dont_match)
 
@@ -95,7 +96,8 @@ fun RegisterScreen(
                             email,
                             password,
                             confirmPassword,
-                            fillEveryFieldError,
+                            emailNeeded,
+                            pwNeeded,
                             invalidEmailError,
                             passwordsDontMatchError
                         )
@@ -105,8 +107,11 @@ fun RegisterScreen(
                     ) {
                         registerViewModel.register(email,password){exception ->
                             if(exception!=null){
-                                Log.d("RegisterScreen", "exception recebida = " + exception.message)
+                                //TODO: mostrar aqui a excecao
+                                Log.d("RegisterScreen",
+                                    "exception recebida = ${exception.message}")
                                 errorMessage = exception.message
+                                showSnackBar = true
                             }else
                                 navController?.navigate(Screens.LOGIN.route)
                         }
@@ -126,16 +131,21 @@ fun isRegisterValid(
     email: String,
     password: String,
     confirmPassword: String,
-    fillEveryFieldError: String,
+    emailNeeded: String,
+    pwNeeded: String,
     invalidEmailError: String,
     passwordsDontMatchError: String,
     errorMessage: (String) -> Unit
 ): Boolean {
 
-
     //TODO: dividir em dois popups -> fazer um para o nome e depois pw
-    if (email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-        errorMessage(fillEveryFieldError)
+    if (email.isBlank()){
+        errorMessage(emailNeeded)
+        return false
+    }
+
+    if(password.isBlank() || confirmPassword.isBlank()) {
+        errorMessage(pwNeeded)
         return false
     }
 

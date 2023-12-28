@@ -48,7 +48,8 @@ fun LoginScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var showSnackBar by remember { mutableStateOf(false) }
     val unkownError = stringResource(R.string.unknown_error)
-    val namePwNeeded = stringResource(R.string.name_pw_needed)
+    val emailNeeded = stringResource(R.string.email_needed)
+    val pwNeeded = stringResource(R.string.pw_needed)
 
     LaunchedEffect(showSnackBar) {
         if (showSnackBar) {
@@ -99,7 +100,8 @@ fun LoginScreen(
                                 if (isLoginValid(
                                         email,
                                         password,
-                                        namePwNeeded
+                                        emailNeeded,
+                                        pwNeeded
                                     )
                                     { msg ->
                                         errorMessage = msg
@@ -107,11 +109,12 @@ fun LoginScreen(
                                 ) {
                                     loginViewModel.login(email, password) { exception ->
                                         if (exception != null) {
+                                            //TODO: Mostrar aqui a excecao
                                             Log.d(
                                                 "LoginScreen",
-                                                "exception recebida = " + exception.message
-                                            )
+                                                "exception recebida =  ${exception.message}")
                                             errorMessage = exception.message
+                                            showSnackBar = true
                                         } else
                                             navController?.navigate(Screens.LOCATIONS.route)
                                     }
@@ -150,13 +153,19 @@ fun LoginScreen(
 fun isLoginValid(
     email: String,
     password: String,
-    namePwNeeded: String,
+    emailNeeded: String,
+    pwNeeded: String,
     errorMessage: (String) -> Unit
 ): Boolean {
 
     //TODO: 2 popups diferentes
-    if (email.isBlank() || password.isBlank()) {
-        errorMessage(namePwNeeded)
+    if (email.isBlank()){
+        errorMessage(emailNeeded)
+        return false
+    }
+
+    if (password.isBlank()){
+        errorMessage(pwNeeded)
         return false
     }
 
