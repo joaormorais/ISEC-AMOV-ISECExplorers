@@ -76,10 +76,8 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
 
 
     init {
-
         firebaseGeoDataService.startObserverGeoData(
             onNewLocations = { locsMapList ->
-
                 if (locsMapList.isNotEmpty()) {
                     val newLocations: MutableList<Location> = mutableListOf()
                     locsMapList.map { i ->
@@ -112,11 +110,9 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 }
             },
             onNewPointsOfInterest = { pointsMapList ->
-
                 if (pointsMapList.isNotEmpty()) {
                     val newPointsOfInterest: MutableList<PointOfInterest> = mutableListOf()
                     pointsMapList.map { i ->
-
                         firebaseGeoDataService.downloadImages(
                             "pointsofinterest/" + i["name"],
                             i["imgs"] as List<String>
@@ -147,14 +143,11 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                         }
                     }
                 }
-
             },
             onNewCategories = { catsMapList ->
-
                 if (catsMapList.isNotEmpty()) {
                     val newCategories: MutableList<Category> = mutableListOf()
                     catsMapList.map { i ->
-
                         firebaseGeoDataService.downloadImages(
                             "categories/" + i["name"],
                             i["img"] as List<String>
@@ -178,55 +171,8 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                         }
                     }
                 }
-
             }
-            /*onNewPointsOfInterest = { locPointsList ->
-
-                if (locPointsList.isNotEmpty()) {
-                    val newPointsOfInterest = locPointsList.map { i ->
-                        PointOfInterest(
-                            userId = i["userID"] as String,
-                            name = i["name"] as String,
-                            description = i["description"] as String,
-                            lat = i["lat"] as Double,
-                            long = i["long"] as Double,
-                            isManualCoords = i["isManualCoords"] as Boolean,
-                            locations = i["locations"] as List<String>,
-                            category = i["category"] as String,
-                            imgs = i["imgs"] as List<String>,
-                            classification = i["classification"] as Double,
-                            nClassifications = i["nClassifications"] as Long,
-                            votesForApproval = i["votesForApproval"] as Long,
-                            isApproved = i["isApproved"] as Boolean,
-                            votesForRemoval = i["votesForRemoval"] as Long,
-                            isBeingRemoved = i["isBeingRemoved"] as Boolean
-                        )
-                    }
-                    _pointsOfInterest.value = newPointsOfInterest
-                }
-
-            },
-            onNewCategories = { locCatsList ->
-
-                if (locCatsList.isNotEmpty()) {
-                    val newCategories = locCatsList.map { i ->
-                        Category(
-                            userId = i["userID"] as String,
-                            name = i["name"] as String,
-                            description = i["description"] as String,
-                            img = i["img"] as String,
-                            votesForApproval = i["votesForApproval"] as Long,
-                            isApproved = i["isApproved"] as Boolean,
-                            votesForRemoval = i["votesForRemoval"] as Long,
-                            isBeingRemoved = i["isBeingRemoved"] as Boolean
-                        )
-                    }
-                    _categories.value = newCategories
-                }
-
-            }*/
         )
-
     }
 
     /* ------------------------  Add, remove, and edit info (Start) ------------------------ */
@@ -332,6 +278,30 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
 
     }
 
+    fun editLocation(
+        locationName:String
+    ){
+        firebaseGeoDataService.updateLocationToFirestore(locationName,_locations.value.find { it.name == locationName }){
+            //TODO: tratar a exception
+        }
+    }
+
+    fun editPointOfInterest(
+        pointOfInterestName:String
+    ){
+        firebaseGeoDataService.updatePointOfInterestToFirestore(pointOfInterestName,_pointsOfInterest.value.find { it.name == pointOfInterestName }){
+            //TODO: tratar a exception
+        }
+    }
+
+    fun editCategory(
+        categoryName:String
+    ){
+        firebaseGeoDataService.updateCategoryToFirestore(categoryName,_categories.value.find { it.name == categoryName }){
+            //TODO: tratar a exception
+        }
+    }
+
     /* ------------------------  Add, remove, and edit info (End) ------------------------ */
 
     /* ------------------------  Location approval (Start) ------------------------ */
@@ -341,6 +311,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
 
     fun removeVoteForApprovalLocation(locationName: String) {
         _locations.value.find { it.name == locationName }?.apply { votesForApproval-- }
+
     }
 
     fun approveLocation(locationName: String) {
@@ -354,23 +325,19 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
 
     /* ------------------------  Point of interest approval (Start) ------------------------ */
     fun voteForApprovalPointOfInterest(pointOfInterestName: String) {
-        _pointsOfInterest.value.find { it.name == pointOfInterestName }
-            ?.apply { votesForApproval++ }
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.apply { votesForApproval++ }
     }
 
     fun removeVoteForApprovalPointOfInterest(pointOfInterestName: String) {
-        _pointsOfInterest.value.find { it.name == pointOfInterestName }
-            ?.apply { votesForApproval-- }
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.apply { votesForApproval-- }
     }
 
     fun approvePointOfInterest(pointOfInterestName: String) {
-        _pointsOfInterest.value.find { it.name == pointOfInterestName }
-            ?.apply { isApproved = true }
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.apply { isApproved = true }
     }
 
     fun disapprovePointOfInterest(pointOfInterestName: String) {
-        _pointsOfInterest.value.find { it.name == pointOfInterestName }
-            ?.apply { isApproved = false }
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.apply { isApproved = false }
     }
     /* ------------------------  Point of interest approval (End) ------------------------ */
 

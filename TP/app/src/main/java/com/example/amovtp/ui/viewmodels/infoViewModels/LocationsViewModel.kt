@@ -83,11 +83,14 @@ class LocationsViewModel(
         userData.addLocationApproved(locationName)
         if (geoData.locations.value.find { it.name == locationName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
             geoData.approveLocation(locationName)
+
+        geoData.editLocation(locationName)
     }
 
     fun removeVoteForApprovalLocationByUser(locationName: String) {
         geoData.removeVoteForApprovalLocation(locationName)
         userData.removeLocationApproved(locationName)
+        geoData.editLocation(locationName)
     }
 
 }

@@ -67,8 +67,8 @@ class FirebaseGeoDataService {
 
     fun addLocationToFirestore(newLocation: Location, onResult: (Throwable?) -> Unit) {
         val db = Firebase.firestore
-        uploadImages("locations/" + newLocation.name, newLocation.imgs){paths->
-            if(paths.isNotEmpty()){
+        uploadImages("locations/" + newLocation.name, newLocation.imgs) { paths ->
+            if (paths.isNotEmpty()) {
                 val locationToCloud = hashMapOf(
                     "userID" to newLocation.userId,
                     "name" to newLocation.name,
@@ -88,7 +88,6 @@ class FirebaseGeoDataService {
                         onResult(result.exception)
                     }
             }
-
         }
     }
 
@@ -97,7 +96,10 @@ class FirebaseGeoDataService {
         onResult: (Throwable?) -> Unit
     ) {
         val db = Firebase.firestore
-        uploadImages("pointsofinterest/" + newPointOfInterest.name, newPointOfInterest.imgs) { paths ->
+        uploadImages(
+            "pointsofinterest/" + newPointOfInterest.name,
+            newPointOfInterest.imgs
+        ) { paths ->
             if (paths.isNotEmpty()) {
                 val pointOfInterestToCloud = hashMapOf(
                     "userID" to newPointOfInterest.userId,
@@ -149,7 +151,7 @@ class FirebaseGeoDataService {
 
     fun updateLocationToFirestore(
         currentLocationName: String,
-        updatedLocation: Location,
+        updatedLocation: Location?,
         onResult: (Throwable?) -> Unit
     ) {
         val db = Firebase.firestore
@@ -160,46 +162,50 @@ class FirebaseGeoDataService {
             if (doc.exists()) {
                 Log.d("Firebase", "doc existe!")
                 val data = doc.data
-                if (data?.get("name") != updatedLocation.name) {
-                    transaction.update(document, "name", updatedLocation.name)
+                if (data?.get("name") != updatedLocation?.name) {
+                    transaction.update(document, "name", updatedLocation?.name)
                 }
-                if (data?.get("description") != updatedLocation.description) {
-                    transaction.update(document, "description", updatedLocation.description)
+                if (data?.get("description") != updatedLocation?.description) {
+                    transaction.update(document, "description", updatedLocation?.description)
                 }
-                if (data?.get("lat") != updatedLocation.lat) {
-                    transaction.update(document, "lat", updatedLocation.lat)
+                if (data?.get("lat") != updatedLocation?.lat) {
+                    transaction.update(document, "lat", updatedLocation?.lat)
                 }
-                if (data?.get("long") != updatedLocation.long) {
-                    transaction.update(document, "long", updatedLocation.long)
+                if (data?.get("long") != updatedLocation?.long) {
+                    transaction.update(document, "long", updatedLocation?.long)
                 }
-                if (data?.get("isManualCoords") != updatedLocation.isManualCoords) {
-                    transaction.update(document, "isManualCoords", updatedLocation.isManualCoords)
+                if (data?.get("isManualCoords") != updatedLocation?.isManualCoords) {
+                    transaction.update(document, "isManualCoords", updatedLocation?.isManualCoords)
                 }
-                if (data?.get("pointsOfInterest") != updatedLocation.pointsOfInterest) {
+                if (data?.get("pointsOfInterest") != updatedLocation?.pointsOfInterest) {
                     transaction.update(
                         document,
                         "pointsOfInterest",
-                        updatedLocation.pointsOfInterest
+                        updatedLocation?.pointsOfInterest
                     )
                 }
-                if (data?.get("imgs") != updatedLocation.imgs) {
-                    transaction.update(document, "imgs", updatedLocation.imgs)
-                }
-                if (data?.get("votesForApproval") != updatedLocation.votesForApproval) {
+                /*if (data?.get("imgs") != updatedLocation?.imgs) {
+                    transaction.update(document, "imgs", updatedLocation?.imgs)
+                }*/
+                if (data?.get("votesForApproval") != updatedLocation?.votesForApproval) {
                     transaction.update(
                         document,
                         "votesForApproval",
-                        updatedLocation.votesForApproval
+                        updatedLocation?.votesForApproval
                     )
                 }
-                if (data?.get("isApproved") != updatedLocation.isApproved) {
-                    transaction.update(document, "isApproved", updatedLocation.isApproved)
+                if (data?.get("isApproved") != updatedLocation?.isApproved) {
+                    transaction.update(document, "isApproved", updatedLocation?.isApproved)
                 }
-                if (data?.get("votesForRemoval") != updatedLocation.votesForRemoval) {
-                    transaction.update(document, "votesForRemoval", updatedLocation.votesForRemoval)
+                if (data?.get("votesForRemoval") != updatedLocation?.votesForRemoval) {
+                    transaction.update(
+                        document,
+                        "votesForRemoval",
+                        updatedLocation?.votesForRemoval
+                    )
                 }
-                if (data?.get("isBeingRemoved") != updatedLocation.isBeingRemoved) {
-                    transaction.update(document, "isBeingRemoved", updatedLocation.isBeingRemoved)
+                if (data?.get("isBeingRemoved") != updatedLocation?.isBeingRemoved) {
+                    transaction.update(document, "isBeingRemoved", updatedLocation?.isBeingRemoved)
                 }
                 null
             } else
@@ -212,6 +218,152 @@ class FirebaseGeoDataService {
         }
     }
 
+    fun updatePointOfInterestToFirestore(
+        currentPointOfInterestName: String,
+        updatedPointOfInterest: PointOfInterest?,
+        onResult: (Throwable?) -> Unit
+    ) {
+        val db = Firebase.firestore
+        val document = db.collection("GeoDataPointsOfInterest").document(currentPointOfInterestName)
+
+        db.runTransaction { transaction ->
+            val doc = transaction.get(document)
+            if (doc.exists()) {
+                Log.d("Firebase", "doc existe!")
+                val data = doc.data
+                if (data?.get("name") != updatedPointOfInterest?.name) {
+                    transaction.update(document, "name", updatedPointOfInterest?.name)
+                }
+                if (data?.get("description") != updatedPointOfInterest?.description) {
+                    transaction.update(document, "description", updatedPointOfInterest?.description)
+                }
+                if (data?.get("lat") != updatedPointOfInterest?.lat) {
+                    transaction.update(document, "lat", updatedPointOfInterest?.lat)
+                }
+                if (data?.get("long") != updatedPointOfInterest?.long) {
+                    transaction.update(document, "long", updatedPointOfInterest?.long)
+                }
+                if (data?.get("isManualCoords") != updatedPointOfInterest?.isManualCoords) {
+                    transaction.update(
+                        document,
+                        "isManualCoords",
+                        updatedPointOfInterest?.isManualCoords
+                    )
+                }
+                if (data?.get("locations") != updatedPointOfInterest?.locations) {
+                    transaction.update(document, "locations", updatedPointOfInterest?.locations)
+                }
+                if (data?.get("category") != updatedPointOfInterest?.category) {
+                    transaction.update(document, "category", updatedPointOfInterest?.category)
+                }
+                /*if (data?.get("imgs") != updatedPointOfInterest?.imgs) {
+                    transaction.update(document, "imgs", updatedPointOfInterest?.imgs)
+                }*/
+                if (data?.get("classification") != updatedPointOfInterest?.classification) {
+                    transaction.update(
+                        document,
+                        "classification",
+                        updatedPointOfInterest?.classification
+                    )
+                }
+                if (data?.get("nClassifications") != updatedPointOfInterest?.nClassifications) {
+                    transaction.update(
+                        document,
+                        "nClassifications",
+                        updatedPointOfInterest?.nClassifications
+                    )
+                }
+                if (data?.get("votesForApproval") != updatedPointOfInterest?.votesForApproval) {
+                    transaction.update(
+                        document,
+                        "votesForApproval",
+                        updatedPointOfInterest?.votesForApproval
+                    )
+                }
+                if (data?.get("isApproved") != updatedPointOfInterest?.isApproved) {
+                    transaction.update(document, "isApproved", updatedPointOfInterest?.isApproved)
+                }
+                if (data?.get("votesForRemoval") != updatedPointOfInterest?.votesForRemoval) {
+                    transaction.update(
+                        document,
+                        "votesForRemoval",
+                        updatedPointOfInterest?.votesForRemoval
+                    )
+                }
+                if (data?.get("isBeingRemoved") != updatedPointOfInterest?.isBeingRemoved) {
+                    transaction.update(
+                        document,
+                        "isBeingRemoved",
+                        updatedPointOfInterest?.isBeingRemoved
+                    )
+                }
+                null
+            } else
+                throw FirebaseFirestoreException(
+                    "Doesn't exist",
+                    FirebaseFirestoreException.Code.UNAVAILABLE
+                )
+        }.addOnCompleteListener { result ->
+            onResult(result.exception)
+        }
+    }
+
+    fun updateCategoryToFirestore(
+        currentCategoryName: String,
+        updatedCategory: Category?,
+        onResult: (Throwable?) -> Unit
+    ) {
+        val db = Firebase.firestore
+        val document = db.collection("GeoDataPointsOfInterest").document(currentCategoryName)
+
+        db.runTransaction { transaction ->
+            val doc = transaction.get(document)
+            if (doc.exists()) {
+                Log.d("Firebase", "doc existe!")
+                val data = doc.data
+                if (data?.get("name") != updatedCategory?.name) {
+                    transaction.update(document, "name", updatedCategory?.name)
+                }
+                if (data?.get("description") != updatedCategory?.description) {
+                    transaction.update(document, "description", updatedCategory?.description)
+                }
+                /*if (data?.get("img") != updatedCategory?.img) {
+                    transaction.update(document, "img", updatedCategory?.img)
+                }*/
+                if (data?.get("votesForApproval") != updatedCategory?.votesForApproval) {
+                    transaction.update(
+                        document,
+                        "votesForApproval",
+                        updatedCategory?.votesForApproval
+                    )
+                }
+                if (data?.get("isApproved") != updatedCategory?.isApproved) {
+                    transaction.update(document, "isApproved", updatedCategory?.isApproved)
+                }
+                if (data?.get("votesForRemoval") != updatedCategory?.votesForRemoval) {
+                    transaction.update(
+                        document,
+                        "votesForRemoval",
+                        updatedCategory?.votesForRemoval
+                    )
+                }
+                if (data?.get("isBeingRemoved") != updatedCategory?.isBeingRemoved) {
+                    transaction.update(
+                        document,
+                        "isBeingRemoved",
+                        updatedCategory?.isBeingRemoved
+                    )
+                }
+                null
+            } else
+                throw FirebaseFirestoreException(
+                    "Doesn't exist",
+                    FirebaseFirestoreException.Code.UNAVAILABLE
+                )
+        }.addOnCompleteListener { result ->
+            onResult(result.exception)
+        }
+    }
 
     fun uploadImages(
         folder: String,
@@ -220,7 +372,6 @@ class FirebaseGeoDataService {
     ) { //https://firebase.google.com/docs/storage/android/upload-files
         val ref = Firebase.storage.reference.child(folder)
         val returnPaths: MutableList<String> = mutableListOf()
-
         imgsToUpload.forEachIndexed { index, img ->
             val file = Uri.fromFile(File(img))
             val imgPath = "img" + (index + 1)
@@ -230,7 +381,7 @@ class FirebaseGeoDataService {
                 onResult(emptyList())
             }.addOnSuccessListener {
                 returnPaths.add(imgPath)
-                if(returnPaths.size==imgsToUpload.size)
+                if (returnPaths.size == imgsToUpload.size)
                     onResult(returnPaths)
             }
         }
@@ -243,10 +394,8 @@ class FirebaseGeoDataService {
     ) {
         val ref = Firebase.storage.reference.child(folder)
         val returnPaths: MutableList<String> = mutableListOf()
-
         imgsPathSearch.forEachIndexed { index, img ->
             val fileReference = ref.child(img)
-            Log.d("FirebaseGeoDataService", "fileReference = " + fileReference)
             fileReference.downloadUrl.addOnSuccessListener { uri ->
                 returnPaths.add(uri.toString())
                 if (returnPaths.size == imgsPathSearch.size)
@@ -257,12 +406,31 @@ class FirebaseGeoDataService {
         }
     }
 
-    /*fun removeDataFromFirestore(onResult: (Throwable?) -> Unit) {
+    fun removeLocationFromFirestore(
+        locationName: String,
+        onResult: (Throwable?) -> Unit
+    ) {
         val db = Firebase.firestore
-        val v = db.collection("Scores").document("Level1")
+        val v = db.collection("GeoDataLocations").document(locationName)
+        v.delete().addOnCompleteListener { onResult(it.exception) }
+    }
 
-        v.delete()
-            .addOnCompleteListener { onResult(it.exception) }
-    }*/
+    fun removePointsOfInterestFromFirestore(
+        pointOfInterestName: String,
+        onResult: (Throwable?) -> Unit
+    ) {
+        val db = Firebase.firestore
+        val v = db.collection("GeoDataPointsOfInterest").document(pointOfInterestName)
+        v.delete().addOnCompleteListener { onResult(it.exception) }
+    }
+
+    fun removeCategoryFromFirestore(
+        categoryName: String,
+        onResult: (Throwable?) -> Unit
+    ) {
+        val db = Firebase.firestore
+        val v = db.collection("GeoDataCategories").document(categoryName)
+        v.delete().addOnCompleteListener { onResult(it.exception) }
+    }
 
 }
