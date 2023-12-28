@@ -5,17 +5,6 @@ import androidx.compose.ui.graphics.Color
 class Consts {
     companion object {
 
-        const val TITLE_LOCATIONS : String = "Explore Locations"
-        const val TITLE_POINTS_OF_INTEREST: String = "Explore Points Of Interest"
-        const val TITLE_CATEGORIES: String = "Available Categories"
-        const val TITLE_LOGIN: String = "Login to continue..."
-        const val TITLE_ADD_LOCATION: String = "Add a new Location"
-        const val TITLE_ADD_POINT_OF_INTEREST: String= "Add a new Point Of Interest"
-        const val TITLE_ADD_CATEGORY: String = "Add a new Category"
-        const val TITLE_EDIT_LOCATION: String = "Edit Location"
-        const val TITLE_EDIT_POINT_OF_INTEREST: String = "Edit Point Of Interest"
-        const val TITLE_EDIT_CATEGORY: String = "Edit Category"
-        const val TITLE_CREDITOS: String = "Créditos"
         const val POINTS_OF_INTEREST: String = "Points of Interest"
         const val DEFAULT_VALUE: String = "DEFAULT_VALUE"
         const val ALL_LOCATIONS: String = "ALL_LOCATIONS"

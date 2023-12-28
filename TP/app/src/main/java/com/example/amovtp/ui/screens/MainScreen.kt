@@ -31,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.amovtp.MyApplication
+import com.example.amovtp.R
 import com.example.amovtp.ui.screens.addScreens.AddCategoryScreen
 import com.example.amovtp.ui.screens.addScreens.AddLocationScreen
 import com.example.amovtp.ui.screens.addScreens.AddPointOfInterestScreen
@@ -96,6 +97,18 @@ fun MainScreen(
     var addCategory by remember { mutableStateOf(false) }
     var screenTitle by remember { mutableStateOf("") }
 
+    val loginTitle = stringResource(R.string.title_login)
+    val locationTitle = stringResource(R.string.title_locations)
+    val pointOfInterestTitle = stringResource(R.string.title_points_of_interest)
+    val categoriesTitle = stringResource(R.string.title_categories)
+    val addLocationTitle = stringResource(R.string.title_add_location)
+    val addPointOfInterestTitle = stringResource(R.string.title_add_point_of_interest)
+    val addCategoryTitle = stringResource(R.string.title_add_category)
+    val editLocationTitle = stringResource(R.string.title_edit_location)
+    val editPointOfInterestTitle = stringResource(R.string.title_edit_point_of_interest)
+    val editCategoryTitle = stringResource(R.string.title_edit_category)
+    val creditsTitle = stringResource(R.string.title_credits)
+
 //    navController.addOnDestinationChangedListener { controller, destination, arguments ->
 //        isLogin = (destination.route == Screens.LOGIN.route)
 //        isLocation = (destination.route == Screens.LOCATIONS.route)
@@ -117,37 +130,37 @@ fun MainScreen(
 
         when(destination.route){
             Screens.LOGIN.route -> {
-                screenTitle = Consts.TITLE_LOGIN
+                screenTitle = loginTitle
             }
             Screens.LOCATIONS.route -> {
-                screenTitle = Consts.TITLE_LOCATIONS
+                screenTitle = locationTitle
             }
             Screens.POINTS_OF_INTEREST.route -> {
-                screenTitle = Consts.TITLE_POINTS_OF_INTEREST
+                screenTitle = pointOfInterestTitle
             }
             Screens.CATEGORIES.route -> {
-                screenTitle = Consts.TITLE_CATEGORIES
+                screenTitle = categoriesTitle
             }
             Screens.ADD_LOCATION.route -> {
-                screenTitle = Consts.TITLE_ADD_LOCATION
+                screenTitle = addLocationTitle
             }
             Screens.ADD_POINT_OF_INTEREST.route -> {
-                screenTitle = Consts.TITLE_ADD_POINT_OF_INTEREST
+                screenTitle = addPointOfInterestTitle
             }
             Screens.ADD_CATEGORY.route -> {
-                screenTitle = Consts.TITLE_ADD_CATEGORY
+                screenTitle = addCategoryTitle
             }
             Screens.EDIT_LOCATIONS.route -> {
-                screenTitle = Consts.TITLE_EDIT_LOCATION
+                screenTitle = editLocationTitle
             }
             Screens.EDIT_POINT_OF_INTEREST.route -> {
-                screenTitle = Consts.TITLE_EDIT_POINT_OF_INTEREST
+                screenTitle = editPointOfInterestTitle
             }
             Screens.EDIT_CATEGORY.route -> {
-                screenTitle = Consts.TITLE_EDIT_CATEGORY
+                screenTitle = editCategoryTitle
             }
             Screens.CREDITS.route -> {
-                screenTitle = Consts.TITLE_CREDITOS
+                screenTitle = creditsTitle
             }
             else -> {
                 screenTitle = destination.route.toString()

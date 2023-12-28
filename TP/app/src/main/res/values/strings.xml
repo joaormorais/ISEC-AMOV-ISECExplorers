@@ -61,4 +61,15 @@
     <string name="error_existing_name">Error: This name already exists!</string>
     <string name="error_existing_pi">Error: This Point of Interest already exists!</string>
     <string name="error_existing_location">Error: This Location already exists!</string>
+    <string name="title_locations">Explore Locations</string>
+    <string name="title_points_of_interest">Explore Points Of Interest</string>
+    <string name="title_categories">Available Categories</string>
+    <string name="title_login">Login to continue...</string>
+    <string name="title_add_location">Add a new Location</string>
+    <string name="title_add_point_of_interest">Add a new Point Of Interest</string>
+    <string name="title_add_category">Add a new Category</string>
+    <string name="title_edit_location">Edit Location</string>
+    <string name="title_edit_point_of_interest">Edit Point Of Interest</string>
+    <string name="title_edit_category">Edit Category</string>
+    <string name="title_credits">Credits</string>
 </resources>
