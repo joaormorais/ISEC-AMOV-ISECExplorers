@@ -310,7 +310,7 @@ fun LocationsScreen(
                                         } else {
                                             Spacer(modifier.height(8.dp))
                                             Button(
-                                                onClick = {/*TODO: jump para o ecra de editar*/ },
+                                                onClick = { navController?.navigate("EditLocation?itemName=${it.name}") },
                                             ) {
                                                 Row {
                                                     Text(stringResource(R.string.edit))

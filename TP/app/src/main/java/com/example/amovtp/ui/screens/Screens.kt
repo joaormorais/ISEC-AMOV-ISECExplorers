@@ -8,10 +8,10 @@ enum class Screens(val path: String) {
     CATEGORIES("Categories"),
     ADD_LOCATION("AddLocation"),
     ADD_POINT_OF_INTEREST("AddPointOfInterest"),
-    ADD_CATEGORY("AddCategory");
-
-    /*val route: String
-        get() = this.toString()*/
+    ADD_CATEGORY("AddCategory"),
+    EDIT_LOCATIONS("EditLocation?itemName={itemName}"),
+    EDIT_POINT_OF_INTEREST("EditPointOfInterest?itemName={itemName}"),
+    EDIT_CATEGORY("EditCategory?itemName={itemName}");
 
     val route: String
         get() = this.path

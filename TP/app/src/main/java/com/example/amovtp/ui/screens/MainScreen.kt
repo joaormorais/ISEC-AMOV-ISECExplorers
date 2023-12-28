@@ -33,6 +33,9 @@ import com.example.amovtp.MyApplication
 import com.example.amovtp.ui.screens.addScreens.AddCategoryScreen
 import com.example.amovtp.ui.screens.addScreens.AddLocationScreen
 import com.example.amovtp.ui.screens.addScreens.AddPointOfInterestScreen
+import com.example.amovtp.ui.screens.editScreens.EditCategoryScreen
+import com.example.amovtp.ui.screens.editScreens.EditLocationScreen
+import com.example.amovtp.ui.screens.editScreens.EditPointOfInterestScreen
 import com.example.amovtp.ui.screens.infoScreens.CategoriesScreen
 import com.example.amovtp.ui.screens.infoScreens.LocationsScreen
 import com.example.amovtp.ui.screens.infoScreens.PointsOfInterestScreen
@@ -45,6 +48,12 @@ import com.example.amovtp.ui.viewmodels.addViewModels.AddLocationViewModel
 import com.example.amovtp.ui.viewmodels.addViewModels.AddLocationViewModelFactory
 import com.example.amovtp.ui.viewmodels.addViewModels.AddPointOfInterestViewModel
 import com.example.amovtp.ui.viewmodels.addViewModels.AddPointOfInterestViewModelFactory
+import com.example.amovtp.ui.viewmodels.editViewModels.EditCategoryViewModel
+import com.example.amovtp.ui.viewmodels.editViewModels.EditCategoryViewModelFactory
+import com.example.amovtp.ui.viewmodels.editViewModels.EditLocationViewModel
+import com.example.amovtp.ui.viewmodels.editViewModels.EditLocationViewModelFactory
+import com.example.amovtp.ui.viewmodels.editViewModels.EditPointOfInterestViewModel
+import com.example.amovtp.ui.viewmodels.editViewModels.EditPointOfInterestViewModelFactory
 import com.example.amovtp.ui.viewmodels.infoViewModels.CategoriesViewModel
 import com.example.amovtp.ui.viewmodels.infoViewModels.CategoriesViewModelFactory
 import com.example.amovtp.ui.viewmodels.infoViewModels.LocationsViewModel
@@ -75,6 +84,9 @@ fun MainScreen(
     var addLocationViewModel: AddLocationViewModel?
     var addPointOfInterestViewModel: AddPointOfInterestViewModel?
     var addCategoryViewModel: AddCategoryViewModel?
+    var editLocationViewModel: EditLocationViewModel?
+    var editPointOfInterestViewModel: EditPointOfInterestViewModel?
+    var editCategoryViewModel: EditCategoryViewModel?
 
     var isLogin by remember { mutableStateOf(false) }
     var isLocation by remember { mutableStateOf(false) }
@@ -236,7 +248,7 @@ fun MainScreen(
                                     app.userData
                                 )
                             )
-                        CategoriesScreen(categoriesViewModel!!)
+                        CategoriesScreen(categoriesViewModel!!, navController)
                     }
 
                     composable(Screens.ADD_LOCATION.route) {
@@ -270,6 +282,78 @@ fun MainScreen(
                                 )
                             )
                         AddCategoryScreen(addCategoryViewModel!!, navController)
+                    }
+
+                    composable(Screens.EDIT_LOCATIONS.route,
+                        arguments = listOf(
+                            navArgument("itemName") {
+                                type = NavType.StringType
+                                defaultValue = Consts.DEFAULT_VALUE
+                                nullable = false
+                            }
+                        )
+                    ) {
+
+                        val itemName = it.arguments?.getString("itemName")
+                        editLocationViewModel =
+                            viewModel(
+                                factory = EditLocationViewModelFactory(
+                                    app.geoData
+                                )
+                            )
+                        EditLocationScreen(
+                            editLocationViewModel!!,
+                            itemName!!,
+                            navController
+                        )
+                    }
+
+                    composable(Screens.EDIT_POINT_OF_INTEREST.route,
+                        arguments = listOf(
+                            navArgument("itemName") {
+                                type = NavType.StringType
+                                defaultValue = Consts.DEFAULT_VALUE
+                                nullable = false
+                            }
+                        )
+                    ) {
+
+                        val itemName = it.arguments?.getString("itemName")
+                        editPointOfInterestViewModel =
+                            viewModel(
+                                factory = EditPointOfInterestViewModelFactory(
+                                    app.geoData
+                                )
+                            )
+                        EditPointOfInterestScreen(
+                            editPointOfInterestViewModel!!,
+                            itemName!!,
+                            navController
+                        )
+                    }
+
+                    composable(Screens.EDIT_CATEGORY.route,
+                        arguments = listOf(
+                            navArgument("itemName") {
+                                type = NavType.StringType
+                                defaultValue = Consts.DEFAULT_VALUE
+                                nullable = false
+                            }
+                        )
+                    ) {
+
+                        val itemName = it.arguments?.getString("itemName")
+                        editCategoryViewModel =
+                            viewModel(
+                                factory = EditCategoryViewModelFactory(
+                                    app.geoData
+                                )
+                            )
+                        EditCategoryScreen(
+                            editCategoryViewModel!!,
+                            itemName!!,
+                            navController
+                        )
                     }
 
                 }

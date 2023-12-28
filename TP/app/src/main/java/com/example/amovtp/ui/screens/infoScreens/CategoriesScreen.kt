@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.amovtp.R
 import com.example.amovtp.ui.viewmodels.infoViewModels.CategoriesViewModel
@@ -46,6 +47,7 @@ import com.example.amovtp.utils.Consts
 @Composable
 fun CategoriesScreen(
     categoriesViewModel: CategoriesViewModel,
+    navController: NavHostController?,
     modifier: Modifier = Modifier
 ) {
 
@@ -210,7 +212,7 @@ fun CategoriesScreen(
                                         }else {
                                             Spacer(modifier.height(8.dp))
                                             Button(
-                                                onClick = {/*TODO: jump para o ecra de editar*/ },
+                                                onClick = {navController?.navigate("EditCategory?itemName=${it.name}") },
                                             ) {
                                                 Row {
                                                     Text(stringResource(R.string.edit))
