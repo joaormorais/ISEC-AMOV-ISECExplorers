@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.Category
 import com.example.amovtp.data.GeoData
+import com.example.amovtp.data.LocalUser
 import com.example.amovtp.data.Location
 import com.example.amovtp.data.PointOfInterest
 import com.example.amovtp.data.UserData
@@ -68,6 +69,9 @@ class PointsOfInterestViewModel(
         return listOfCurrentPoints.filter { it.category == categoryName }
     }
 
+    fun getLocalUser(): MutableState<LocalUser> {
+        return userData.localUser
+    }
 
     fun getCurrentLocation(): MutableLiveData<android.location.Location> {
         return userData.currentLocation

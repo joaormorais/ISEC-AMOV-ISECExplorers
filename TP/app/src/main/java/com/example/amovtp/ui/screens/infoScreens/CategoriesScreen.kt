@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.material3.Button
@@ -25,6 +26,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,7 +49,15 @@ fun CategoriesScreen(
     modifier: Modifier = Modifier
 ) {
 
+    // info for the card
     val categories by remember { categoriesViewModel.getCategories() }
+
+    // info for the buttons in the card
+    val localUserDM = categoriesViewModel.getLocalUser()
+    var currentUserId by remember { mutableStateOf("") }
+    LaunchedEffect(key1 = localUserDM.value, block = {
+        currentUserId = localUserDM.value.userId
+    })
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -153,45 +163,65 @@ fun CategoriesScreen(
                                         ),
                                         fontSize = 12.sp
                                     )
-                                    if (!isVotedByUser) {
-                                        Spacer(modifier.height(8.dp))
-                                        Button(
-                                            onClick = {
-                                                isVotedByUser = true
-                                                categoriesViewModel.voteForApprovalCategoryByUser(it.name)
-                                                isCategoryApproved = it.isApproved
-                                            },
-                                        ) {
-                                            Row {
-                                                Text(stringResource(R.string.approve))
-                                                Icon(
-                                                    Icons.Rounded.ThumbUp,
-                                                    "Approve",
-                                                    modifier = modifier.padding(start = 8.dp)
-                                                )
+
+                                    if (currentUserId != "")
+                                        if (currentUserId != it.userId) {
+                                            if (!isVotedByUser) {
+                                                Spacer(modifier.height(8.dp))
+                                                Button(
+                                                    onClick = {
+                                                        isVotedByUser = true
+                                                        categoriesViewModel.voteForApprovalCategoryByUser(
+                                                            it.name
+                                                        )
+                                                        isCategoryApproved = it.isApproved
+                                                    },
+                                                ) {
+                                                    Row {
+                                                        Text(stringResource(R.string.approve))
+                                                        Icon(
+                                                            Icons.Rounded.ThumbUp,
+                                                            "Approve",
+                                                            modifier = modifier.padding(start = 8.dp)
+                                                        )
+                                                    }
+                                                }
+                                            } else {
+                                                Spacer(modifier.height(8.dp))
+                                                Button(
+                                                    onClick = {
+                                                        isVotedByUser = false
+                                                        categoriesViewModel.removeVoteForApprovalCategoryByUser(
+                                                            it.name
+                                                        )
+                                                        isCategoryApproved = it.isApproved
+                                                    },
+                                                ) {
+                                                    Row {
+                                                        Text(stringResource(R.string.disapprove))
+                                                        Icon(
+                                                            Icons.Rounded.Close,
+                                                            "Disapprove",
+                                                            modifier = modifier.padding(start = 8.dp)
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }else {
+                                            Spacer(modifier.height(8.dp))
+                                            Button(
+                                                onClick = {/*TODO: jump para o ecra de editar*/ },
+                                            ) {
+                                                Row {
+                                                    Text(stringResource(R.string.edit))
+                                                    Icon(
+                                                        Icons.Rounded.Edit,
+                                                        "Edit",
+                                                        modifier = modifier.padding(start = 8.dp)
+                                                    )
+                                                }
                                             }
                                         }
-                                    } else {
-                                        Spacer(modifier.height(8.dp))
-                                        Button(
-                                            onClick = {
-                                                isVotedByUser = false
-                                                categoriesViewModel.removeVoteForApprovalCategoryByUser(
-                                                    it.name
-                                                )
-                                                isCategoryApproved = it.isApproved
-                                            },
-                                        ) {
-                                            Row {
-                                                Text(stringResource(R.string.disapprove))
-                                                Icon(
-                                                    Icons.Rounded.Close,
-                                                    "Disapprove",
-                                                    modifier = modifier.padding(start = 8.dp)
-                                                )
-                                            }
-                                        }
-                                    }
                                     Spacer(modifier.height(8.dp))
                                 }
                             }
@@ -201,5 +231,4 @@ fun CategoriesScreen(
             }
         }
     }
-
 }

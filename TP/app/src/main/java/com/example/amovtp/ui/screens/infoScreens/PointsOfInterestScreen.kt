@@ -1,5 +1,6 @@
 package com.example.amovtp.ui.screens.infoScreens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
@@ -55,6 +57,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.amovtp.R
+import com.example.amovtp.data.Location
+import com.example.amovtp.data.PointOfInterest
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuFilters
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuOrders
 import com.example.amovtp.ui.screens.Screens
@@ -75,9 +79,13 @@ fun PointsOfInterestScreen(
     modifier: Modifier = Modifier
 ) {
 
+    // utils for the lazy column
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+
+    // utils for the dropdown menus and open street map
     var isHelperExpanded by remember { mutableStateOf(false) }
+    val locations by remember { pointsOfInterestViewModel.getLocations() }
     val currentLocation by remember { mutableStateOf(pointsOfInterestViewModel.getCurrentLocation()) }
     var geoPoint by remember {
         mutableStateOf(
@@ -87,16 +95,25 @@ fun PointsOfInterestScreen(
             )
         )
     }
-    val locations by remember { pointsOfInterestViewModel.getLocations() }
+
+    // info for the card
     val pointsOfInterestDM = pointsOfInterestViewModel.getPointsOfInterest()
     var pointsOfInterestUI by remember {
-        mutableStateOf(pointsOfInterestViewModel.getPointsOfInterest().value)
+        mutableStateOf<List<PointOfInterest>>(emptyList())
     }
     LaunchedEffect(key1 = pointsOfInterestDM.value, block = {
-        pointsOfInterestUI=pointsOfInterestDM.value
+        pointsOfInterestUI = pointsOfInterestDM.value.toList()
     })
 
-    LaunchedEffect(key1 = itemName) {
+    // info for the buttons in the card
+    val localUserDM = pointsOfInterestViewModel.getLocalUser()
+    var currentUserId by remember { mutableStateOf("") }
+    LaunchedEffect(key1 = localUserDM.value, block = {
+        currentUserId = localUserDM.value.userId
+    })
+
+    // info for the filter of a unnique location
+    LaunchedEffect(key1 = itemName) { //TODO: ver se de facto é preciso um LaunchedEffet, ou não
         if (itemName != Consts.DEFAULT_VALUE) {
             pointsOfInterestUI = pointsOfInterestViewModel.getPointsFromLocation(itemName)
             val tempLoc = locations.find { it.name == itemName }
@@ -377,7 +394,6 @@ fun PointsOfInterestScreen(
                                 )
                                 Spacer(modifier.height(8.dp))
                                 if (!isPointOfInterestApproved) {
-                                    //TODO: quem criou o ponto não deve poder aprovar o mesmo
                                     Divider(color = Color.DarkGray, thickness = 1.dp)
                                     Spacer(modifier.height(8.dp))
                                     Text(
@@ -393,47 +409,50 @@ fun PointsOfInterestScreen(
                                         ),
                                         fontSize = 12.sp
                                     )
-                                    if (!isVotedByUser) {
-                                        Spacer(modifier.height(8.dp))
-                                        Button(
-                                            onClick = {
-                                                isVotedByUser = true
-                                                pointsOfInterestViewModel.voteForApprovalPointOfInterestByUser(
-                                                    it.name
-                                                )
-                                                isPointOfInterestApproved = it.isApproved
-                                            },
-                                        ) {
-                                            Row {
-                                                Text(stringResource(R.string.approve))
-                                                Icon(
-                                                    Icons.Rounded.ThumbUp,
-                                                    "Approve",
-                                                    modifier = modifier.padding(start = 8.dp)
-                                                )
+
+                                    if (currentUserId != "")
+                                        if (currentUserId != it.userId)
+                                            if (!isVotedByUser) {
+                                                Spacer(modifier.height(8.dp))
+                                                Button(
+                                                    onClick = {
+                                                        isVotedByUser = true
+                                                        pointsOfInterestViewModel.voteForApprovalPointOfInterestByUser(
+                                                            it.name
+                                                        )
+                                                        isPointOfInterestApproved = it.isApproved
+                                                    },
+                                                ) {
+                                                    Row {
+                                                        Text(stringResource(R.string.approve))
+                                                        Icon(
+                                                            Icons.Rounded.ThumbUp,
+                                                            "Approve",
+                                                            modifier = modifier.padding(start = 8.dp)
+                                                        )
+                                                    }
+                                                }
+                                            } else {
+                                                Spacer(modifier.height(8.dp))
+                                                Button(
+                                                    onClick = {
+                                                        isVotedByUser = false
+                                                        pointsOfInterestViewModel.removeVoteForApprovalPointOfInterestByUser(
+                                                            it.name
+                                                        )
+                                                        isPointOfInterestApproved = it.isApproved
+                                                    },
+                                                ) {
+                                                    Row {
+                                                        Text(stringResource(R.string.disapprove))
+                                                        Icon(
+                                                            Icons.Rounded.Close,
+                                                            "Disapprove",
+                                                            modifier = modifier.padding(start = 8.dp)
+                                                        )
+                                                    }
+                                                }
                                             }
-                                        }
-                                    } else {
-                                        Spacer(modifier.height(8.dp))
-                                        Button(
-                                            onClick = {
-                                                isVotedByUser = false
-                                                pointsOfInterestViewModel.removeVoteForApprovalPointOfInterestByUser(
-                                                    it.name
-                                                )
-                                                isPointOfInterestApproved = it.isApproved
-                                            },
-                                        ) {
-                                            Row {
-                                                Text(stringResource(R.string.disapprove))
-                                                Icon(
-                                                    Icons.Rounded.Close,
-                                                    "Disapprove",
-                                                    modifier = modifier.padding(start = 8.dp)
-                                                )
-                                            }
-                                        }
-                                    }
                                     Spacer(modifier.height(8.dp))
                                 } else {
 
@@ -571,6 +590,21 @@ fun PointsOfInterestScreen(
                                         ),
                                         fontSize = 12.sp
                                     )
+                                }
+                                if (currentUserId == it.userId) {
+                                    Spacer(modifier.height(8.dp))
+                                    Button(
+                                        onClick = {/*TODO: jump para o ecra de editar*/ },
+                                    ) {
+                                        Row {
+                                            Text(stringResource(R.string.edit))
+                                            Icon(
+                                                Icons.Rounded.Edit,
+                                                "Edit",
+                                                modifier = modifier.padding(start = 8.dp)
+                                            )
+                                        }
+                                    }
                                 }
                                 Spacer(modifier.height(8.dp))
                             }

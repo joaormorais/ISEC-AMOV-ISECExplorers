@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.ThumbUp
@@ -63,6 +64,11 @@ fun LocationsScreen(
     modifier: Modifier = Modifier
 ) {
 
+    // utils for the lazy column
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    // info for the card
     val locationsDM = locationsViewModel.getLocations()
     var locationsUI by remember {
         mutableStateOf<List<Location>>(emptyList())
@@ -70,8 +76,13 @@ fun LocationsScreen(
     LaunchedEffect(key1 = locationsDM.value, block = {
         locationsUI = locationsDM.value.toList()
     })
-    val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
+
+    // info for the buttons in the card
+    val localUserDM = locationsViewModel.getLocalUser()
+    var currentUserId by remember { mutableStateOf("") }
+    LaunchedEffect(key1 = localUserDM.value, block = {
+        currentUserId = localUserDM.value.userId
+    })
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -99,20 +110,10 @@ fun LocationsScreen(
                     when (itemPicked) {
                         Consts.ORDER_BY_NAME -> {
                             locationsUI = locationsUI.sortedBy { it.name }
-                            /*Log.d("LocationnsScreen", "locations aqui = " + locationsUI)
-                            Log.d(
-                                "LocationnsScreen",
-                                "locations no modelo de dados = " + locationsViewModel.getLocations()
-                            )*/
                         }
 
                         Consts.ORDER_BY_DISTANCE -> {
                             locationsUI = locationsViewModel.getLocationsOrderedByDistance()
-                            /*Log.d("LocationnsScreen", "locations aqui = " + locationsUI)
-                            Log.d(
-                                "LocationnsScreen",
-                                "locations no modelo de dados = " + locationsViewModel.getLocations()
-                            )*/
                         }
 
                         else -> {}
@@ -247,7 +248,6 @@ fun LocationsScreen(
                                 )
                                 Spacer(modifier.height(8.dp))
                                 if (!isLocationApproved) {
-                                    //TODO: quem criou a localização não deve poder aprovar a mesma
                                     Divider(color = Color.DarkGray, thickness = 1.dp)
                                     Spacer(modifier.height(8.dp))
                                     Text(
@@ -263,47 +263,67 @@ fun LocationsScreen(
                                         ),
                                         fontSize = 12.sp
                                     )
-                                    if (!isVotedByUser) {
-                                        Spacer(modifier.height(8.dp))
-                                        Button(
-                                            onClick = {
-                                                isVotedByUser = true
-                                                locationsViewModel.voteForApprovalLocationByUser(it.name)
-                                                isLocationApproved = it.isApproved
-                                            },
-                                        ) {
-                                            Row {
-                                                Text(stringResource(R.string.approve))
-                                                Icon(
-                                                    Icons.Rounded.ThumbUp,
-                                                    "Approve",
-                                                    modifier = modifier.padding(start = 8.dp)
-                                                )
+
+                                    if (currentUserId != "")
+                                        if (currentUserId != it.userId) {
+                                            if (!isVotedByUser) {
+                                                Spacer(modifier.height(8.dp))
+                                                Button(
+                                                    onClick = {
+                                                        isVotedByUser = true
+                                                        locationsViewModel.voteForApprovalLocationByUser(
+                                                            it.name
+                                                        )
+                                                        isLocationApproved = it.isApproved
+                                                    },
+                                                ) {
+                                                    Row {
+                                                        Text(stringResource(R.string.approve))
+                                                        Icon(
+                                                            Icons.Rounded.ThumbUp,
+                                                            "Approve",
+                                                            modifier = modifier.padding(start = 8.dp)
+                                                        )
+                                                    }
+                                                }
+                                            } else {
+                                                Spacer(modifier.height(8.dp))
+                                                Button(
+                                                    onClick = {
+                                                        isVotedByUser = false
+                                                        locationsViewModel.removeVoteForApprovalLocationByUser(
+                                                            it.name
+                                                        )
+                                                        isLocationApproved = it.isApproved
+                                                    },
+                                                ) {
+                                                    Row {
+                                                        Text(stringResource(R.string.disapprove))
+                                                        Icon(
+                                                            Icons.Rounded.Close,
+                                                            "Disapprove",
+                                                            modifier = modifier.padding(start = 8.dp)
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            Spacer(modifier.height(8.dp))
+                                            Button(
+                                                onClick = {/*TODO: jump para o ecra de editar*/ },
+                                            ) {
+                                                Row {
+                                                    Text(stringResource(R.string.edit))
+                                                    Icon(
+                                                        Icons.Rounded.Edit,
+                                                        "Edit",
+                                                        modifier = modifier.padding(start = 8.dp)
+                                                    )
+                                                }
                                             }
                                         }
-                                    } else {
-                                        Spacer(modifier.height(8.dp))
-                                        Button(
-                                            onClick = {
-                                                isVotedByUser = false
-                                                locationsViewModel.removeVoteForApprovalLocationByUser(
-                                                    it.name
-                                                )
-                                                isLocationApproved = it.isApproved
-                                            },
-                                        ) {
-                                            Row {
-                                                Text(stringResource(R.string.disapprove))
-                                                Icon(
-                                                    Icons.Rounded.Close,
-                                                    "Disapprove",
-                                                    modifier = modifier.padding(start = 8.dp)
-                                                )
-                                            }
-                                        }
-                                    }
-                                    Spacer(modifier.height(8.dp))
                                 }
+                                Spacer(modifier.height(8.dp))
                             }
                         }
                 }

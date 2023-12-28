@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.amovtp.data.Category
 import com.example.amovtp.data.GeoData
+import com.example.amovtp.data.LocalUser
 import com.example.amovtp.data.UserData
 import com.example.amovtp.utils.Consts
 
@@ -23,9 +24,10 @@ class CategoriesViewModel(
     private val userData: UserData
 ) : ViewModel() {
 
-    /**
-     * Gets every category
-     */
+    fun getLocalUser(): MutableState<LocalUser> {
+        return userData.localUser
+    }
+
     fun getCategories(): MutableState<List<Category>> {
         return geoData.categories
     }
