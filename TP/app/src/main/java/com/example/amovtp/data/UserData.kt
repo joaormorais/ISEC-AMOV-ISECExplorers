@@ -52,7 +52,7 @@ class UserData(private val firebaseUserDataService: FirebaseUserDataService) {
     }
 
     fun createUser(){
-        firebaseUserDataService.addSavedVotesToFirestore(_localUser.value) {}
+        firebaseUserDataService.addLocalUserToFirestore(_localUser.value) {}
         firebaseUserDataService.clearUserId()
     }
 
