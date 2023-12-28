@@ -79,6 +79,8 @@ fun AddPointOfInterestScreen(
     val fillImagesError = stringResource(R.string.invalid_images)
     val fillLocationError = stringResource(R.string.invalid_location)
     val fillCategoryError = stringResource(R.string.invalid_category)
+    val nameExistsError = stringResource(R.string.error_existing_name)
+    val piExistsError = stringResource(R.string.error_existing_pi)
 
     LaunchedEffect(showSnackBar) {
         if (showSnackBar) {
@@ -266,11 +268,24 @@ fun AddPointOfInterestScreen(
                                 mixedImgs
                             ){
                                 resultMessage ->
-                                showSnackBar = true
-                                errorMessage = resultMessage
+                                when(resultMessage){
+                                    Consts.SUCCESS-> {
+                                        navController!!.navigateUp()
+                                    }
+                                    Consts.ERROR_EXISTING_NAME -> {
+                                        showSnackBar = true
+                                        errorMessage = nameExistsError
+                                    }
+                                    Consts.ERROR_EXISTING_POINT_OF_INTEREST -> {
+                                        showSnackBar = true
+                                        errorMessage = piExistsError
+                                    }
+                                    else -> {
+                                        showSnackBar = true
+                                        errorMessage = resultMessage
+                                    }
+                                }
                             }
-
-                            navController!!.navigateUp()
                         } else {
                             showSnackBar = true
                         }

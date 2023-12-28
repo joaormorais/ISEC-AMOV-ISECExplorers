@@ -56,6 +56,8 @@ fun AddLocationScreen(
     val fillDescriptionError = stringResource(R.string.invalid_description)
     val fillCoordinatesError = stringResource(R.string.invalid_coordinates)
     val fillImagesError = stringResource(R.string.invalid_images)
+    val nameExistsError = stringResource(R.string.error_existing_name)
+    val locationExistsError = stringResource(R.string.error_existing_location)
 
 
     LaunchedEffect(showSnackBar) {
@@ -147,12 +149,24 @@ fun AddLocationScreen(
                                 mixedImgs
                             ){
                                 resultMessage ->
-                                showSnackBar = true
-                                errorMessage = resultMessage
+                                when(resultMessage){
+                                    Consts.SUCCESS-> {
+                                        navController!!.navigateUp()
+                                    }
+                                    Consts.ERROR_EXISTING_NAME -> {
+                                        showSnackBar = true
+                                        errorMessage = nameExistsError
+                                    }
+                                    Consts.ERROR_EXISTING_LOCATION -> {
+                                        showSnackBar = true
+                                        errorMessage = locationExistsError
+                                    }
+                                    else -> {
+                                        showSnackBar = true
+                                        errorMessage = resultMessage
+                                    }
+                                }
                             }
-
-
-                            navController!!.navigateUp()
                         }
                         else{
                             // a validação falhou

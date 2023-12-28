@@ -57,4 +57,7 @@
     <string name="choose_a_category">Escolher uma categoria</string>
     <string name="choose_locations">Associar localizações</string>
     <string name="edit">Editar</string>
+    <string name="error_existing_name">Erro: O nome já existe!</string>
+    <string name="error_existing_pi">Erro: Este Ponto de Interesse já existe!</string>
+    <string name="error_existing_location">Erro: Esta Localização já existe!</string>
 </resources>

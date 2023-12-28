@@ -48,6 +48,7 @@ fun AddCategoryScreen(
     val fillNameError = stringResource(R.string.invalid_name)
     val fillDescriptionError = stringResource(R.string.invalid_description)
     val fillImageError = stringResource(R.string.invalid_images)
+    val nameExistsError = stringResource(R.string.error_existing_name)
 
     LaunchedEffect(showSnackBar) {
         if (showSnackBar) {
@@ -110,13 +111,23 @@ fun AddCategoryScreen(
                                 name,
                                 description,
                                 image
-                            ){
-                                resultMessage ->
-                                showSnackBar = true
-                                errorMessage = resultMessage
-                            }
+                            ) { resultMessage ->
+                                when (resultMessage) {
+                                    Consts.SUCCESS -> {
+                                        navController!!.navigateUp()
+                                    }
 
-                            navController!!.navigateUp()
+                                    Consts.ERROR_EXISTING_NAME -> {
+                                        showSnackBar = true
+                                        errorMessage = nameExistsError
+                                    }
+
+                                    else -> {
+                                        showSnackBar = true
+                                        errorMessage = resultMessage
+                                    }
+                                }
+                            }
                         }
                         else{
                             // a validação falhou

@@ -56,4 +56,7 @@
     <string name="choose_a_category">Choose a category</string>
     <string name="choose_locations">Associate locations</string>
     <string name="edit">Edit</string>
+    <string name="error_existing_name">Error: This name already exists!</string>
+    <string name="error_existing_pi">Error: This Point of Interest already exists!</string>
+    <string name="error_existing_location">Error: This Location already exists!</string>
 </resources>
