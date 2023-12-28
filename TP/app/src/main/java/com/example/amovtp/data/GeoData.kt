@@ -1,9 +1,7 @@
 package com.example.amovtp.data
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.LocalContext
 import com.example.amovtp.services.FirebaseGeoDataService
 
 /**
@@ -73,7 +71,6 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
 
     val categories: MutableState<List<Category>>
         get() = _categories
-
 
     init {
         firebaseGeoDataService.startObserverGeoData(

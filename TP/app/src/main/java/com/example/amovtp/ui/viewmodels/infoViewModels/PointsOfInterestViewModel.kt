@@ -139,12 +139,14 @@ class PointsOfInterestViewModel(
         if (geoData.pointsOfInterest.value.find { it.name == pointOfInterestName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
             geoData.approvePointOfInterest(pointOfInterestName)
         geoData.editPointOfInterest(pointOfInterestName)
+        userData.editLocalUser()
     }
 
     fun removeVoteForApprovalPointOfInterestByUser(pointOfInterestName: String) {
         geoData.removeVoteForApprovalPointOfInterest(pointOfInterestName)
         userData.removePointOfInterestApproved(pointOfInterestName)
         geoData.editPointOfInterest(pointOfInterestName)
+        userData.editLocalUser()
     }
 
     fun findClassificationFromUser(pointOfInterestName: String): Double {
@@ -164,6 +166,7 @@ class PointsOfInterestViewModel(
         geoData.incrementNumberOfClassifications(pointOfInterestName)
         userData.addPointOfInterestClassified(pointOfInterestName, classification)
         geoData.editPointOfInterest(pointOfInterestName)
+        userData.editLocalUser()
     }
 
     fun removeClassificationToPointByUser(pointOfInterestName: String) {
@@ -174,6 +177,7 @@ class PointsOfInterestViewModel(
         geoData.decrementNumberOfClassifications(pointOfInterestName)
         userData.removePointOfInterestClassified(pointOfInterestName)
         geoData.editPointOfInterest(pointOfInterestName)
+        userData.editLocalUser()
     }
 
     fun calculateMediaClassification(pointOfInterestName: String): Double {

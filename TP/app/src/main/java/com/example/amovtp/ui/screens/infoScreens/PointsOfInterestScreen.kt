@@ -107,7 +107,7 @@ fun PointsOfInterestScreen(
 
     // info for the buttons in the card
     val localUserDM = pointsOfInterestViewModel.getLocalUser()
-    var currentUserId by remember { mutableStateOf("") }
+    var currentUserId by remember { mutableStateOf("") } //TODO: fazer aqui o mesmo para o locauserdata (modelo de dados e UI) deixar de ser apenas strinng e transformar em valor geral
     LaunchedEffect(key1 = localUserDM.value, block = {
         currentUserId = localUserDM.value.userId
     })
@@ -393,6 +393,7 @@ fun PointsOfInterestScreen(
                                     fontSize = 12.sp
                                 )
                                 Spacer(modifier.height(8.dp))
+
                                 if (!isPointOfInterestApproved) {
                                     Divider(color = Color.DarkGray, thickness = 1.dp)
                                     Spacer(modifier.height(8.dp))
@@ -411,7 +412,7 @@ fun PointsOfInterestScreen(
                                     )
 
                                     if (currentUserId != "")
-                                        if (currentUserId != it.userId)
+                                        if (currentUserId != it.userId) {
                                             if (!isVotedByUser) {
                                                 Spacer(modifier.height(8.dp))
                                                 Button(
@@ -453,143 +454,145 @@ fun PointsOfInterestScreen(
                                                     }
                                                 }
                                             }
+                                        }
                                     Spacer(modifier.height(8.dp))
                                 } else {
-
-                                    val listOfClassifications = listOf(
-                                        Consts.ONE_STAR_CLASSIFICATION,
-                                        Consts.TWO_STAR_CLASSIFICATION,
-                                        Consts.THREE_STAR_CLASSIFICATION
-                                    )
-                                    var mediaClassification by remember {
-                                        mutableDoubleStateOf(
-                                            pointsOfInterestViewModel.calculateMediaClassification(
-                                                it.name
+                                    if (currentUserId != it.userId) {
+                                        val listOfClassifications = listOf(
+                                            Consts.ONE_STAR_CLASSIFICATION,
+                                            Consts.TWO_STAR_CLASSIFICATION,
+                                            Consts.THREE_STAR_CLASSIFICATION
+                                        )
+                                        var mediaClassification by remember {
+                                            mutableDoubleStateOf(
+                                                pointsOfInterestViewModel.calculateMediaClassification(
+                                                    it.name
+                                                )
                                             )
-                                        )
-                                    }
+                                        }
 
-                                    var classificationFromUser by remember {
-                                        mutableDoubleStateOf(
-                                            pointsOfInterestViewModel.findClassificationFromUser(
-                                                it.name
+                                        var classificationFromUser by remember {
+                                            mutableDoubleStateOf(
+                                                pointsOfInterestViewModel.findClassificationFromUser(
+                                                    it.name
+                                                )
                                             )
-                                        )
-                                    }
+                                        }
 
-                                    Spacer(modifier.height(8.dp))
-                                    Row(
-                                        modifier = modifier
-                                            .fillMaxWidth()
-                                            .padding(end = 32.dp),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(
-                                            text = stringResource(R.string.classify),
-                                            fontSize = 12.sp
-                                        )
-                                        for (i in listOfClassifications) {
-                                            Button(
-                                                colors =
-                                                if (classificationFromUser == i) {
-                                                    ButtonDefaults.buttonColors(
-                                                        containerColor = MaterialTheme.colorScheme.inversePrimary,
-                                                        contentColor = Color.White
-                                                    )
-                                                } else {
-                                                    ButtonDefaults.buttonColors(
-                                                        containerColor = MaterialTheme.colorScheme.primary,
-                                                        contentColor = Color.White
-                                                    )
-                                                },
-                                                onClick = {
-                                                    when (i) {
+                                        Spacer(modifier.height(8.dp))
+                                        Row(
+                                            modifier = modifier
+                                                .fillMaxWidth()
+                                                .padding(end = 32.dp),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text(
+                                                text = stringResource(R.string.classify),
+                                                fontSize = 12.sp
+                                            )
+                                            for (i in listOfClassifications) {
+                                                Button(
+                                                    colors =
+                                                    if (classificationFromUser == i) {
+                                                        ButtonDefaults.buttonColors(
+                                                            containerColor = MaterialTheme.colorScheme.inversePrimary,
+                                                            contentColor = Color.White
+                                                        )
+                                                    } else {
+                                                        ButtonDefaults.buttonColors(
+                                                            containerColor = MaterialTheme.colorScheme.primary,
+                                                            contentColor = Color.White
+                                                        )
+                                                    },
+                                                    onClick = {
+                                                        when (i) {
 
-                                                        Consts.ONE_STAR_CLASSIFICATION -> {
-                                                            if (classificationFromUser == Consts.ONE_STAR_CLASSIFICATION) {
-                                                                pointsOfInterestViewModel.removeClassificationToPointByUser(
-                                                                    it.name
-                                                                )
-                                                            } else {
-                                                                pointsOfInterestViewModel.addClassificationToPointByUser(
-                                                                    it.name,
-                                                                    Consts.ONE_STAR_CLASSIFICATION
-                                                                )
+                                                            Consts.ONE_STAR_CLASSIFICATION -> {
+                                                                if (classificationFromUser == Consts.ONE_STAR_CLASSIFICATION) {
+                                                                    pointsOfInterestViewModel.removeClassificationToPointByUser(
+                                                                        it.name
+                                                                    )
+                                                                } else {
+                                                                    pointsOfInterestViewModel.addClassificationToPointByUser(
+                                                                        it.name,
+                                                                        Consts.ONE_STAR_CLASSIFICATION
+                                                                    )
+                                                                }
+                                                                classificationFromUser =
+                                                                    pointsOfInterestViewModel.findClassificationFromUser(
+                                                                        it.name
+                                                                    )
+                                                                mediaClassification =
+                                                                    pointsOfInterestViewModel.calculateMediaClassification(
+                                                                        it.name
+                                                                    )
                                                             }
-                                                            classificationFromUser =
-                                                                pointsOfInterestViewModel.findClassificationFromUser(
-                                                                    it.name
-                                                                )
-                                                            mediaClassification =
-                                                                pointsOfInterestViewModel.calculateMediaClassification(
-                                                                    it.name
-                                                                )
-                                                        }
 
-                                                        Consts.TWO_STAR_CLASSIFICATION -> {
-                                                            if (classificationFromUser == Consts.TWO_STAR_CLASSIFICATION) {
-                                                                pointsOfInterestViewModel.removeClassificationToPointByUser(
-                                                                    it.name
-                                                                )
-                                                            } else {
-                                                                pointsOfInterestViewModel.addClassificationToPointByUser(
-                                                                    it.name,
-                                                                    Consts.TWO_STAR_CLASSIFICATION
-                                                                )
+                                                            Consts.TWO_STAR_CLASSIFICATION -> {
+                                                                if (classificationFromUser == Consts.TWO_STAR_CLASSIFICATION) {
+                                                                    pointsOfInterestViewModel.removeClassificationToPointByUser(
+                                                                        it.name
+                                                                    )
+                                                                } else {
+                                                                    pointsOfInterestViewModel.addClassificationToPointByUser(
+                                                                        it.name,
+                                                                        Consts.TWO_STAR_CLASSIFICATION
+                                                                    )
+                                                                }
+                                                                classificationFromUser =
+                                                                    pointsOfInterestViewModel.findClassificationFromUser(
+                                                                        it.name
+                                                                    )
+                                                                mediaClassification =
+                                                                    pointsOfInterestViewModel.calculateMediaClassification(
+                                                                        it.name
+                                                                    )
                                                             }
-                                                            classificationFromUser =
-                                                                pointsOfInterestViewModel.findClassificationFromUser(
-                                                                    it.name
-                                                                )
-                                                            mediaClassification =
-                                                                pointsOfInterestViewModel.calculateMediaClassification(
-                                                                    it.name
-                                                                )
-                                                        }
 
-                                                        Consts.THREE_STAR_CLASSIFICATION -> {
-                                                            if (classificationFromUser == Consts.THREE_STAR_CLASSIFICATION) {
-                                                                pointsOfInterestViewModel.removeClassificationToPointByUser(
-                                                                    it.name
-                                                                )
-                                                            } else {
-                                                                pointsOfInterestViewModel.addClassificationToPointByUser(
-                                                                    it.name,
-                                                                    Consts.THREE_STAR_CLASSIFICATION
-                                                                )
+                                                            Consts.THREE_STAR_CLASSIFICATION -> {
+                                                                if (classificationFromUser == Consts.THREE_STAR_CLASSIFICATION) {
+                                                                    pointsOfInterestViewModel.removeClassificationToPointByUser(
+                                                                        it.name
+                                                                    )
+                                                                } else {
+                                                                    pointsOfInterestViewModel.addClassificationToPointByUser(
+                                                                        it.name,
+                                                                        Consts.THREE_STAR_CLASSIFICATION
+                                                                    )
+                                                                }
+                                                                classificationFromUser =
+                                                                    pointsOfInterestViewModel.findClassificationFromUser(
+                                                                        it.name
+                                                                    )
+                                                                mediaClassification =
+                                                                    pointsOfInterestViewModel.calculateMediaClassification(
+                                                                        it.name
+                                                                    )
                                                             }
-                                                            classificationFromUser =
-                                                                pointsOfInterestViewModel.findClassificationFromUser(
-                                                                    it.name
-                                                                )
-                                                            mediaClassification =
-                                                                pointsOfInterestViewModel.calculateMediaClassification(
-                                                                    it.name
-                                                                )
-                                                        }
 
+                                                        }
+                                                    },
+                                                ) {
+                                                    Row {
+                                                        Text(i.toString())
+                                                        Icon(
+                                                            Icons.Rounded.Star,
+                                                            "Classification",
+                                                            modifier = modifier.padding(start = 8.dp)
+                                                        )
                                                     }
-                                                },
-                                            ) {
-                                                Row {
-                                                    Text(i.toString())
-                                                    Icon(
-                                                        Icons.Rounded.Star,
-                                                        "Classification",
-                                                        modifier = modifier.padding(start = 8.dp)
-                                                    )
                                                 }
                                             }
                                         }
+                                        Text(
+                                            text = stringResource(
+                                                R.string.classification_media,
+                                                mediaClassification
+                                            ),
+                                            fontSize = 12.sp
+                                        )
                                     }
-                                    Text(
-                                        text = stringResource(
-                                            R.string.classification_media,
-                                            mediaClassification
-                                        ),
-                                        fontSize = 12.sp
-                                    )
                                 }
                                 if (currentUserId == it.userId) {
                                     Spacer(modifier.height(8.dp))

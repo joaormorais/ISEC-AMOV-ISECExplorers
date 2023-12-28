@@ -25,39 +25,9 @@ class UserData(private val firebaseUserDataService: FirebaseUserDataService) {
     val localUser: MutableState<LocalUser>
         get() = _localUser
 
-    /* ------------------------  Login and register (Start) ------------------------ */
+    init {
 
-    fun register(email: String, pw: String, onResult: (Throwable?) -> Unit) {
-        firebaseUserDataService.createUserWithEmail(email, pw) { exception ->
-            onResult(exception)
-        }
-    }
-
-    fun login(email: String, pw: String, onResult: (Throwable?) -> Unit) {
-        firebaseUserDataService.signInWithEmail(email, pw) { exception ->
-            onResult(exception)
-        }
-    }
-
-    fun signOut() {
-        firebaseUserDataService.signOut()
-    }
-
-    fun updateUserId() {
-        _localUser.value.userId = firebaseUserDataService.userId
-    }
-
-    fun resetUserId(){
-        _localUser.value.userId = ""
-    }
-
-    fun createUser(){
-        firebaseUserDataService.addLocalUserToFirestore(_localUser.value) {}
-        firebaseUserDataService.clearUserId()
-    }
-
-    fun searchUser() {
-        firebaseUserDataService.locateUserFirestore(
+        firebaseUserDataService.startObserverGeoData(
             onFoundUser = { foundUser ->
                 if (foundUser.isNotEmpty()) {
                     _localUser.value = LocalUser(
@@ -70,9 +40,46 @@ class UserData(private val firebaseUserDataService: FirebaseUserDataService) {
                 }
             }
         )
+
     }
 
-    /* ------------------------  Login and register (End) ------------------------ */
+    /* ------------------------  Login, register and update (Start) ------------------------ */
+
+    fun register(email: String, pw: String, onResult: (Throwable?) -> Unit) {
+        firebaseUserDataService.createUserWithEmail(email, pw) { exception ->
+            onResult(exception)
+        }
+        _localUser.value = LocalUser()
+    }
+
+    fun login(email: String, pw: String, onResult: (Throwable?) -> Unit) {
+        firebaseUserDataService.signInWithEmail(email, pw) { exception ->
+            onResult(exception)
+        }
+    }
+
+    fun signOut() {
+        firebaseUserDataService.signOut()
+        _localUser.value = LocalUser()
+    }
+
+    fun updateUserId() {
+        _localUser.value.userId = firebaseUserDataService.userId
+    }
+
+    fun createUser() {
+        updateUserId()
+        firebaseUserDataService.addLocalUserToFirestore(_localUser.value) {}
+        _localUser.value.userId = ""
+    }
+
+    fun editLocalUser() {
+        firebaseUserDataService.updateLocalUserToFirestore(_localUser.value){
+            //TODO: tratar a exception
+        }
+    }
+
+    /* ------------------------  Login, register and update (End) ------------------------ */
 
     /* ------------------------  Device location (Start) ------------------------ */
     fun setCurrentLocation(location: Location) {

@@ -85,12 +85,14 @@ class LocationsViewModel(
             geoData.approveLocation(locationName)
 
         geoData.editLocation(locationName)
+        userData.editLocalUser()
     }
 
     fun removeVoteForApprovalLocationByUser(locationName: String) {
         geoData.removeVoteForApprovalLocation(locationName)
         userData.removeLocationApproved(locationName)
         geoData.editLocation(locationName)
+        userData.editLocalUser()
     }
 
 }

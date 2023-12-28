@@ -16,7 +16,6 @@ class LoginViewModel(private val userData: UserData) : ViewModel() {
         userData.login(email,pw){exception ->
             if(exception==null){
                 userData.updateUserId()
-                userData.searchUser()
             }
             onResult(exception)
         }

@@ -15,9 +15,7 @@ class RegisterViewModel(private val userData: UserData) : ViewModel() {
     fun register(email:String,pw:String,onResult: (Throwable?) -> Unit){
         userData.register(email,pw){exception ->
             if(exception==null){
-                userData.updateUserId()
                 userData.createUser()
-                userData.resetUserId()
             }
             onResult(exception)
         }

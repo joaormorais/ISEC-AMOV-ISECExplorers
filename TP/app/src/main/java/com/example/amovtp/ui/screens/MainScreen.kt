@@ -124,7 +124,6 @@ fun MainScreen(
 
                                     if (isLocation) {
                                         app.userData.signOut()
-                                        app.userData.updateUserId()
                                     }
 
                                 }) {

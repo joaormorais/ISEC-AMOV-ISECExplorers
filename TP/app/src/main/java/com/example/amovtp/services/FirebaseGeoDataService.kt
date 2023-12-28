@@ -16,6 +16,7 @@ import java.io.File
 
 class FirebaseGeoDataService {
 
+    private val db by lazy { Firebase.firestore }
     private var listenerRegistrationLocations: ListenerRegistration? = null
     private var listenerRegistrationPointOfInterest: ListenerRegistration? = null
     private var listenerRegistrationCategory: ListenerRegistration? = null
@@ -26,7 +27,7 @@ class FirebaseGeoDataService {
         onNewCategories: (List<Map<String, Any>>) -> Unit
     ) {
         stopObserver()
-        val db = Firebase.firestore
+        //val db = Firebase.firestore
         listenerRegistrationLocations =
             db.collection("GeoDataLocations").addSnapshotListener { value, e ->
                 if (e != null)
@@ -66,7 +67,7 @@ class FirebaseGeoDataService {
     }
 
     fun addLocationToFirestore(newLocation: Location, onResult: (Throwable?) -> Unit) {
-        val db = Firebase.firestore
+        //val db = Firebase.firestore
         uploadImages("locations/" + newLocation.name, newLocation.imgs) { paths ->
             if (paths.isNotEmpty()) {
                 val locationToCloud = hashMapOf(
@@ -95,7 +96,7 @@ class FirebaseGeoDataService {
         newPointOfInterest: PointOfInterest,
         onResult: (Throwable?) -> Unit
     ) {
-        val db = Firebase.firestore
+        //val db = Firebase.firestore
         uploadImages(
             "pointsofinterest/" + newPointOfInterest.name,
             newPointOfInterest.imgs
@@ -128,7 +129,7 @@ class FirebaseGeoDataService {
     }
 
     fun addCategoryToFirestore(newCategory: Category, onResult: (Throwable?) -> Unit) {
-        val db = Firebase.firestore
+        //val db = Firebase.firestore
         uploadImages("categories/" + newCategory.name, listOf(newCategory.img)) { paths ->
             if (paths.isNotEmpty()) {
                 val categoryToCloud = hashMapOf(
@@ -154,13 +155,12 @@ class FirebaseGeoDataService {
         updatedLocation: Location?,
         onResult: (Throwable?) -> Unit
     ) {
-        val db = Firebase.firestore
+        //val db = Firebase.firestore
         val document = db.collection("GeoDataLocations").document(currentLocationName)
 
         db.runTransaction { transaction ->
             val doc = transaction.get(document)
             if (doc.exists()) {
-                Log.d("Firebase", "doc existe!")
                 val data = doc.data
                 if (data?.get("name") != updatedLocation?.name) {
                     transaction.update(document, "name", updatedLocation?.name)
@@ -223,13 +223,15 @@ class FirebaseGeoDataService {
         updatedPointOfInterest: PointOfInterest?,
         onResult: (Throwable?) -> Unit
     ) {
-        val db = Firebase.firestore
+        //val db = Firebase.firestore
+        Log.d("FirebaseGeoDataService","currentPointOfInterestName = "+currentPointOfInterestName)
         val document = db.collection("GeoDataPointsOfInterest").document(currentPointOfInterestName)
+        Log.d("FirebaseGeoDataService","document = "+document.toString())
 
         db.runTransaction { transaction ->
             val doc = transaction.get(document)
+            Log.d("FirebaseGeoDataService","doc = "+doc.exists())
             if (doc.exists()) {
-                Log.d("Firebase", "doc existe!")
                 val data = doc.data
                 if (data?.get("name") != updatedPointOfInterest?.name) {
                     transaction.update(document, "name", updatedPointOfInterest?.name)
@@ -304,6 +306,7 @@ class FirebaseGeoDataService {
                     FirebaseFirestoreException.Code.UNAVAILABLE
                 )
         }.addOnCompleteListener { result ->
+            Log.d("FirebaseGeoDataService","result.exception = "+result.exception)
             onResult(result.exception)
         }
     }
@@ -313,13 +316,12 @@ class FirebaseGeoDataService {
         updatedCategory: Category?,
         onResult: (Throwable?) -> Unit
     ) {
-        val db = Firebase.firestore
+        //val db = Firebase.firestore
         val document = db.collection("GeoDataPointsOfInterest").document(currentCategoryName)
 
         db.runTransaction { transaction ->
             val doc = transaction.get(document)
             if (doc.exists()) {
-                Log.d("Firebase", "doc existe!")
                 val data = doc.data
                 if (data?.get("name") != updatedCategory?.name) {
                     transaction.update(document, "name", updatedCategory?.name)
@@ -410,7 +412,7 @@ class FirebaseGeoDataService {
         locationName: String,
         onResult: (Throwable?) -> Unit
     ) {
-        val db = Firebase.firestore
+        //val db = Firebase.firestore
         val v = db.collection("GeoDataLocations").document(locationName)
         v.delete().addOnCompleteListener { onResult(it.exception) }
     }
@@ -419,7 +421,7 @@ class FirebaseGeoDataService {
         pointOfInterestName: String,
         onResult: (Throwable?) -> Unit
     ) {
-        val db = Firebase.firestore
+        //val db = Firebase.firestore
         val v = db.collection("GeoDataPointsOfInterest").document(pointOfInterestName)
         v.delete().addOnCompleteListener { onResult(it.exception) }
     }
@@ -428,7 +430,7 @@ class FirebaseGeoDataService {
         categoryName: String,
         onResult: (Throwable?) -> Unit
     ) {
-        val db = Firebase.firestore
+        //val db = Firebase.firestore
         val v = db.collection("GeoDataCategories").document(categoryName)
         v.delete().addOnCompleteListener { onResult(it.exception) }
     }

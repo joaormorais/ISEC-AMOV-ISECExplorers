@@ -42,12 +42,14 @@ class CategoriesViewModel(
         if (geoData.categories.value.find { it.name == categoryName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
             geoData.approveCategory(categoryName)
         geoData.editCategory(categoryName)
+        userData.editLocalUser()
     }
 
     fun removeVoteForApprovalCategoryByUser(categoryName: String) {
         geoData.removeVoteForApprovalCategory(categoryName)
         userData.removeCategoryApproved(categoryName)
         geoData.editCategory(categoryName)
+        userData.editLocalUser()
     }
 
 }
