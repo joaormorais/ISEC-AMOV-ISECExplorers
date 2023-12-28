@@ -11,7 +11,8 @@ enum class Screens(val path: String) {
     ADD_CATEGORY("AddCategory"),
     EDIT_LOCATIONS("EditLocation?itemName={itemName}"),
     EDIT_POINT_OF_INTEREST("EditPointOfInterest?itemName={itemName}"),
-    EDIT_CATEGORY("EditCategory?itemName={itemName}");
+    EDIT_CATEGORY("EditCategory?itemName={itemName}"),
+    CREDITS("Credits");
 
     val route: String
         get() = this.path

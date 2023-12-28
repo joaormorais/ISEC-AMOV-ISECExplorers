@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -95,15 +96,63 @@ fun MainScreen(
     var addCategory by remember { mutableStateOf(false) }
     var screenTitle by remember { mutableStateOf("") }
 
-    navController.addOnDestinationChangedListener { controller, destination, arguments ->
+//    navController.addOnDestinationChangedListener { controller, destination, arguments ->
+//        isLogin = (destination.route == Screens.LOGIN.route)
+//        isLocation = (destination.route == Screens.LOCATIONS.route)
+//        addLocation = (destination.route == Screens.LOCATIONS.route)
+//        addPointOfInterest = (destination.route == Screens.POINTS_OF_INTEREST.route)
+//        addCategory = (destination.route == Screens.CATEGORIES.route)
+//
+//        screenTitle =
+//            if (destination.route == Screens.POINTS_OF_INTEREST.route) Consts.POINTS_OF_INTEREST else destination.route.toString()
+//    }
+
+    navController.addOnDestinationChangedListener{ controller, destination, arguments ->
+
         isLogin = (destination.route == Screens.LOGIN.route)
         isLocation = (destination.route == Screens.LOCATIONS.route)
         addLocation = (destination.route == Screens.LOCATIONS.route)
         addPointOfInterest = (destination.route == Screens.POINTS_OF_INTEREST.route)
         addCategory = (destination.route == Screens.CATEGORIES.route)
 
-        screenTitle =
-            if (destination.route == Screens.POINTS_OF_INTEREST.route) Consts.POINTS_OF_INTEREST else destination.route.toString()
+        when(destination.route){
+            Screens.LOGIN.route -> {
+                screenTitle = Consts.TITLE_LOGIN
+            }
+            Screens.LOCATIONS.route -> {
+                screenTitle = Consts.TITLE_LOCATIONS
+            }
+            Screens.POINTS_OF_INTEREST.route -> {
+                screenTitle = Consts.TITLE_POINTS_OF_INTEREST
+            }
+            Screens.CATEGORIES.route -> {
+                screenTitle = Consts.TITLE_CATEGORIES
+            }
+            Screens.ADD_LOCATION.route -> {
+                screenTitle = Consts.TITLE_ADD_LOCATION
+            }
+            Screens.ADD_POINT_OF_INTEREST.route -> {
+                screenTitle = Consts.TITLE_ADD_POINT_OF_INTEREST
+            }
+            Screens.ADD_CATEGORY.route -> {
+                screenTitle = Consts.TITLE_ADD_CATEGORY
+            }
+            Screens.EDIT_LOCATIONS.route -> {
+                screenTitle = Consts.TITLE_EDIT_LOCATION
+            }
+            Screens.EDIT_POINT_OF_INTEREST.route -> {
+                screenTitle = Consts.TITLE_EDIT_POINT_OF_INTEREST
+            }
+            Screens.EDIT_CATEGORY.route -> {
+                screenTitle = Consts.TITLE_EDIT_CATEGORY
+            }
+            Screens.CREDITS.route -> {
+                screenTitle = Consts.TITLE_CREDITOS
+            }
+            else -> {
+                screenTitle = destination.route.toString()
+            }
+        }
     }
 
     AMOVTPTheme() {
@@ -354,6 +403,10 @@ fun MainScreen(
                             itemName!!,
                             navController
                         )
+                    }
+
+                    composable(Screens.CREDITS.route){
+                        CreditsScreen()
                     }
 
                 }
