@@ -145,7 +145,12 @@ fun AddLocationScreen(
                                 long!!,
                                 isManual,
                                 mixedImgs
-                            )
+                            ){
+                                resultMessage ->
+                                showSnackBar = true
+                                errorMessage = resultMessage
+                            }
+
 
                             navController!!.navigateUp()
                         }

@@ -264,7 +264,11 @@ fun AddPointOfInterestScreen(
                                 selectedLocations,
                                 selectedCategory,
                                 mixedImgs
-                            )
+                            ){
+                                resultMessage ->
+                                showSnackBar = true
+                                errorMessage = resultMessage
+                            }
 
                             navController!!.navigateUp()
                         } else {

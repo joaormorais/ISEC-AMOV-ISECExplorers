@@ -24,21 +24,23 @@ class AddCategoryViewModel(
         name: String,
         description: String,
         img: String,
-    ): String {
+        onResult: (String) -> Unit
+    ){
         val tempCategories = geoData.categories
         val tempUserId = userData.localUser.value.userId
 
-        if (tempCategories.value.any { it.name == name })
-            return Consts.ERROR_EXISTING_NAME
-        else if (tempUserId.isBlank())
-            return Consts.ERROR_NEED_LOGIN
-
+        if (tempCategories.value.any { it.name == name }) {
+            onResult(Consts.ERROR_EXISTING_NAME)
+            return
+        }else if (tempUserId.isBlank()) {
+            onResult(Consts.ERROR_NEED_LOGIN)
+            return
+        }
         geoData.addCategory(tempUserId, name, description, img)// TODO: metter aqui parenteses e mandar o erro para a UI (return erro)
-        /*{
-            if exception != null
-            return exception.tostring()
-        }*/
+        {exception ->
+            val message = if (exception == null) Consts.SUCCESS else exception.toString()
+            onResult(message)
+        }
 
-        return Consts.SUCCESS
     }
 }

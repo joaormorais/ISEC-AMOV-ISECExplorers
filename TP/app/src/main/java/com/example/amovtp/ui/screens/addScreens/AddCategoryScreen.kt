@@ -110,7 +110,11 @@ fun AddCategoryScreen(
                                 name,
                                 description,
                                 image
-                            )
+                            ){
+                                resultMessage ->
+                                showSnackBar = true
+                                errorMessage = resultMessage
+                            }
 
                             navController!!.navigateUp()
                         }
