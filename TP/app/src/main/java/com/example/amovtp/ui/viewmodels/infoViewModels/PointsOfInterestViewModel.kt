@@ -149,7 +149,7 @@ class PointsOfInterestViewModel(
         userData.editLocalUser()
     }
 
-    fun findClassificationFromUser(pointOfInterestName: String): Double {
+    fun findClassificationFromUser(pointOfInterestName: String): Long {
 
         return if (userData.localUser.value.pointsOfInterestClassified.keys.contains(pointOfInterestName))
             userData.localUser.value.pointsOfInterestClassified.getValue(pointOfInterestName)
@@ -158,7 +158,7 @@ class PointsOfInterestViewModel(
 
     }
 
-    fun addClassificationToPointByUser(pointOfInterestName: String, classification: Double) {
+    fun addClassificationToPointByUser(pointOfInterestName: String, classification: Long) {
         if (userData.localUser.value.pointsOfInterestClassified.containsKey(pointOfInterestName)) {
             removeClassificationToPointByUser(pointOfInterestName)
         }
@@ -182,7 +182,7 @@ class PointsOfInterestViewModel(
 
     fun calculateMediaClassification(pointOfInterestName: String): Double {
         val tempPoint = geoData.pointsOfInterest.value.find { it.name == pointOfInterestName }
-        return tempPoint!!.classification.div(tempPoint.nClassifications)
+        return tempPoint!!.classification.toDouble().div(tempPoint.nClassifications)
     }
 
 }

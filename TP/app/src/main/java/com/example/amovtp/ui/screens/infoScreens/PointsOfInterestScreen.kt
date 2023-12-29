@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -57,6 +58,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.amovtp.R
+import com.example.amovtp.data.LocalUser
 import com.example.amovtp.data.Location
 import com.example.amovtp.data.PointOfInterest
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuFilters
@@ -106,11 +108,16 @@ fun PointsOfInterestScreen(
     })
 
     // info for the buttons in the card
-    val localUserDM = pointsOfInterestViewModel.getLocalUser()
-    var currentUserId by remember { mutableStateOf("") } //TODO: fazer aqui o mesmo para o locauserdata (modelo de dados e UI) deixar de ser apenas strinng e transformar em valor geral
+    val localUserDM =
+        pointsOfInterestViewModel.getLocalUser() //TODO: fazer aqui o mesmo para o locauserdata (modelo de dados e UI) deixar de ser apenas strinng e transformar em valor geral
+    var localUserUI by remember { mutableStateOf(LocalUser()) }
+    LaunchedEffect(key1 = localUserDM.value, block = {
+        localUserUI = localUserDM.value
+    })
+    /*var currentUserId by remember { mutableStateOf("") }
     LaunchedEffect(key1 = localUserDM.value, block = {
         currentUserId = localUserDM.value.userId
-    })
+    })*/
 
     // info for the filter of a unnique location
     LaunchedEffect(key1 = itemName) { //TODO: ver se de facto é preciso um LaunchedEffet, ou não
@@ -270,13 +277,13 @@ fun PointsOfInterestScreen(
         ) {
             items(pointsOfInterestUI, key = { it.name }) {
 
+                var isPointOfInterestApproved by remember { mutableStateOf(it.isApproved) }
                 var isDetailExpanded by remember { mutableStateOf(false) }
-                var isVotedByUser by remember {
+                /*var isVotedByUser by remember {
                     mutableStateOf(
                         pointsOfInterestViewModel.findVoteForApprovedPointOfInterestByUser(it.name)
                     )
-                }
-                var isPointOfInterestApproved by remember { mutableStateOf(it.isApproved) }
+                }*/
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
@@ -411,13 +418,16 @@ fun PointsOfInterestScreen(
                                         fontSize = 12.sp
                                     )
 
-                                    if (currentUserId != "")
-                                        if (currentUserId != it.userId) {
-                                            if (!isVotedByUser) {
+                                    if (localUserUI.userId != "")
+                                        if (localUserUI.userId != it.userId) {
+                                            if (!pointsOfInterestViewModel.findVoteForApprovedPointOfInterestByUser(
+                                                    it.name
+                                                )
+                                            ) {
                                                 Spacer(modifier.height(8.dp))
                                                 Button(
                                                     onClick = {
-                                                        isVotedByUser = true
+                                                        //isVotedByUser = true
                                                         pointsOfInterestViewModel.voteForApprovalPointOfInterestByUser(
                                                             it.name
                                                         )
@@ -437,7 +447,7 @@ fun PointsOfInterestScreen(
                                                 Spacer(modifier.height(8.dp))
                                                 Button(
                                                     onClick = {
-                                                        isVotedByUser = false
+                                                        //isVotedByUser = false
                                                         pointsOfInterestViewModel.removeVoteForApprovalPointOfInterestByUser(
                                                             it.name
                                                         )
@@ -457,12 +467,14 @@ fun PointsOfInterestScreen(
                                         }
                                     Spacer(modifier.height(8.dp))
                                 } else {
-                                    if (currentUserId != it.userId) {
+                                    if (localUserUI.userId != it.userId) {
+
                                         val listOfClassifications = listOf(
                                             Consts.ONE_STAR_CLASSIFICATION,
                                             Consts.TWO_STAR_CLASSIFICATION,
                                             Consts.THREE_STAR_CLASSIFICATION
                                         )
+
                                         var mediaClassification by remember {
                                             mutableDoubleStateOf(
                                                 pointsOfInterestViewModel.calculateMediaClassification(
@@ -472,7 +484,7 @@ fun PointsOfInterestScreen(
                                         }
 
                                         var classificationFromUser by remember {
-                                            mutableDoubleStateOf(
+                                            mutableLongStateOf(
                                                 pointsOfInterestViewModel.findClassificationFromUser(
                                                     it.name
                                                 )
@@ -594,7 +606,7 @@ fun PointsOfInterestScreen(
                                         )
                                     }
                                 }
-                                if (currentUserId == it.userId) {
+                                if (localUserUI.userId == it.userId) {
                                     Spacer(modifier.height(8.dp))
                                     Button(
                                         onClick = { navController?.navigate("EditPointOfInterest?itemName=${it.name}") },

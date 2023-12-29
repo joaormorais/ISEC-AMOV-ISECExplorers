@@ -19,10 +19,10 @@ class Consts {
         const val ORDER_BY_DISTANCE: String = "ORDER_BY_DISTANCE"
         const val ORDER_BY_CATEGORY: String = "ORDER_BY_CATEGORY"
         const val VOTES_NEEDED_FOR_APPROVAL: Long = 2
-        const val NO_START_CLASSIFICATION: Double = 0.0
-        const val ONE_STAR_CLASSIFICATION: Double = 1.0
-        const val TWO_STAR_CLASSIFICATION: Double = 2.0
-        const val THREE_STAR_CLASSIFICATION: Double = 3.0
+        const val NO_START_CLASSIFICATION: Long = 0
+        const val ONE_STAR_CLASSIFICATION: Long = 1
+        const val TWO_STAR_CLASSIFICATION: Long = 2
+        const val THREE_STAR_CLASSIFICATION: Long = 3
         val NOT_APPROVED_COLOR: Color = Color(255, 135, 70, 255)
         val CONFIRMATION_COLOR: Color = Color(15, 100, 0, 255)
         val WARNING_COLOR: Color = Color(135, 0, 0, 255)

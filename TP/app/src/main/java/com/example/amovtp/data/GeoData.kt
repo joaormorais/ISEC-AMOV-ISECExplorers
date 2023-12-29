@@ -49,7 +49,7 @@ data class PointOfInterest(
     val locations: List<String>,
     val category: String,
     val imgs: List<String>,
-    var classification: Double,
+    var classification: Long,
     var nClassifications: Long,
     var votesForApproval: Long,
     var isApproved: Boolean,
@@ -126,7 +126,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                                         locations = i["locations"] as List<String>,
                                         category = i["category"] as String,
                                         imgs = paths,
-                                        classification = i["classification"] as Double,
+                                        classification = i["classification"] as Long,
                                         nClassifications = i["nClassifications"] as Long,
                                         votesForApproval = i["votesForApproval"] as Long,
                                         isApproved = i["isApproved"] as Boolean,
@@ -230,7 +230,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 locations,
                 category,
                 imgs,
-                0.0,
+                0,
                 0L,
                 0L,
                 false,
@@ -357,7 +357,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
     /* ------------------------  Category approval (End) ------------------------ */
 
     /* ------------------------  Point classification (Start) ------------------------ */
-    fun addClassificationToPoint(pointOfInterestName: String, classification: Double) {
+    fun addClassificationToPoint(pointOfInterestName: String, classification: Long) {
         _pointsOfInterest.value.find { it.name == pointOfInterestName }?.classification =
             _pointsOfInterest.value.find { it.name == pointOfInterestName }?.classification!! + classification
     }
@@ -367,7 +367,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
             _pointsOfInterest.value.find { it.name == pointOfInterestName }?.nClassifications!! + 1
     }
 
-    fun removeClassificationToPoint(pointOfInterestName: String, classification: Double) {
+    fun removeClassificationToPoint(pointOfInterestName: String, classification: Long) {
         _pointsOfInterest.value.find { it.name == pointOfInterestName }?.classification =
             _pointsOfInterest.value.find { it.name == pointOfInterestName }?.classification!! - classification
     }

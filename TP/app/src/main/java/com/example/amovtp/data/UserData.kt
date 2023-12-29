@@ -1,6 +1,7 @@
 package com.example.amovtp.data
 
 import android.location.Location
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +12,7 @@ data class LocalUser(
     var locationsApproved: List<String> = emptyList(),
     var pointsOfInterestApproved: List<String> = emptyList(),
     var categoriesApproved: List<String> = emptyList(),
-    var pointsOfInterestClassified: Map<String, Double> = emptyMap()
+    var pointsOfInterestClassified: Map<String, Long> = emptyMap()
 )
 
 class UserData(private val firebaseUserDataService: FirebaseUserDataService) {
@@ -25,24 +26,6 @@ class UserData(private val firebaseUserDataService: FirebaseUserDataService) {
     val localUser: MutableState<LocalUser>
         get() = _localUser
 
-    init {
-
-        firebaseUserDataService.startObserverGeoData(
-            onFoundUser = { foundUser ->
-                if (foundUser.isNotEmpty()) {
-                    _localUser.value = LocalUser(
-                        userId = foundUser["userId"] as String,
-                        locationsApproved = foundUser["locationsApproved"] as List<String>,
-                        pointsOfInterestApproved = foundUser["pointsOfInterestApproved"] as List<String>,
-                        categoriesApproved = foundUser["categoriesApproved"] as List<String>,
-                        pointsOfInterestClassified = foundUser["pointsOfInterestClassified"] as Map<String, Double>,
-                    )
-                }
-            }
-        )
-
-    }
-
     /* ------------------------  Login, register and update (Start) ------------------------ */
 
     fun register(email: String, pw: String, onResult: (Throwable?) -> Unit) {
@@ -55,12 +38,30 @@ class UserData(private val firebaseUserDataService: FirebaseUserDataService) {
     fun login(email: String, pw: String, onResult: (Throwable?) -> Unit) {
         firebaseUserDataService.signInWithEmail(email, pw) { exception ->
             onResult(exception)
+
+            if(exception==null){
+                firebaseUserDataService.startObserverGeoData(
+                    onFoundUser = { foundUser ->
+                        if (foundUser.isNotEmpty()) {
+                            _localUser.value = LocalUser(
+                                userId = foundUser["userId"] as String,
+                                locationsApproved = foundUser["locationsApproved"] as List<String>,
+                                pointsOfInterestApproved = foundUser["pointsOfInterestApproved"] as List<String>,
+                                categoriesApproved = foundUser["categoriesApproved"] as List<String>,
+                                pointsOfInterestClassified = foundUser["pointsOfInterestClassified"] as Map<String, Long>,
+                            )
+                            Log.d("UserData", "_localUser.value = " + _localUser.value)
+                        }
+                    }
+                )
+            }
         }
     }
 
     fun signOut() {
         firebaseUserDataService.signOut()
         _localUser.value = LocalUser()
+        firebaseUserDataService.stopObserver()
     }
 
     fun updateUserId() {
@@ -74,7 +75,7 @@ class UserData(private val firebaseUserDataService: FirebaseUserDataService) {
     }
 
     fun editLocalUser() {
-        firebaseUserDataService.updateLocalUserToFirestore(_localUser.value){
+        firebaseUserDataService.updateLocalUserToFirestore(_localUser.value) {
             //TODO: tratar a exception
         }
     }
@@ -120,7 +121,7 @@ class UserData(private val firebaseUserDataService: FirebaseUserDataService) {
     /* ------------------------  Point of interest approval (End) ------------------------ */
 
     /* ------------------------  Point classification (Start) ------------------------ */
-    fun addPointOfInterestClassified(pointOfInterestName: String, classification: Double) {
+    fun addPointOfInterestClassified(pointOfInterestName: String, classification: Long) {
         _localUser.value.pointsOfInterestClassified =
             _localUser.value.pointsOfInterestClassified + (pointOfInterestName to classification)
     }

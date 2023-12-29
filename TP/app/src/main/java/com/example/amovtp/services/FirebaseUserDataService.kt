@@ -65,7 +65,7 @@ class FirebaseUserDataService {
             }
     }
 
-    private fun stopObserver() {
+    fun stopObserver() {
         listenerUserData?.remove()
     }
 
