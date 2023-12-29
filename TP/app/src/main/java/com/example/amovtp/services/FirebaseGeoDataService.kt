@@ -317,7 +317,7 @@ class FirebaseGeoDataService {
         onResult: (Throwable?) -> Unit
     ) {
         //val db = Firebase.firestore
-        val document = db.collection("GeoDataPointsOfInterest").document(currentCategoryName)
+        val document = db.collection("GeoDataCategories").document(currentCategoryName)
 
         db.runTransaction { transaction ->
             val doc = transaction.get(document)

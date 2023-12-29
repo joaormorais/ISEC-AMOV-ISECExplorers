@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -119,17 +120,18 @@ fun MainScreen(
                             },
 
                             navigationIcon = {
-                                IconButton(onClick = {
-                                    navController.navigateUp()
-
-                                    if (isLocation) {
-                                        app.userData.signOut()
+                                IconButton(
+                                    onClick = {
+                                        if (isLocation) {
+                                            app.userData.signOut()
+                                        } else {
+                                            navController.navigateUp()
+                                        }
                                     }
-
-                                }) {
+                                ) {
                                     Icon(
-                                        Icons.Filled.ArrowBack,
-                                        contentDescription = "Back"
+                                        imageVector = if (isLocation) Icons.Filled.ExitToApp else Icons.Filled.ArrowBack,
+                                        contentDescription = if (isLocation) "Logout" else "Back"
                                     )
                                 }
                             },

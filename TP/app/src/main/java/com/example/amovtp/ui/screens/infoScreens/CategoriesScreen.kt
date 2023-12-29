@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.amovtp.R
+import com.example.amovtp.data.LocalUser
 import com.example.amovtp.ui.viewmodels.infoViewModels.CategoriesViewModel
 import com.example.amovtp.utils.Consts
 
@@ -56,9 +57,9 @@ fun CategoriesScreen(
 
     // info for the buttons in the card
     val localUserDM = categoriesViewModel.getLocalUser()
-    var currentUserId by remember { mutableStateOf("") }
+    var localUserUI by remember { mutableStateOf(LocalUser()) }
     LaunchedEffect(key1 = localUserDM.value, block = {
-        currentUserId = localUserDM.value.userId
+        localUserUI = localUserDM.value
     })
 
     Box(
@@ -71,13 +72,15 @@ fun CategoriesScreen(
         ) {
             items(categories, key = { it.name }) {
 
+                var isCategoryApproved by remember { mutableStateOf(it.isApproved) }
                 var isDetailExpanded by remember { mutableStateOf(false) }
-                var isVotedByUser by remember {
+                var isApprovedByUser by remember {
                     mutableStateOf(
-                        categoriesViewModel.findVoteForApprovedCategoryByUser(it.name)
+                        categoriesViewModel.findVoteForApprovedCategoryByUser(
+                            it.name
+                        )
                     )
                 }
-                var isCategoryApproved by remember { mutableStateOf(it.isApproved) }
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
@@ -149,7 +152,6 @@ fun CategoriesScreen(
                                 )
                                 Spacer(modifier.height(8.dp))
                                 if (!isCategoryApproved) {
-                                    //TODO: quem criou a categoria não deve poder aprovar a mesma
                                     Divider(color = Color.DarkGray, thickness = 1.dp)
                                     Spacer(modifier.height(8.dp))
                                     Text(
@@ -166,17 +168,17 @@ fun CategoriesScreen(
                                         fontSize = 12.sp
                                     )
 
-                                    if (currentUserId != "")
-                                        if (currentUserId != it.userId) {
-                                            if (!isVotedByUser) {
+                                    if (localUserUI.userId != "")
+                                        if (localUserUI.userId != it.userId) {
+                                            if (!isApprovedByUser) {
                                                 Spacer(modifier.height(8.dp))
                                                 Button(
                                                     onClick = {
-                                                        isVotedByUser = true
                                                         categoriesViewModel.voteForApprovalCategoryByUser(
                                                             it.name
                                                         )
                                                         isCategoryApproved = it.isApproved
+                                                        isApprovedByUser = categoriesViewModel.findVoteForApprovedCategoryByUser(it.name)
                                                     },
                                                 ) {
                                                     Row {
@@ -192,11 +194,12 @@ fun CategoriesScreen(
                                                 Spacer(modifier.height(8.dp))
                                                 Button(
                                                     onClick = {
-                                                        isVotedByUser = false
                                                         categoriesViewModel.removeVoteForApprovalCategoryByUser(
                                                             it.name
                                                         )
                                                         isCategoryApproved = it.isApproved
+                                                        isApprovedByUser = categoriesViewModel.findVoteForApprovedCategoryByUser(it.name)
+
                                                     },
                                                 ) {
                                                     Row {
@@ -228,7 +231,6 @@ fun CategoriesScreen(
                                 }
                             }
                         }
-
                 }
             }
         }

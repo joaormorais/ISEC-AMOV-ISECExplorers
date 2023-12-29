@@ -1,6 +1,5 @@
 package com.example.amovtp.ui.screens.infoScreens
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -49,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.amovtp.R
+import com.example.amovtp.data.LocalUser
 import com.example.amovtp.data.Location
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuOrders
 import com.example.amovtp.ui.screens.Screens
@@ -79,9 +79,9 @@ fun LocationsScreen(
 
     // info for the buttons in the card
     val localUserDM = locationsViewModel.getLocalUser()
-    var currentUserId by remember { mutableStateOf("") }
+    var localUserUI by remember { mutableStateOf(LocalUser()) }
     LaunchedEffect(key1 = localUserDM.value, block = {
-        currentUserId = localUserDM.value.userId
+        localUserUI = localUserDM.value
     })
 
     Column(
@@ -130,15 +130,18 @@ fun LocationsScreen(
                 .fillMaxSize()
                 .padding(top = 8.dp)
         ) {
-            items(locationsUI) {
+            items(locationsUI, key = { it.name }) {
 
+                var isLocationApproved by remember { mutableStateOf(it.isApproved) }
                 var isDetailExpanded by remember { mutableStateOf(false) }
-                var isVotedByUser by remember {
+                var isApprovedByUser by remember {
                     mutableStateOf(
-                        locationsViewModel.findVoteForApprovedLocationByUser(it.name)
+                        locationsViewModel.findVoteForApprovedLocationByUser(
+                            it.name
+                        )
                     )
                 }
-                var isLocationApproved by remember { mutableStateOf(it.isApproved) }
+                //TODO: o botao de remove é do mesmo genero do isApprovedByUser
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
@@ -264,17 +267,61 @@ fun LocationsScreen(
                                         fontSize = 12.sp
                                     )
 
-                                    if (currentUserId != "")
-                                        if (currentUserId != it.userId) {
-                                            if (!isVotedByUser) {
-                                                Spacer(modifier.height(8.dp))
-                                                Button(
-                                                    onClick = {
-                                                        isVotedByUser = true
+                                    if (localUserUI.userId != "")
+                                        if (localUserUI.userId != it.userId) {
+                                            Spacer(modifier.height(8.dp))
+                                            /*Button(
+                                                onClick = {
+                                                    if (!isApprovedByUser) {
                                                         locationsViewModel.voteForApprovalLocationByUser(
                                                             it.name
                                                         )
                                                         isLocationApproved = it.isApproved
+                                                        isApprovedByUser =
+                                                            locationsViewModel.findVoteForApprovedLocationByUser(
+                                                                it.name
+                                                            )
+                                                    } else {
+                                                        locationsViewModel.removeVoteForApprovalLocationByUser(
+                                                            it.name
+                                                        )
+                                                        isLocationApproved = it.isApproved
+                                                        isApprovedByUser =
+                                                            locationsViewModel.findVoteForApprovedLocationByUser(
+                                                                it.name
+                                                            )
+                                                    }
+                                                },
+                                            ) {
+                                                if (!isApprovedByUser) {
+                                                    Row {
+                                                        Text(stringResource(R.string.approve))
+                                                        Icon(
+                                                            Icons.Rounded.ThumbUp,
+                                                            "Approve",
+                                                            modifier = modifier.padding(start = 8.dp)
+                                                        )
+                                                    }
+                                                } else {
+                                                    Row {
+                                                        Text(stringResource(R.string.disapprove))
+                                                        Icon(
+                                                            Icons.Rounded.Close,
+                                                            "Disapprove",
+                                                            modifier = modifier.padding(start = 8.dp)
+                                                        )
+                                                    }
+                                                }
+                                            }*/ // TODO: duvida defesa --> porque que com o mesmo botao, nao atualiza a UI
+                                            if (!isApprovedByUser) {
+                                                Spacer(modifier.height(8.dp))
+                                                Button(
+                                                    onClick = {
+                                                        locationsViewModel.voteForApprovalLocationByUser(
+                                                            it.name
+                                                        )
+                                                        isLocationApproved = it.isApproved
+                                                        isApprovedByUser = locationsViewModel.findVoteForApprovedLocationByUser(it.name)
                                                     },
                                                 ) {
                                                     Row {
@@ -290,11 +337,11 @@ fun LocationsScreen(
                                                 Spacer(modifier.height(8.dp))
                                                 Button(
                                                     onClick = {
-                                                        isVotedByUser = false
                                                         locationsViewModel.removeVoteForApprovalLocationByUser(
                                                             it.name
                                                         )
                                                         isLocationApproved = it.isApproved
+                                                        isApprovedByUser = locationsViewModel.findVoteForApprovedLocationByUser(it.name)
                                                     },
                                                 ) {
                                                     Row {

@@ -59,7 +59,6 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.amovtp.R
 import com.example.amovtp.data.LocalUser
-import com.example.amovtp.data.Location
 import com.example.amovtp.data.PointOfInterest
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuFilters
 import com.example.amovtp.ui.composables.DropDownMenus.DropdownMenuOrders
@@ -109,15 +108,11 @@ fun PointsOfInterestScreen(
 
     // info for the buttons in the card
     val localUserDM =
-        pointsOfInterestViewModel.getLocalUser() //TODO: fazer aqui o mesmo para o locauserdata (modelo de dados e UI) deixar de ser apenas strinng e transformar em valor geral
+        pointsOfInterestViewModel.getLocalUser()
     var localUserUI by remember { mutableStateOf(LocalUser()) }
     LaunchedEffect(key1 = localUserDM.value, block = {
         localUserUI = localUserDM.value
     })
-    /*var currentUserId by remember { mutableStateOf("") }
-    LaunchedEffect(key1 = localUserDM.value, block = {
-        currentUserId = localUserDM.value.userId
-    })*/
 
     // info for the filter of a unnique location
     LaunchedEffect(key1 = itemName) { //TODO: ver se de facto é preciso um LaunchedEffet, ou não
@@ -279,11 +274,6 @@ fun PointsOfInterestScreen(
 
                 var isPointOfInterestApproved by remember { mutableStateOf(it.isApproved) }
                 var isDetailExpanded by remember { mutableStateOf(false) }
-                /*var isVotedByUser by remember {
-                    mutableStateOf(
-                        pointsOfInterestViewModel.findVoteForApprovedPointOfInterestByUser(it.name)
-                    )
-                }*/
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
