@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.ThumbUp
@@ -178,7 +179,10 @@ fun CategoriesScreen(
                                                             it.name
                                                         )
                                                         isCategoryApproved = it.isApproved
-                                                        isApprovedByUser = categoriesViewModel.findVoteForApprovedCategoryByUser(it.name)
+                                                        isApprovedByUser =
+                                                            categoriesViewModel.findVoteForApprovedCategoryByUser(
+                                                                it.name
+                                                            )
                                                     },
                                                 ) {
                                                     Row {
@@ -198,7 +202,10 @@ fun CategoriesScreen(
                                                             it.name
                                                         )
                                                         isCategoryApproved = it.isApproved
-                                                        isApprovedByUser = categoriesViewModel.findVoteForApprovedCategoryByUser(it.name)
+                                                        isApprovedByUser =
+                                                            categoriesViewModel.findVoteForApprovedCategoryByUser(
+                                                                it.name
+                                                            )
 
                                                     },
                                                 ) {
@@ -212,16 +219,31 @@ fun CategoriesScreen(
                                                     }
                                                 }
                                             }
-                                        }else {
+                                        } else {
                                             Spacer(modifier.height(8.dp))
                                             Button(
-                                                onClick = {navController?.navigate("EditCategory?itemName=${it.name}") },
+                                                onClick = { navController?.navigate("EditCategory?itemName=${it.name}") },
                                             ) {
                                                 Row {
                                                     Text(stringResource(R.string.edit))
                                                     Icon(
                                                         Icons.Rounded.Edit,
                                                         "Edit",
+                                                        modifier = modifier.padding(start = 8.dp)
+                                                    )
+                                                }
+                                            }
+                                            Spacer(modifier.height(8.dp))
+                                            Button(
+                                                onClick = {
+
+                                                },
+                                            ) {
+                                                Row {
+                                                    Text(stringResource(R.string.remove))
+                                                    Icon(
+                                                        Icons.Rounded.Delete,
+                                                        "Delete",
                                                         modifier = modifier.padding(start = 8.dp)
                                                     )
                                                 }
