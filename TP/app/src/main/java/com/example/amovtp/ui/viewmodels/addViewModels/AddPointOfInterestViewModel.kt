@@ -45,17 +45,22 @@ class AddPointOfInterestViewModel(
         isManualCoords: Boolean,
         location: List<String>,
         category: String,
-        imgs: List<String>
-    ): String {
+        imgs: List<String>,
+        onResult: (String) -> Unit
+    ){
         val tempPointsOfInterest = geoData.pointsOfInterest
         val tempUserId = userData.localUser.value.userId
 
-        if (tempPointsOfInterest.value.any { it.name == name })
-            return Consts.ERROR_EXISTING_NAME
-        else if (tempPointsOfInterest.value.any { it.lat == lat && it.long == long })
-            return Consts.ERROR_EXISTING_POINT_OF_INTEREST
-        else if (tempUserId.isBlank())
-            return Consts.ERROR_NEED_LOGIN
+        if (tempPointsOfInterest.value.any { it.name == name }) {
+            onResult(Consts.ERROR_EXISTING_NAME)
+            return
+        }else if (tempPointsOfInterest.value.any { it.lat == lat && it.long == long }) {
+            onResult(Consts.ERROR_EXISTING_POINT_OF_INTEREST)
+            return
+        }else if (tempUserId.isBlank()) {
+            onResult(Consts.ERROR_NEED_LOGIN)
+            return
+        }
 
         geoData.addPointOfInterest(
             tempUserId,
@@ -68,11 +73,9 @@ class AddPointOfInterestViewModel(
             category,
             imgs
         )// TODO: metter aqui parenteses e mandar o erro para a UI (return erro)
-        /*{
-            if exception != null
-            return exception.tostring()
-        }*/
-
-        return Consts.SUCCESS
+        { exception ->
+            val message = if (exception == null) Consts.SUCCESS else exception.toString()
+            onResult(message)
+        }
     }
 }

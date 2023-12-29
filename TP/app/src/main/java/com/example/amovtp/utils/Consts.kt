@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 class Consts {
     companion object {
+
         const val POINTS_OF_INTEREST: String = "Points of Interest"
         const val DEFAULT_VALUE: String = "DEFAULT_VALUE"
         const val ALL_LOCATIONS: String = "ALL_LOCATIONS"

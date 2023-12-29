@@ -36,6 +36,8 @@
     <string name="not_approved_point">Este ponto de interesse ainda não foi aprovada por pelo menos 2 utilizadores!</string>
     <string name="category_description">Categoria: %1$s</string>
     <string name="name_pw_needed">Nome de utilizador e password necessários</string>
+    <string name="email_needed">Email necessário!</string>
+    <string name="pw_needed">Password necessária!</string>
     <string name="unknown_error">Erro descohecido</string>
     <string name="votes_for_approval">Votos para aprovação: %1$s</string>
     <string name="not_approved_category">Esta categoria ainda não foi aprovada por pelo menos 2 utilizadores!</string>
@@ -57,6 +59,20 @@
     <string name="choose_a_category">Escolher uma categoria</string>
     <string name="choose_locations">Associar localizações</string>
     <string name="edit">Editar</string>
+    <string name="error_existing_name">Erro: O nome já existe!</string>
+    <string name="error_existing_pi">Erro: Este Ponto de Interesse já existe!</string>
+    <string name="error_existing_location">Erro: Esta Localização já existe!</string>
+    <string name="title_locations">Explorar Localizações</string>
+    <string name="title_points_of_interest">Explorar Pontos de Interesse</string>
+    <string name="title_categories">Categorias disponíveis</string>
+    <string name="title_login">Login para continuar...</string>
+    <string name="title_add_location">Adicionar nova Localização</string>
+    <string name="title_add_point_of_interest">Adicionar um Ponto de Interesse</string>
+    <string name="title_add_category">Adicionar uma Categoria</string>
+    <string name="title_edit_location">Editar uma Localização</string>
+    <string name="title_edit_point_of_interest">Editar um Ponto de Interesse</string>
+    <string name="title_edit_category">Editar Categoria</string>
+    <string name="title_credits">Créditos</string>
     <string name="edit_category">Editar categoria</string>
     <string name="remove">Remover</string>
 </resources>

@@ -216,8 +216,8 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         lat: Double,
         long: Double,
         isManualCoords: Boolean,
-        imgs: List<String>
-        // onResult: (Throwable?) -> Unit
+        imgs: List<String>,
+        onResult: (Throwable?) -> Unit
     ) {
 
         firebaseGeoDataService.addLocationToFirestore(
@@ -236,8 +236,10 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 false
             )
         ) {
-            //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
-        }
+        //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
+            exception ->
+            onResult(exception)
+         }
 
     }
 
@@ -250,8 +252,8 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         isManualCoords: Boolean,
         locations: List<String>,
         category: String,
-        imgs: List<String>
-        // onResult: (Throwable?) -> Unit
+        imgs: List<String>,
+        onResult: (Throwable?) -> Unit
     ) {
 
         firebaseGeoDataService.addPointOfInterestToFirestore(
@@ -274,6 +276,8 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
             )
         ) {
             //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
+            exception ->
+            onResult(exception)
         }
 
         for (i in _locations.value)
@@ -290,7 +294,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         name: String,
         description: String,
         img: String,
-        // onResult: (Throwable?) -> Unit
+        onResult: (Throwable?) -> Unit
     ) {
 
         firebaseGeoDataService.addCategoryToFirestore(
@@ -306,6 +310,8 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
             )
         ) {
             //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
+            exception ->
+            onResult(exception)
         }
 
     }

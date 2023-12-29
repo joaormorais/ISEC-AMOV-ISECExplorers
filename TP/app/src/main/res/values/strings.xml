@@ -35,6 +35,8 @@
     <string name="not_approved_point">This point of interest hasn\'t been approved by at least 2 users!</string>
     <string name="category_description">Category: %1$s</string>
     <string name="name_pw_needed">Username and password needed!</string>
+    <string name="email_needed">Email needed!</string>
+    <string name="pw_needed">Password needed!</string>
     <string name="unknown_error">Unknown error</string>
     <string name="votes_for_approval">Votes for approval: %1$s</string>
     <string name="not_approved_category">This category hasn\'t been approved by at least 2 users!</string>
@@ -56,6 +58,20 @@
     <string name="choose_a_category">Choose a category</string>
     <string name="choose_locations">Associate locations</string>
     <string name="edit">Edit</string>
+    <string name="error_existing_name">Error: This name already exists!</string>
+    <string name="error_existing_pi">Error: This Point of Interest already exists!</string>
+    <string name="error_existing_location">Error: This Location already exists!</string>
+    <string name="title_locations">Explore Locations</string>
+    <string name="title_points_of_interest">Explore Points Of Interest</string>
+    <string name="title_categories">Available Categories</string>
+    <string name="title_login">Login to continue...</string>
+    <string name="title_add_location">Add a new Location</string>
+    <string name="title_add_point_of_interest">Add a new Point Of Interest</string>
+    <string name="title_add_category">Add a new Category</string>
+    <string name="title_edit_location">Edit Location</string>
+    <string name="title_edit_point_of_interest">Edit Point Of Interest</string>
+    <string name="title_edit_category">Edit Category</string>
+    <string name="title_credits">Credits</string>
     <string name="edit_category">Edit category</string>
     <string name="remove">Remove</string>
 </resources>
