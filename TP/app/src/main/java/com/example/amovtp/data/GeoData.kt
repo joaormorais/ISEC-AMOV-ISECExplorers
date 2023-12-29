@@ -27,8 +27,8 @@ data class Location(
  */
 data class Category(
     val userId: String,
-    val name: String,
-    val description: String,
+    var name: String,
+    var description: String,
     val img: String,
     var votesForApproval: Long,
     var isApproved: Boolean,
@@ -172,6 +172,41 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         )
     }
 
+    /* ------------------------  Update info to Firesore (Start) ------------------------ */
+
+    fun updateLocation(
+        locationName: String
+    ) {
+        firebaseGeoDataService.updateLocationToFirestore(
+            locationName,
+            _locations.value.find { it.name == locationName }) {
+            //TODO: tratar a exception
+        }
+    }
+
+    fun updatePointOfInterest(
+        pointOfInterestName: String
+    ) {
+        firebaseGeoDataService.updatePointOfInterestToFirestore(
+            pointOfInterestName,
+            _pointsOfInterest.value.find { it.name == pointOfInterestName }) {
+            //TODO: tratar a exception
+        }
+    }
+
+    fun updateCategory(
+        firebaseName: String,
+        localName: String
+    ) {
+        firebaseGeoDataService.updateCategoryToFirestore(
+            firebaseName,
+            _categories.value.find { it.name == localName }) {
+            //TODO: tratar a exception
+        }
+    }
+
+    /* ------------------------  Update info to Firesore (End) ------------------------ */
+
     /* ------------------------  Add, remove, and edit info (Start) ------------------------ */
 
     fun addLocation(
@@ -275,28 +310,16 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
 
     }
 
-    fun editLocation(
-        locationName:String
-    ){
-        firebaseGeoDataService.updateLocationToFirestore(locationName,_locations.value.find { it.name == locationName }){
-            //TODO: tratar a exception
-        }
-    }
-
-    fun editPointOfInterest(
-        pointOfInterestName:String
-    ){
-        firebaseGeoDataService.updatePointOfInterestToFirestore(pointOfInterestName,_pointsOfInterest.value.find { it.name == pointOfInterestName }){
-            //TODO: tratar a exception
-        }
-    }
-
     fun editCategory(
-        categoryName:String
-    ){
-        firebaseGeoDataService.updateCategoryToFirestore(categoryName,_categories.value.find { it.name == categoryName }){
-            //TODO: tratar a exception
-        }
+        currentName: String,
+        categoryName: String,
+        categoryDescription: String
+    ) {
+        val tempCategory = _categories.value.find { it.name == currentName }
+        tempCategory?.name = categoryName
+        tempCategory?.description = categoryDescription
+        tempCategory?.votesForApproval = 0
+        tempCategory?.isApproved = false
     }
 
     /* ------------------------  Add, remove, and edit info (End) ------------------------ */
@@ -322,11 +345,13 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
 
     /* ------------------------  Point of interest approval (Start) ------------------------ */
     fun voteForApprovalPointOfInterest(pointOfInterestName: String) {
-        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.apply { votesForApproval++ }
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }
+            ?.apply { votesForApproval++ }
     }
 
     fun removeVoteForApprovalPointOfInterest(pointOfInterestName: String) {
-        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.apply { votesForApproval-- }
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }
+            ?.apply { votesForApproval-- }
     }
 
     fun approvePointOfInterest(pointOfInterestName: String) {
@@ -334,7 +359,8 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
     }
 
     fun disapprovePointOfInterest(pointOfInterestName: String) {
-        _pointsOfInterest.value.find { it.name == pointOfInterestName }?.apply { isApproved = false }
+        _pointsOfInterest.value.find { it.name == pointOfInterestName }
+            ?.apply { isApproved = false }
     }
     /* ------------------------  Point of interest approval (End) ------------------------ */
 

@@ -81,6 +81,8 @@ fun AddLocationScreen(
             item {
 
                 NameDescription(
+                    "",
+                    "",
                     nameChanged = { newName ->
                         name = newName
                     },
@@ -165,7 +167,7 @@ fun AddLocationScreen(
     }
 }
 
-fun isAddLocationValid(
+fun isAddLocationValid( //TODO: passar esta função para a viewModel (Sandra)
     name: String,
     description: String,
     lat: Double?,

@@ -33,7 +33,7 @@ class AddCategoryViewModel(
         else if (tempUserId.isBlank())
             return Consts.ERROR_NEED_LOGIN
 
-        geoData.addCategory(tempUserId, name, description, img)// TODO: metter aqui parenteses e mandar o erro para a UI (return erro)
+        geoData.addCategory(tempUserId, name, description, img) // TODO: metter aqui parenteses e mandar o erro para a UI (return erro)
         /*{
             if exception != null
             return exception.tostring()

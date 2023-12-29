@@ -62,12 +62,12 @@ fun AddPointOfInterestScreen(
     var imgsGallery by remember { mutableStateOf(listOf<String>()) }
     var imgsCamera by remember { mutableStateOf(listOf<String>()) }
 
-    var selectedLocations by remember { mutableStateOf(mutableListOf<String>()) }
+    val selectedLocations by remember { mutableStateOf(mutableListOf<String>()) }
     var expanded1 by remember { mutableStateOf(false) }
-    var locationList: MutableState<List<Location>> = addPointOfInterestViewModel.getLocations()
+    val locationList: MutableState<List<Location>> = addPointOfInterestViewModel.getLocations()
     var selectedCategory by remember { mutableStateOf("") }
     var expanded2 by remember { mutableStateOf(false) }
-    var categoryList: MutableState<List<Category>> = addPointOfInterestViewModel.getCategories()
+    val categoryList: MutableState<List<Category>> = addPointOfInterestViewModel.getCategories()
 
     val snackbarHostState = remember { SnackbarHostState() }
     var showSnackBar by remember { mutableStateOf(false) }
@@ -102,6 +102,8 @@ fun AddPointOfInterestScreen(
             item {
 
                 NameDescription(
+                    "",
+                    "",
                     nameChanged = { newName ->
                         name = newName
                     },
@@ -236,7 +238,6 @@ fun AddPointOfInterestScreen(
                             description,
                             lat,
                             long,
-                            isManual,
                             selectedLocations,
                             selectedCategory,
                             imgsGallery,
@@ -280,12 +281,11 @@ fun AddPointOfInterestScreen(
     }
 }
 
-fun isAddPointOfInterestValid(
+fun isAddPointOfInterestValid( //TODO: passar esta função para a viewModel (Sandra)
     name: String,
     description: String,
     lat: Double?,
     long: Double?,
-    isManualCoords: Boolean,
     selectedLocations: List<String>,
     selectedCategory: String,
     imgsGallery: List<String>,

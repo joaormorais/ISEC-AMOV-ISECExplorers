@@ -138,14 +138,14 @@ class PointsOfInterestViewModel(
         userData.addPointOfInterestApproved(pointOfInterestName)
         if (geoData.pointsOfInterest.value.find { it.name == pointOfInterestName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
             geoData.approvePointOfInterest(pointOfInterestName)
-        geoData.editPointOfInterest(pointOfInterestName)
+        geoData.updatePointOfInterest(pointOfInterestName)
         userData.editLocalUser()
     }
 
     fun removeVoteForApprovalPointOfInterestByUser(pointOfInterestName: String) {
         geoData.removeVoteForApprovalPointOfInterest(pointOfInterestName)
         userData.removePointOfInterestApproved(pointOfInterestName)
-        geoData.editPointOfInterest(pointOfInterestName)
+        geoData.updatePointOfInterest(pointOfInterestName)
         userData.editLocalUser()
     }
 
@@ -165,7 +165,7 @@ class PointsOfInterestViewModel(
         geoData.addClassificationToPoint(pointOfInterestName, classification)
         geoData.incrementNumberOfClassifications(pointOfInterestName)
         userData.addPointOfInterestClassified(pointOfInterestName, classification)
-        geoData.editPointOfInterest(pointOfInterestName)
+        geoData.updatePointOfInterest(pointOfInterestName)
         userData.editLocalUser()
     }
 
@@ -176,7 +176,7 @@ class PointsOfInterestViewModel(
         )
         geoData.decrementNumberOfClassifications(pointOfInterestName)
         userData.removePointOfInterestClassified(pointOfInterestName)
-        geoData.editPointOfInterest(pointOfInterestName)
+        geoData.updatePointOfInterest(pointOfInterestName)
         userData.editLocalUser()
     }
 

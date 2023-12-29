@@ -107,7 +107,7 @@ fun MainScreen(
             if (destination.route == Screens.POINTS_OF_INTEREST.route) Consts.POINTS_OF_INTEREST else destination.route.toString()
     }
 
-    AMOVTPTheme() {
+    AMOVTPTheme {
         Box(
             modifier = modifier.fillMaxSize()
         ) {
@@ -347,7 +347,7 @@ fun MainScreen(
                         editCategoryViewModel =
                             viewModel(
                                 factory = EditCategoryViewModelFactory(
-                                    app.geoData
+                                    app.geoData, app.userData
                                 )
                             )
                         EditCategoryScreen(

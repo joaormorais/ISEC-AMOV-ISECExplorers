@@ -17,13 +17,25 @@ import com.example.amovtp.R
 
 @Composable
 fun NameDescription(
+    editingName: String,
+    editingDescription: String,
     nameChanged: (String) -> Unit,
     descriptionChanged: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    var name by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    var name by remember {
+        if (editingName.isBlank())
+            mutableStateOf("")
+        else
+            mutableStateOf(editingName)
+    }
+    var description by remember {
+        if (editingDescription.isBlank())
+            mutableStateOf("")
+        else
+            mutableStateOf(editingDescription)
+    }
 
     Column(
         modifier = modifier

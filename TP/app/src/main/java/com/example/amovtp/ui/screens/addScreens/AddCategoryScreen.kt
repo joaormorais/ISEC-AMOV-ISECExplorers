@@ -71,6 +71,8 @@ fun AddCategoryScreen(
             item{
 
                 NameDescription(
+                    "",
+                    "",
                     nameChanged = { newName ->
                         name = newName
                     },
@@ -131,7 +133,7 @@ fun AddCategoryScreen(
     }
 }
 
-fun isAddCategoryValid(
+fun isAddCategoryValid( //TODO: passar esta função para a viewModel (Sandra)
     name: String,
     description: String,
     image: String,
