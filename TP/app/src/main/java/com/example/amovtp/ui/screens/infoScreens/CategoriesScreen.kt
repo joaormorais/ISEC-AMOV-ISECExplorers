@@ -25,6 +25,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,6 +63,7 @@ fun CategoriesScreen(
     LaunchedEffect(key1 = localUserDM.value, block = {
         localUserUI = localUserDM.value
     })
+
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -207,7 +209,6 @@ fun CategoriesScreen(
                                                             categoriesViewModel.findVoteForApprovedCategoryByUser(
                                                                 it.id
                                                             )
-
                                                     },
                                                 ) {
                                                     Row {

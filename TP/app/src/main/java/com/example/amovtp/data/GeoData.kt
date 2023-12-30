@@ -181,32 +181,29 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
     /* ------------------------  Update info to Firestore (Start) ------------------------ */
 
     fun updateLocation(
-        locationId: String
+        locationId: String,
     ) {
         firebaseGeoDataService.updateLocationToFirestore(
             locationId,
             _locations.value.find { it.id == locationId }) {
-            //TODO: tratar a exception
         }
     }
 
     fun updatePointOfInterest(
-        pointOfInterestId: String
+        pointOfInterestId: String,
     ) {
         firebaseGeoDataService.updatePointOfInterestToFirestore(
             pointOfInterestId,
             _pointsOfInterest.value.find { it.id == pointOfInterestId }) {
-            //TODO: tratar a exception
         }
     }
 
     fun updateCategory(
-        categoryId: String
+        categoryId: String,
     ) {
         firebaseGeoDataService.updateCategoryToFirestore(
             categoryId,
             _categories.value.find { it.id == categoryId }) {
-            //TODO: tratar a exception
         }
     }
 
@@ -242,7 +239,6 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 false
             )
         ) {
-            //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
                 exception ->
             onResult(exception)
         }
@@ -282,7 +278,6 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 false
             )
         ) {
-            //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
                 exception ->
             onResult(exception)
         }
@@ -317,7 +312,6 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 false
             )
         ) {
-            //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
                 exception ->
             onResult(exception)
         }

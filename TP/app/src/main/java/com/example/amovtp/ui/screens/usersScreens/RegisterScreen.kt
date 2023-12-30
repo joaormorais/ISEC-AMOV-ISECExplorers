@@ -92,7 +92,7 @@ fun RegisterScreen(
 
             Button(
                 onClick = {
-                    if (isRegisterValid(
+                    if (registerViewModel.isRegisterValid(
                             email,
                             password,
                             confirmPassword,
@@ -107,7 +107,6 @@ fun RegisterScreen(
                     ) {
                         registerViewModel.register(email,password){exception ->
                             if(exception!=null){
-                                //TODO: mostrar aqui a excecao
                                 Log.d("RegisterScreen",
                                     "exception recebida = ${exception.message}")
                                 errorMessage = exception.message
@@ -127,37 +126,3 @@ fun RegisterScreen(
     }
 }
 
-fun isRegisterValid(
-    email: String,
-    password: String,
-    confirmPassword: String,
-    emailNeeded: String,
-    pwNeeded: String,
-    invalidEmailError: String,
-    passwordsDontMatchError: String,
-    errorMessage: (String) -> Unit
-): Boolean {
-
-    //TODO: dividir em dois popups -> fazer um para o nome e depois pw
-    if (email.isBlank()){
-        errorMessage(emailNeeded)
-        return false
-    }
-
-    if(password.isBlank() || confirmPassword.isBlank()) {
-        errorMessage(pwNeeded)
-        return false
-    }
-
-    if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-        errorMessage(invalidEmailError)
-        return false
-    }
-
-    if (password != confirmPassword) {
-        errorMessage(passwordsDontMatchError)
-        return false
-    }
-
-    return true
-}

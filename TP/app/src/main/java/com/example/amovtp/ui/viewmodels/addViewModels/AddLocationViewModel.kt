@@ -48,12 +48,45 @@ class AddLocationViewModel(
         }else if (currentUserId.isBlank()) {
             onResult(Consts.ERROR_NEED_LOGIN)
         }else{
-            geoData.addLocation(currentUserId, name, description, lat, long, isManualCoords, imgs) // TODO: metter aqui parenteses e mandar o erro para a UI (return erro)
+            geoData.addLocation(currentUserId, name, description, lat, long, isManualCoords, imgs)
             {exception ->
                 val message = if (exception == null) Consts.SUCCESS else exception.toString()
                 onResult(message)
             }
         }
+    }
+
+    fun isAddLocationValid(
+        name: String,
+        description: String,
+        lat: Double?,
+        long: Double?,
+        isManualCoords: Boolean,
+        imgsGallery: List<String>,
+        imgsCamera: List<String>,
+        fillNameError : String,
+        fillDescriptionError : String,
+        fillCoordinatesError : String,
+        fillImagesError: String,
+        errorMessage: (String) -> Unit
+    ): Boolean {
+        if(name.isBlank()){
+            errorMessage(fillNameError)
+            return false
+        }
+        if (description.isBlank()){
+            errorMessage(fillDescriptionError)
+            return false
+        }
+        if(isManualCoords && (lat == null || long == null)){
+            errorMessage(fillCoordinatesError)
+            return false
+        }
+        if(imgsGallery.isEmpty() && imgsCamera.isEmpty()){
+            errorMessage(fillImagesError)
+            return false
+        }
+        return true
     }
 
 }

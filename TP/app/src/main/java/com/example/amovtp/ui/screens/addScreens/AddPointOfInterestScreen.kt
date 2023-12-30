@@ -81,6 +81,7 @@ fun AddPointOfInterestScreen(
     val fillCategoryError = stringResource(R.string.invalid_category)
     val nameExistsError = stringResource(R.string.error_existing_name)
     val piExistsError = stringResource(R.string.error_existing_pi)
+    val loginNeededError = stringResource(R.string.error_you_have_to_login)
 
     LaunchedEffect(showSnackBar) {
         if (showSnackBar) {
@@ -238,7 +239,7 @@ fun AddPointOfInterestScreen(
                     ),
                     onClick = {
 
-                        val validationResult = isAddPointOfInterestValid(
+                        val validationResult = addPointOfInterestViewModel.isAddPointOfInterestValid(
                             name,
                             description,
                             lat,
@@ -260,7 +261,6 @@ fun AddPointOfInterestScreen(
                         if (validationResult) {
                             val mixedImgs = imgsGallery + imgsCamera
 
-                            //TODO: receber os erros e mostrar na toast (sandra)
                             addPointOfInterestViewModel.addPointOfInterest(
                                 name,
                                 description,
@@ -284,6 +284,10 @@ fun AddPointOfInterestScreen(
                                         showSnackBar = true
                                         errorMessage = piExistsError
                                     }
+                                    Consts.ERROR_NEED_LOGIN ->{
+                                        showSnackBar=true
+                                        errorMessage=loginNeededError
+                                    }
                                     else -> {
                                         showSnackBar = true
                                         errorMessage = resultMessage
@@ -303,46 +307,3 @@ fun AddPointOfInterestScreen(
     }
 }
 
-fun isAddPointOfInterestValid( //TODO: passar esta função para a viewModel (Sandra)
-    name: String,
-    description: String,
-    lat: Double?,
-    long: Double?,
-    selectedLocations: List<String>,
-    selectedCategory: String,
-    imgsGallery: List<String>,
-    imgsCamera: List<String>,
-    fillNameError: String,
-    fillDescriptionError: String,
-    fillCoordinatesError: String,
-    fillImagesError: String,
-    fillLocationError: String,
-    fillCategoryError: String,
-    errorMessage: (String) -> Unit
-): Boolean {
-    if (name.isBlank()) {
-        errorMessage(fillNameError)
-        return false
-    }
-    if (description.isBlank()) {
-        errorMessage(fillDescriptionError)
-        return false
-    }
-    if (lat == null || long == null) {
-        errorMessage(fillCoordinatesError)
-        return false
-    }
-    if (selectedLocations.isEmpty()) {
-        errorMessage(fillLocationError)
-        return false
-    }
-    if (selectedCategory.isBlank()) {
-        errorMessage(fillCategoryError)
-        return false
-    }
-    if (imgsGallery.isEmpty() && imgsCamera.isEmpty()) {
-        errorMessage(fillImagesError)
-        return false
-    }
-    return true
-}

@@ -80,7 +80,7 @@ class EditLocationViewModel(
             }
 
             geoData.editLocation(locationId, name, description, lat, long, isManualCoords)
-            geoData.updateLocation(locationId) //TODO: meter aqui parenteses e mandar o erro para a UI (return erro) Sandra
+            geoData.updateLocation(locationId)
             userData.removeVotesApprovalForLocation(locationId)
             userData.updateLocalUser()
             onResult(Consts.SUCCESS)

@@ -58,6 +58,7 @@ fun AddLocationScreen(
     val fillImagesError = stringResource(R.string.invalid_images)
     val nameExistsError = stringResource(R.string.error_existing_name)
     val locationExistsError = stringResource(R.string.error_existing_location)
+    val loginNeededError = stringResource(R.string.error_you_have_to_login)
 
     LaunchedEffect(showSnackBar) {
         if (showSnackBar) {
@@ -123,7 +124,7 @@ fun AddLocationScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = Consts.CONFIRMATION_COLOR, contentColor = Color.Black),
                 onClick = {
 
-                        val validationResult = isAddLocationValid(
+                        val validationResult = addLocationViewModel.isAddLocationValid(
                             name,
                             description,
                             lat,
@@ -142,7 +143,6 @@ fun AddLocationScreen(
                         if(validationResult){
                             val mixedImgs = imgsGallery + imgsCamera
 
-                            //TODO: receber os erros e mostrar na toast (sandra)
                             addLocationViewModel.addLocation(
                                 name,
                                 description,
@@ -163,6 +163,10 @@ fun AddLocationScreen(
                                     Consts.ERROR_EXISTING_LOCATION -> {
                                         showSnackBar = true
                                         errorMessage = locationExistsError
+                                    }
+                                    Consts.ERROR_NEED_LOGIN ->{
+                                        showSnackBar=true
+                                        errorMessage=loginNeededError
                                     }
                                     else -> {
                                         showSnackBar = true
@@ -186,35 +190,3 @@ fun AddLocationScreen(
     }
 }
 
-fun isAddLocationValid( //TODO: passar esta função para a viewModel (Sandra)
-    name: String,
-    description: String,
-    lat: Double?,
-    long: Double?,
-    isManualCoords: Boolean,
-    imgsGallery: List<String>,
-    imgsCamera: List<String>,
-    fillNameError : String,
-    fillDescriptionError : String,
-    fillCoordinatesError : String,
-    fillImagesError: String,
-    errorMessage: (String) -> Unit
-): Boolean {
-    if(name.isBlank()){
-        errorMessage(fillNameError)
-        return false
-    }
-    if (description.isBlank()){
-        errorMessage(fillDescriptionError)
-        return false
-    }
-    if(isManualCoords && (lat == null || long == null)){
-        errorMessage(fillCoordinatesError)
-        return false
-    }
-    if(imgsGallery.isEmpty() && imgsCamera.isEmpty()){
-        errorMessage(fillImagesError)
-        return false
-    }
-    return true
-}
