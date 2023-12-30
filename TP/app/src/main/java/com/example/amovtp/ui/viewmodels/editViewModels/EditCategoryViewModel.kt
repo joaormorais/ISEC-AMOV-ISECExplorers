@@ -66,7 +66,7 @@ class EditCategoryViewModel(
             }
 
             geoData.editCategory(categoryId, name, description)
-            geoData.updateCategory(categoryId) //TODO: meter aqui parenteses e mandar o erro para a UI (return erro) Sandra
+            geoData.updateCategory(categoryId)
             userData.removeVotesApprovalForCategory(categoryId)
             userData.updateLocalUser()
             onResult(Consts.SUCCESS)
