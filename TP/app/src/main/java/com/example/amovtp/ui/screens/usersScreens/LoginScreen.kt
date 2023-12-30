@@ -103,7 +103,7 @@ fun LoginScreen(
                         Button(
                             onClick = {
                                 if (i.path == Screens.LOCATIONS.route) {
-                                    if (isLoginValid(
+                                    if (loginViewModel.isLoginValid(
                                             email,
                                             password,
                                             emailNeeded,
@@ -169,23 +169,3 @@ fun LoginScreen(
     }
 }
 
-fun isLoginValid(
-    email: String,
-    password: String,
-    emailNeeded: String,
-    pwNeeded: String,
-    errorMessage: (String) -> Unit
-): Boolean {
-
-    if (email.isBlank()){
-        errorMessage(emailNeeded)
-        return false
-    }
-
-    if (password.isBlank()){
-        errorMessage(pwNeeded)
-        return false
-    }
-
-    return true
-}
