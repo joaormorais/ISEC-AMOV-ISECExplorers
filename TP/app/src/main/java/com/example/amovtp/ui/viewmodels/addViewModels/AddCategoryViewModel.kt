@@ -36,7 +36,7 @@ class AddCategoryViewModel(
             onResult(Consts.ERROR_NEED_LOGIN)
             return
         }
-        geoData.addCategory(tempUserId, name, description, img)// TODO: metter aqui parenteses e mandar o erro para a UI (return erro)
+        geoData.addCategory(tempUserId, name, description, img)
         {exception ->
             val message = if (exception == null) Consts.SUCCESS else exception.toString()
             onResult(message)

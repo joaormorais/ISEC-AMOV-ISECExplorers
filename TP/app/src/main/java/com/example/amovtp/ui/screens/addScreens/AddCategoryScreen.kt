@@ -132,7 +132,6 @@ fun AddCategoryScreen(
                             }
                         }
                         else{
-                            // a validação falhou
                             showSnackBar = true
                         }
                     },
