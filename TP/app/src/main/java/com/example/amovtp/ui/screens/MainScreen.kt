@@ -111,18 +111,7 @@ fun MainScreen(
     val editCategoryTitle = stringResource(R.string.title_edit_category)
     val creditsTitle = stringResource(R.string.title_credits)
 
-//    navController.addOnDestinationChangedListener { controller, destination, arguments ->
-//        isLogin = (destination.route == Screens.LOGIN.route)
-//        isLocation = (destination.route == Screens.LOCATIONS.route)
-//        addLocation = (destination.route == Screens.LOCATIONS.route)
-//        addPointOfInterest = (destination.route == Screens.POINTS_OF_INTEREST.route)
-//        addCategory = (destination.route == Screens.CATEGORIES.route)
-//
-//        screenTitle =
-//            if (destination.route == Screens.POINTS_OF_INTEREST.route) Consts.POINTS_OF_INTEREST else destination.route.toString()
-//    }
-
-    navController.addOnDestinationChangedListener{ controller, destination, arguments ->
+    navController.addOnDestinationChangedListener { controller, destination, arguments ->
 
         isLogin = (destination.route == Screens.LOGIN.route)
         isLocation = (destination.route == Screens.LOCATIONS.route)
@@ -130,40 +119,51 @@ fun MainScreen(
         addPointOfInterest = (destination.route == Screens.POINTS_OF_INTEREST.route)
         addCategory = (destination.route == Screens.CATEGORIES.route)
 
-        when(destination.route){
+        when (destination.route) {
             Screens.LOGIN.route -> {
                 screenTitle = loginTitle
             }
+
             Screens.LOCATIONS.route -> {
                 screenTitle = locationTitle
             }
+
             Screens.POINTS_OF_INTEREST.route -> {
                 screenTitle = pointOfInterestTitle
             }
+
             Screens.CATEGORIES.route -> {
                 screenTitle = categoriesTitle
             }
+
             Screens.ADD_LOCATION.route -> {
                 screenTitle = addLocationTitle
             }
+
             Screens.ADD_POINT_OF_INTEREST.route -> {
                 screenTitle = addPointOfInterestTitle
             }
+
             Screens.ADD_CATEGORY.route -> {
                 screenTitle = addCategoryTitle
             }
+
             Screens.EDIT_LOCATIONS.route -> {
                 screenTitle = editLocationTitle
             }
+
             Screens.EDIT_POINT_OF_INTEREST.route -> {
                 screenTitle = editPointOfInterestTitle
             }
+
             Screens.EDIT_CATEGORY.route -> {
                 screenTitle = editCategoryTitle
             }
+
             Screens.CREDITS.route -> {
                 screenTitle = creditsTitle
             }
+
             else -> {
                 screenTitle = destination.route.toString()
             }
@@ -186,7 +186,9 @@ fun MainScreen(
                                 IconButton(
                                     onClick = {
                                         if (isLocation) {
-                                            app.userData.signOut()
+                                            if (app.userData.localUser.value.userId != "")
+                                                app.userData.signOut()
+                                            navController.navigateUp()
                                         } else {
                                             navController.navigateUp()
                                         }
@@ -281,7 +283,7 @@ fun MainScreen(
 
                     composable(Screens.POINTS_OF_INTEREST.route,
                         arguments = listOf(
-                            navArgument("itemName") {
+                            navArgument("itemId") {
                                 type = NavType.StringType
                                 defaultValue = Consts.DEFAULT_VALUE
                                 nullable = false
@@ -289,7 +291,7 @@ fun MainScreen(
                         )
                     ) {
 
-                        val itemName = it.arguments?.getString("itemName")
+                        val itemId = it.arguments?.getString("itemId")
                         pointsOfInterestViewModel =
                             viewModel(
                                 factory = PointsOfInterestViewModelFactory(
@@ -299,7 +301,7 @@ fun MainScreen(
                             )
                         PointsOfInterestScreen(
                             pointsOfInterestViewModel!!,
-                            itemName!!,
+                            itemId!!,
                             navController
                         )
                     }
@@ -350,7 +352,7 @@ fun MainScreen(
 
                     composable(Screens.EDIT_LOCATIONS.route,
                         arguments = listOf(
-                            navArgument("itemName") {
+                            navArgument("itemId") {
                                 type = NavType.StringType
                                 defaultValue = Consts.DEFAULT_VALUE
                                 nullable = false
@@ -358,23 +360,23 @@ fun MainScreen(
                         )
                     ) {
 
-                        val itemName = it.arguments?.getString("itemName")
+                        val itemId = it.arguments?.getString("itemId")
                         editLocationViewModel =
                             viewModel(
                                 factory = EditLocationViewModelFactory(
-                                    app.geoData
+                                    app.geoData, app.userData
                                 )
                             )
                         EditLocationScreen(
                             editLocationViewModel!!,
-                            itemName!!,
+                            itemId!!,
                             navController
                         )
                     }
 
                     composable(Screens.EDIT_POINT_OF_INTEREST.route,
                         arguments = listOf(
-                            navArgument("itemName") {
+                            navArgument("itemId") {
                                 type = NavType.StringType
                                 defaultValue = Consts.DEFAULT_VALUE
                                 nullable = false
@@ -382,7 +384,7 @@ fun MainScreen(
                         )
                     ) {
 
-                        val itemName = it.arguments?.getString("itemName")
+                        val itemId = it.arguments?.getString("itemId")
                         editPointOfInterestViewModel =
                             viewModel(
                                 factory = EditPointOfInterestViewModelFactory(
@@ -391,14 +393,14 @@ fun MainScreen(
                             )
                         EditPointOfInterestScreen(
                             editPointOfInterestViewModel!!,
-                            itemName!!,
+                            itemId!!,
                             navController
                         )
                     }
 
                     composable(Screens.EDIT_CATEGORY.route,
                         arguments = listOf(
-                            navArgument("itemName") {
+                            navArgument("itemId") {
                                 type = NavType.StringType
                                 defaultValue = Consts.DEFAULT_VALUE
                                 nullable = false
@@ -406,7 +408,7 @@ fun MainScreen(
                         )
                     ) {
 
-                        val itemName = it.arguments?.getString("itemName")
+                        val itemId = it.arguments?.getString("itemId")
                         editCategoryViewModel =
                             viewModel(
                                 factory = EditCategoryViewModelFactory(
@@ -415,12 +417,12 @@ fun MainScreen(
                             )
                         EditCategoryScreen(
                             editCategoryViewModel!!,
-                            itemName!!,
+                            itemId!!,
                             navController
                         )
                     }
 
-                    composable(Screens.CREDITS.route){
+                    composable(Screens.CREDITS.route) {
                         CreditsScreen()
                     }
 

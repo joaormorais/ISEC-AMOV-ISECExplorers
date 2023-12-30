@@ -74,4 +74,6 @@
     <string name="title_credits">Credits</string>
     <string name="edit_category">Edit category</string>
     <string name="remove">Remove</string>
+    <string name="error_you_have_to_login">Error: You have to login!</string>
+    <string name="edit_location">Edit Location</string>
 </resources>

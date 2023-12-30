@@ -30,12 +30,12 @@ import com.example.amovtp.utils.Consts
 @Composable
 fun EditCategoryScreen(
     editCategoryViewModel: EditCategoryViewModel,
-    itemName: String,
+    itemId: String,
     navController: NavHostController?,
     modifier: Modifier = Modifier
 ){
 
-    val currentCategory = editCategoryViewModel.getCurrentCategory(itemName)
+    val currentCategory = editCategoryViewModel.getCurrentEditingCategory(itemId)
     var name by remember { mutableStateOf(currentCategory?.name ?: "") }
     var description by remember { mutableStateOf(currentCategory?.description ?: "") }
 
@@ -45,6 +45,8 @@ fun EditCategoryScreen(
     val unkownError = stringResource(R.string.unknown_error)
     val fillNameError = stringResource(R.string.invalid_name)
     val fillDescriptionError = stringResource(R.string.invalid_description)
+    val nameExistsError = stringResource(R.string.error_existing_name)
+    val loginNeededError = stringResource(R.string.error_you_have_to_login)
 
     LaunchedEffect(showSnackBar) {
         if (showSnackBar) {
@@ -81,23 +83,38 @@ fun EditCategoryScreen(
                 Button(
                     colors = ButtonDefaults.buttonColors(containerColor = Consts.CONFIRMATION_COLOR, contentColor = Color.Black),
                     onClick = {
-                        editCategoryViewModel.isEditCategoryValid(
-                            name,
-                            description,
-                            fillNameError,
-                            fillDescriptionError
-                        ) { msg ->
-                            if(msg.isBlank()){
-                                editCategoryViewModel.editCategory(
-                                    currentCategory?.name!!,
-                                    name,
-                                    description
-                                )
+                              val validationResult = editCategoryViewModel.isEditCategoryValid(
+                                  name,
+                                  description,
+                                  fillNameError,
+                                  fillDescriptionError
+                              ){msg ->
+                                  errorMessage=msg
+                              }
 
-                                navController!!.navigateUp()
-                            }else{
-                                errorMessage = msg
-                                showSnackBar = true
+                        if(validationResult){
+                            editCategoryViewModel.editCategory(
+                                currentCategory?.id!!,
+                                name,
+                                description
+                            ){resultMessage ->
+                                when(resultMessage){
+                                    Consts.SUCCESS-> {
+                                        navController!!.navigateUp()
+                                    }
+                                    Consts.ERROR_EXISTING_NAME -> {
+                                        showSnackBar = true
+                                        errorMessage = nameExistsError
+                                    }
+                                    Consts.ERROR_NEED_LOGIN ->{
+                                        showSnackBar=true
+                                        errorMessage=loginNeededError
+                                    }
+                                    else -> {
+                                        showSnackBar = true
+                                        errorMessage = resultMessage
+                                    }
+                                }
                             }
                         }
                     },
@@ -111,5 +128,4 @@ fun EditCategoryScreen(
 
         }
     }
-
 }

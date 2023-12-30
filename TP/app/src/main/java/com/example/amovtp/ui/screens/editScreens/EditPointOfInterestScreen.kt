@@ -8,7 +8,7 @@ import com.example.amovtp.ui.viewmodels.editViewModels.EditPointOfInterestViewMo
 @Composable
 fun EditPointOfInterestScreen(
     editPointOfInterestViewModel: EditPointOfInterestViewModel,
-    itemName: String,
+    itemId: String,
     navController: NavHostController?,
     modifier: Modifier = Modifier
 ) {

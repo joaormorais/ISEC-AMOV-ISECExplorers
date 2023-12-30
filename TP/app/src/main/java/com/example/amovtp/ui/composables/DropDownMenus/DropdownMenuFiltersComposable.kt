@@ -51,7 +51,7 @@ import org.osmdroid.util.GeoPoint
 @Composable
 fun DropdownMenuFilters(
     pointsOfInterestViewModel: PointsOfInterestViewModel,
-    itemNameForLocation: String?,
+    itemIdForLocation: String?,
     itemsLocations: List<Location>?,
     itemPicked: (String) -> Unit,
     newGeoPoint: (GeoPoint) -> Unit,
@@ -65,8 +65,8 @@ fun DropdownMenuFilters(
         val allLocationsString = stringResource(R.string.all_locations)
         var selectedItem by remember {
             mutableStateOf(
-                if (itemNameForLocation != Consts.DEFAULT_VALUE)
-                    itemNameForLocation!!
+                if (itemIdForLocation != Consts.DEFAULT_VALUE)
+                    itemIdForLocation!!
                 else
                     allLocationsString
             )

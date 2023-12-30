@@ -59,14 +59,12 @@ fun AddLocationScreen(
     val nameExistsError = stringResource(R.string.error_existing_name)
     val locationExistsError = stringResource(R.string.error_existing_location)
 
-
     LaunchedEffect(showSnackBar) {
         if (showSnackBar) {
             snackbarHostState.showSnackbar(errorMessage ?: unkownError)
             showSnackBar = false
         }
     }
-
 
     Scaffold (
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -94,6 +92,9 @@ fun AddLocationScreen(
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 GeoDescription(
+                    "",
+                    "",
+                    true,
                     latChanged = { newLat ->
                         lat = newLat
                     },
@@ -171,7 +172,6 @@ fun AddLocationScreen(
                             }
                         }
                         else{
-                            // a validação falhou
                             showSnackBar = true
                         }
                     },

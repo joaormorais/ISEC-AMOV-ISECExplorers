@@ -115,6 +115,9 @@ fun AddPointOfInterestScreen(
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 GeoDescription(
+                    "",
+                    "",
+                    true,
                     latChanged = { newLat ->
                         lat = newLat
                     },

@@ -74,25 +74,25 @@ class LocationsViewModel(
         }
     }
 
-    fun findVoteForApprovedLocationByUser(locationName: String): Boolean {
-        return userData.localUser.value.locationsApproved.any { it == locationName }
+    fun findVoteForApprovedLocationByUser(locationId: String): Boolean {
+        return userData.localUser.value.locationsApproved.any { it == locationId }
     }
 
-    fun voteForApprovalLocationByUser(locationName: String) {
-        geoData.voteForApprovalLocation(locationName)
-        userData.addLocationApproved(locationName)
-        if (geoData.locations.value.find { it.name == locationName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
-            geoData.approveLocation(locationName)
+    fun voteForApprovalLocationByUser(locationId: String) {
+        geoData.voteForApprovalLocation(locationId)
+        userData.addLocationApproved(locationId)
+        if (geoData.locations.value.find { it.id == locationId }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
+            geoData.approveLocation(locationId)
 
-        geoData.updateLocation(locationName)
-        userData.editLocalUser()
+        geoData.updateLocation(locationId)
+        userData.updateLocalUser()
     }
 
-    fun removeVoteForApprovalLocationByUser(locationName: String) {
-        geoData.removeVoteForApprovalLocation(locationName)
-        userData.removeLocationApproved(locationName)
-        geoData.updateLocation(locationName)
-        userData.editLocalUser()
+    fun removeVoteForApprovalLocationByUser(locationId: String) {
+        geoData.removeVoteForApprovalLocation(locationId)
+        userData.removeLocationApproved(locationId)
+        geoData.updateLocation(locationId)
+        userData.updateLocalUser()
     }
 
 }

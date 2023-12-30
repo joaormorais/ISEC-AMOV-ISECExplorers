@@ -43,13 +43,13 @@ class AddPointOfInterestViewModel(
         lat: Double,
         long: Double,
         isManualCoords: Boolean,
-        location: List<String>,
+        location: MutableList<String>,
         category: String,
         imgs: List<String>,
         onResult: (String) -> Unit
     ){
         val tempPointsOfInterest = geoData.pointsOfInterest
-        val tempUserId = userData.localUser.value.userId
+        val currentUserId = userData.localUser.value.userId
 
         if (tempPointsOfInterest.value.any { it.name == name }) {
             onResult(Consts.ERROR_EXISTING_NAME)
@@ -57,13 +57,13 @@ class AddPointOfInterestViewModel(
         }else if (tempPointsOfInterest.value.any { it.lat == lat && it.long == long }) {
             onResult(Consts.ERROR_EXISTING_POINT_OF_INTEREST)
             return
-        }else if (tempUserId.isBlank()) {
+        }else if (currentUserId.isBlank()) {
             onResult(Consts.ERROR_NEED_LOGIN)
             return
         }
 
         geoData.addPointOfInterest(
-            tempUserId,
+            currentUserId,
             name,
             description,
             lat,

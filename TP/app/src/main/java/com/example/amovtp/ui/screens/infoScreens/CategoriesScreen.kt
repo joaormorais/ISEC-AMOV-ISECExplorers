@@ -71,14 +71,14 @@ fun CategoriesScreen(
                 .fillMaxSize()
                 .padding(top = 8.dp)
         ) {
-            items(categories, key = { it.name }) {
+            items(categories, key = { it.id }) {
 
                 var isCategoryApproved by remember { mutableStateOf(it.isApproved) }
                 var isDetailExpanded by remember { mutableStateOf(false) }
                 var isApprovedByUser by remember {
                     mutableStateOf(
                         categoriesViewModel.findVoteForApprovedCategoryByUser(
-                            it.name
+                            it.id
                         )
                     )
                 }
@@ -152,6 +152,7 @@ fun CategoriesScreen(
                                     fontSize = 12.sp
                                 )
                                 Spacer(modifier.height(8.dp))
+
                                 if (!isCategoryApproved) {
                                     Divider(color = Color.DarkGray, thickness = 1.dp)
                                     Spacer(modifier.height(8.dp))
@@ -176,12 +177,12 @@ fun CategoriesScreen(
                                                 Button(
                                                     onClick = {
                                                         categoriesViewModel.voteForApprovalCategoryByUser(
-                                                            it.name
+                                                            it.id
                                                         )
                                                         isCategoryApproved = it.isApproved
                                                         isApprovedByUser =
                                                             categoriesViewModel.findVoteForApprovedCategoryByUser(
-                                                                it.name
+                                                                it.id
                                                             )
                                                     },
                                                 ) {
@@ -199,12 +200,12 @@ fun CategoriesScreen(
                                                 Button(
                                                     onClick = {
                                                         categoriesViewModel.removeVoteForApprovalCategoryByUser(
-                                                            it.name
+                                                            it.id
                                                         )
                                                         isCategoryApproved = it.isApproved
                                                         isApprovedByUser =
                                                             categoriesViewModel.findVoteForApprovedCategoryByUser(
-                                                                it.name
+                                                                it.id
                                                             )
 
                                                     },
@@ -219,10 +220,15 @@ fun CategoriesScreen(
                                                     }
                                                 }
                                             }
-                                        } else {
-                                            Spacer(modifier.height(8.dp))
+                                        }
+                                    Spacer(modifier.height(8.dp))
+                                }
+                                if (localUserUI.userId != "")
+                                    if (localUserUI.userId == it.userId){
+                                    Spacer(modifier.height(8.dp))
+                                        Row {
                                             Button(
-                                                onClick = { navController?.navigate("EditCategory?itemName=${it.name}") },
+                                                onClick = { navController?.navigate("EditCategory?itemName=${it.id}") },
                                             ) {
                                                 Row {
                                                     Text(stringResource(R.string.edit))
@@ -233,7 +239,6 @@ fun CategoriesScreen(
                                                     )
                                                 }
                                             }
-                                            Spacer(modifier.height(8.dp))
                                             Button(
                                                 onClick = {
 
@@ -249,7 +254,6 @@ fun CategoriesScreen(
                                                 }
                                             }
                                         }
-                                    Spacer(modifier.height(8.dp))
                                 }
                             }
                         }

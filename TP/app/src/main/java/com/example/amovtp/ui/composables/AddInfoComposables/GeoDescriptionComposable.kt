@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -18,26 +17,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.amovtp.R
 
 @Composable
 fun GeoDescription(
+    editingLat: String,
+    editingLong: String,
+    editingIsManual: Boolean,
     latChanged: (Double) -> Unit,
     longChanged: (Double) -> Unit,
     manualChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    var manualString = stringResource(R.string.manual_lat_long)
-    var automaticString = stringResource(R.string.automatic_lat_long)
+    val manualString = stringResource(R.string.manual_lat_long)
+    val automaticString = stringResource(R.string.automatic_lat_long)
     var isLatValid by remember { mutableStateOf(true) }
     var isLongValid by remember { mutableStateOf(true) }
-    var lat by remember { mutableStateOf("") }
-    var long by remember { mutableStateOf("") }
-    var isManual by remember { mutableStateOf(true) }
-    manualChanged(true)
+
+    var lat by remember { mutableStateOf(editingLat) }
+    var long by remember { mutableStateOf(editingLong) }
+    var isManual by remember { mutableStateOf(editingIsManual) }
+
+    manualChanged(isManual)
 
     Row(
         modifier = modifier
@@ -62,6 +65,7 @@ fun GeoDescription(
                         if (isValidCoordinate(newLat)) {
                             isLatValid = true
                             latChanged(newLat.toDouble())
+                            manualChanged(isManual)
                         } else {
                             isLatValid = false
                         }
@@ -70,7 +74,6 @@ fun GeoDescription(
                 label = { Text(stringResource(R.string.latitude)) },
                 modifier = modifier.padding(bottom = 16.dp),
                 enabled = isManual,
-                //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 isError = !isLatValid
             )
             OutlinedTextField(
@@ -81,6 +84,7 @@ fun GeoDescription(
                         if (isValidCoordinate(newLong)) {
                             isLongValid = true
                             longChanged(newLong.toDouble())
+                            manualChanged(isManual)
                         } else {
                             isLongValid = false
                         }
@@ -89,7 +93,6 @@ fun GeoDescription(
                 label = { Text(stringResource(R.string.longitude)) },
                 modifier = modifier.padding(bottom = 16.dp),
                 enabled = isManual,
-                //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 isError = !isLongValid
             )
         }

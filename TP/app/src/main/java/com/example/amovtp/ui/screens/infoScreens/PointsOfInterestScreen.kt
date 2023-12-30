@@ -75,7 +75,7 @@ import org.osmdroid.views.overlay.Marker
 @Composable
 fun PointsOfInterestScreen(
     pointsOfInterestViewModel: PointsOfInterestViewModel,
-    itemName: String,
+    itemId: String,
     navController: NavHostController?,
     modifier: Modifier = Modifier
 ) {
@@ -115,10 +115,10 @@ fun PointsOfInterestScreen(
     })
 
     // info for the filter of a unnique location
-    LaunchedEffect(key1 = itemName) { //TODO: ver se de facto é preciso um LaunchedEffet, ou não
-        if (itemName != Consts.DEFAULT_VALUE) {
-            pointsOfInterestUI = pointsOfInterestViewModel.getPointsFromLocation(itemName)
-            val tempLoc = locations.find { it.name == itemName }
+    LaunchedEffect(key1 = itemId) { //TODO: ver se de facto é preciso um LaunchedEffet, ou não
+        if (itemId != Consts.DEFAULT_VALUE) {
+            pointsOfInterestUI = pointsOfInterestViewModel.getPointsFromLocation(itemId)
+            val tempLoc = locations.find { it.id == itemId }
             geoPoint = GeoPoint(tempLoc!!.lat, tempLoc.long)
         }
     }
@@ -191,7 +191,7 @@ fun PointsOfInterestScreen(
 
                     DropdownMenuFilters(
                         pointsOfInterestViewModel = pointsOfInterestViewModel,
-                        itemNameForLocation = itemName,
+                        itemIdForLocation = itemId,
                         itemsLocations = locations,
                         itemPicked = { itemPicked ->
                             pointsOfInterestUI =
@@ -209,7 +209,7 @@ fun PointsOfInterestScreen(
                     Row {
                         DropdownMenuFilters(
                             pointsOfInterestViewModel = pointsOfInterestViewModel,
-                            itemNameForLocation = null,
+                            itemIdForLocation = null,
                             itemsLocations = null,
                             itemPicked = { itemPicked ->
                                 pointsOfInterestUI =
@@ -270,7 +270,7 @@ fun PointsOfInterestScreen(
                 .fillMaxSize()
                 .padding(top = 8.dp)
         ) {
-            items(pointsOfInterestUI, key = { it.name }) {
+            items(pointsOfInterestUI, key = { it.id }) {
 
                 var isPointOfInterestApproved by remember { mutableStateOf(it.isApproved) }
                 var isDetailExpanded by remember { mutableStateOf(false) }
@@ -411,7 +411,7 @@ fun PointsOfInterestScreen(
                                     if (localUserUI.userId != "")
                                         if (localUserUI.userId != it.userId) {
                                             if (!pointsOfInterestViewModel.findVoteForApprovedPointOfInterestByUser(
-                                                    it.name
+                                                    it.id
                                                 )
                                             ) {
                                                 Spacer(modifier.height(8.dp))
@@ -419,7 +419,7 @@ fun PointsOfInterestScreen(
                                                     onClick = {
                                                         //isVotedByUser = true
                                                         pointsOfInterestViewModel.voteForApprovalPointOfInterestByUser(
-                                                            it.name
+                                                            it.id
                                                         )
                                                         isPointOfInterestApproved = it.isApproved
                                                     },
@@ -439,7 +439,7 @@ fun PointsOfInterestScreen(
                                                     onClick = {
                                                         //isVotedByUser = false
                                                         pointsOfInterestViewModel.removeVoteForApprovalPointOfInterestByUser(
-                                                            it.name
+                                                            it.id
                                                         )
                                                         isPointOfInterestApproved = it.isApproved
                                                     },
@@ -468,7 +468,7 @@ fun PointsOfInterestScreen(
                                         var mediaClassification by remember {
                                             mutableDoubleStateOf(
                                                 pointsOfInterestViewModel.calculateMediaClassification(
-                                                    it.name
+                                                    it.id
                                                 )
                                             )
                                         }
@@ -476,7 +476,7 @@ fun PointsOfInterestScreen(
                                         var classificationFromUser by remember {
                                             mutableLongStateOf(
                                                 pointsOfInterestViewModel.findClassificationFromUser(
-                                                    it.name
+                                                    it.id
                                                 )
                                             )
                                         }
@@ -513,63 +513,63 @@ fun PointsOfInterestScreen(
                                                             Consts.ONE_STAR_CLASSIFICATION -> {
                                                                 if (classificationFromUser == Consts.ONE_STAR_CLASSIFICATION) {
                                                                     pointsOfInterestViewModel.removeClassificationToPointByUser(
-                                                                        it.name
+                                                                        it.id
                                                                     )
                                                                 } else {
                                                                     pointsOfInterestViewModel.addClassificationToPointByUser(
-                                                                        it.name,
+                                                                        it.id,
                                                                         Consts.ONE_STAR_CLASSIFICATION
                                                                     )
                                                                 }
                                                                 classificationFromUser =
                                                                     pointsOfInterestViewModel.findClassificationFromUser(
-                                                                        it.name
+                                                                        it.id
                                                                     )
                                                                 mediaClassification =
                                                                     pointsOfInterestViewModel.calculateMediaClassification(
-                                                                        it.name
+                                                                        it.id
                                                                     )
                                                             }
 
                                                             Consts.TWO_STAR_CLASSIFICATION -> {
                                                                 if (classificationFromUser == Consts.TWO_STAR_CLASSIFICATION) {
                                                                     pointsOfInterestViewModel.removeClassificationToPointByUser(
-                                                                        it.name
+                                                                        it.id
                                                                     )
                                                                 } else {
                                                                     pointsOfInterestViewModel.addClassificationToPointByUser(
-                                                                        it.name,
+                                                                        it.id,
                                                                         Consts.TWO_STAR_CLASSIFICATION
                                                                     )
                                                                 }
                                                                 classificationFromUser =
                                                                     pointsOfInterestViewModel.findClassificationFromUser(
-                                                                        it.name
+                                                                        it.id
                                                                     )
                                                                 mediaClassification =
                                                                     pointsOfInterestViewModel.calculateMediaClassification(
-                                                                        it.name
+                                                                        it.id
                                                                     )
                                                             }
 
                                                             Consts.THREE_STAR_CLASSIFICATION -> {
                                                                 if (classificationFromUser == Consts.THREE_STAR_CLASSIFICATION) {
                                                                     pointsOfInterestViewModel.removeClassificationToPointByUser(
-                                                                        it.name
+                                                                        it.id
                                                                     )
                                                                 } else {
                                                                     pointsOfInterestViewModel.addClassificationToPointByUser(
-                                                                        it.name,
+                                                                        it.id,
                                                                         Consts.THREE_STAR_CLASSIFICATION
                                                                     )
                                                                 }
                                                                 classificationFromUser =
                                                                     pointsOfInterestViewModel.findClassificationFromUser(
-                                                                        it.name
+                                                                        it.id
                                                                     )
                                                                 mediaClassification =
                                                                     pointsOfInterestViewModel.calculateMediaClassification(
-                                                                        it.name
+                                                                        it.id
                                                                     )
                                                             }
 
@@ -599,7 +599,7 @@ fun PointsOfInterestScreen(
                                 if (localUserUI.userId == it.userId) {
                                     Spacer(modifier.height(8.dp))
                                     Button(
-                                        onClick = { navController?.navigate("EditPointOfInterest?itemName=${it.name}") },
+                                        onClick = { navController?.navigate("EditPointOfInterest?itemName=${it.id}") },
                                     ) {
                                         Row {
                                             Text(stringResource(R.string.edit))

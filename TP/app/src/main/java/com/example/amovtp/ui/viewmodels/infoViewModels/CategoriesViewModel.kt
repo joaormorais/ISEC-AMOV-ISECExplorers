@@ -32,24 +32,24 @@ class CategoriesViewModel(
         return geoData.categories
     }
 
-    fun findVoteForApprovedCategoryByUser(categoryName: String): Boolean {
-        return userData.localUser.value.categoriesApproved.any { it == categoryName }
+    fun findVoteForApprovedCategoryByUser(categoryId: String): Boolean {
+        return userData.localUser.value.categoriesApproved.any { it == categoryId }
     }
 
-    fun voteForApprovalCategoryByUser(categoryName: String) {
-        geoData.voteForApprovalCategory(categoryName)
-        userData.addCategoryApproved(categoryName)
-        if (geoData.categories.value.find { it.name == categoryName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
-            geoData.approveCategory(categoryName)
-        geoData.updateCategory(categoryName,categoryName)
-        userData.editLocalUser()
+    fun voteForApprovalCategoryByUser(categoryId: String) {
+        geoData.voteForApprovalCategory(categoryId)
+        userData.addCategoryApproved(categoryId)
+        if (geoData.categories.value.find { it.id == categoryId }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
+            geoData.approveCategory(categoryId)
+        geoData.updateCategory(categoryId)
+        userData.updateLocalUser()
     }
 
-    fun removeVoteForApprovalCategoryByUser(categoryName: String) {
-        geoData.removeVoteForApprovalCategory(categoryName)
-        userData.removeCategoryApproved(categoryName)
-        geoData.updateCategory(categoryName,categoryName)
-        userData.editLocalUser()
+    fun removeVoteForApprovalCategoryByUser(categoryId: String) {
+        geoData.removeVoteForApprovalCategory(categoryId)
+        userData.removeCategoryApproved(categoryId)
+        geoData.updateCategory(categoryId)
+        userData.updateLocalUser()
     }
 
 }

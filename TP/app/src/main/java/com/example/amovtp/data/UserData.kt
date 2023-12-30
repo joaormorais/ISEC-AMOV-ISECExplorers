@@ -74,13 +74,29 @@ class UserData(private val firebaseUserDataService: FirebaseUserDataService) {
         _localUser.value.userId = ""
     }
 
-    fun editLocalUser() {
+    fun updateLocalUser() {
         firebaseUserDataService.updateLocalUserToFirestore(_localUser.value) {
             //TODO: tratar a exception
         }
     }
 
     /* ------------------------  Login, register and update (End) ------------------------ */
+
+    /* ------------------------  Remove votes (Start) ------------------------ */
+
+    fun removeVotesApprovalForLocation(locationId:String){
+        _localUser.value.locationsApproved = _localUser.value.locationsApproved - locationId
+    }
+
+    fun removeVotesApprovalForPointOfInterest(pointOfInterestId:String){
+        _localUser.value.pointsOfInterestApproved = _localUser.value.pointsOfInterestApproved - pointOfInterestId
+    }
+
+    fun removeVotesApprovalForCategory(categoryId:String){
+        _localUser.value.categoriesApproved = _localUser.value.categoriesApproved - categoryId
+    }
+
+    /* ------------------------  Remove votes (End) ------------------------ */
 
     /* ------------------------  Device location (Start) ------------------------ */
     fun setCurrentLocation(location: Location) {

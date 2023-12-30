@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
@@ -130,14 +131,14 @@ fun LocationsScreen(
                 .fillMaxSize()
                 .padding(top = 8.dp)
         ) {
-            items(locationsUI, key = { it.name }) {
+            items(locationsUI, key = { it.id }) {
 
                 var isLocationApproved by remember { mutableStateOf(it.isApproved) }
                 var isDetailExpanded by remember { mutableStateOf(false) }
                 var isApprovedByUser by remember {
                     mutableStateOf(
                         locationsViewModel.findVoteForApprovedLocationByUser(
-                            it.name
+                            it.id
                         )
                     )
                 }
@@ -161,7 +162,7 @@ fun LocationsScreen(
                             contentColor = Color.White
                         ),
                     onClick = {
-                        navController?.navigate("PointsOfInterest?itemName=${it.name}")
+                        navController?.navigate("PointsOfInterest?itemName=${it.id}")
                     }
                 ) {
 
@@ -274,21 +275,21 @@ fun LocationsScreen(
                                                 onClick = {
                                                     if (!isApprovedByUser) {
                                                         locationsViewModel.voteForApprovalLocationByUser(
-                                                            it.name
+                                                            it.id
                                                         )
                                                         isLocationApproved = it.isApproved
                                                         isApprovedByUser =
                                                             locationsViewModel.findVoteForApprovedLocationByUser(
-                                                                it.name
+                                                                it.id
                                                             )
                                                     } else {
                                                         locationsViewModel.removeVoteForApprovalLocationByUser(
-                                                            it.name
+                                                            it.id
                                                         )
                                                         isLocationApproved = it.isApproved
                                                         isApprovedByUser =
                                                             locationsViewModel.findVoteForApprovedLocationByUser(
-                                                                it.name
+                                                                it.id
                                                             )
                                                     }
                                                 },
@@ -318,10 +319,10 @@ fun LocationsScreen(
                                                 Button(
                                                     onClick = {
                                                         locationsViewModel.voteForApprovalLocationByUser(
-                                                            it.name
+                                                            it.id
                                                         )
                                                         isLocationApproved = it.isApproved
-                                                        isApprovedByUser = locationsViewModel.findVoteForApprovedLocationByUser(it.name)
+                                                        isApprovedByUser = locationsViewModel.findVoteForApprovedLocationByUser(it.id)
                                                     },
                                                 ) {
                                                     Row {
@@ -338,10 +339,10 @@ fun LocationsScreen(
                                                 Button(
                                                     onClick = {
                                                         locationsViewModel.removeVoteForApprovalLocationByUser(
-                                                            it.name
+                                                            it.id
                                                         )
                                                         isLocationApproved = it.isApproved
-                                                        isApprovedByUser = locationsViewModel.findVoteForApprovedLocationByUser(it.name)
+                                                        isApprovedByUser = locationsViewModel.findVoteForApprovedLocationByUser(it.id)
                                                     },
                                                 ) {
                                                     Row {
@@ -354,10 +355,14 @@ fun LocationsScreen(
                                                     }
                                                 }
                                             }
-                                        } else {
-                                            Spacer(modifier.height(8.dp))
+                                        }
+                                }
+                                if (localUserUI.userId != "")
+                                    if (localUserUI.userId == it.userId) {
+                                        Spacer(modifier.height(8.dp))
+                                        Row {
                                             Button(
-                                                onClick = { navController?.navigate("EditLocation?itemName=${it.name}") },
+                                                onClick = { navController?.navigate("EditLocation?itemName=${it.id}") },
                                             ) {
                                                 Row {
                                                     Text(stringResource(R.string.edit))
@@ -368,9 +373,22 @@ fun LocationsScreen(
                                                     )
                                                 }
                                             }
+                                            Button(
+                                                onClick = {
+
+                                                },
+                                            ) {
+                                                Row {
+                                                    Text(stringResource(R.string.remove))
+                                                    Icon(
+                                                        Icons.Rounded.Delete,
+                                                        "Delete",
+                                                        modifier = modifier.padding(start = 8.dp)
+                                                    )
+                                                }
+                                            }
                                         }
-                                }
-                                Spacer(modifier.height(8.dp))
+                                    }
                             }
                         }
                 }

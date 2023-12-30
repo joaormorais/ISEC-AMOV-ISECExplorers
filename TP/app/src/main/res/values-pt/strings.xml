@@ -75,4 +75,6 @@
     <string name="title_credits">Créditos</string>
     <string name="edit_category">Editar categoria</string>
     <string name="remove">Remover</string>
+    <string name="error_you_have_to_login">Erro: Precisa de estar autenticado!</string>
+    <string name="edit_location">Editar localização</string>
 </resources>

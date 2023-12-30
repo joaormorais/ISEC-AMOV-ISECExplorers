@@ -2,17 +2,16 @@ package com.example.amovtp.services
 
 import android.net.Uri
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import com.example.amovtp.data.Category
 import com.example.amovtp.data.Location
 import com.example.amovtp.data.PointOfInterest
-import com.example.amovtp.utils.file.FileUtils
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import java.io.File
+import java.util.UUID
 
 class FirebaseGeoDataService {
 
@@ -27,7 +26,6 @@ class FirebaseGeoDataService {
         onNewCategories: (List<Map<String, Any>>) -> Unit
     ) {
         stopObserver()
-        //val db = Firebase.firestore
         listenerRegistrationLocations =
             db.collection("GeoDataLocations").addSnapshotListener { value, e ->
                 if (e != null)
@@ -67,10 +65,11 @@ class FirebaseGeoDataService {
     }
 
     fun addLocationToFirestore(newLocation: Location, onResult: (Throwable?) -> Unit) {
-        //val db = Firebase.firestore
-        uploadImages("locations/" + newLocation.name, newLocation.imgs) { paths ->
+        val newId = UUID.randomUUID().toString()
+        uploadImages("locations/" + newId, newLocation.imgs) { paths ->
             if (paths.isNotEmpty()) {
                 val locationToCloud = hashMapOf(
+                    "id" to newId,
                     "userID" to newLocation.userId,
                     "name" to newLocation.name,
                     "description" to newLocation.description,
@@ -84,7 +83,7 @@ class FirebaseGeoDataService {
                     "votesForRemoval" to newLocation.votesForRemoval,
                     "isBeingRemoved" to newLocation.isBeingRemoved
                 )
-                db.collection("GeoDataLocations").document(newLocation.name).set(locationToCloud)
+                db.collection("GeoDataLocations").document(newId).set(locationToCloud)
                     .addOnCompleteListener { result ->
                         onResult(result.exception)
                     }
@@ -96,13 +95,12 @@ class FirebaseGeoDataService {
         newPointOfInterest: PointOfInterest,
         onResult: (Throwable?) -> Unit
     ) {
-        //val db = Firebase.firestore
+        val newId = UUID.randomUUID().toString()
         uploadImages(
-            "pointsofinterest/" + newPointOfInterest.name,
-            newPointOfInterest.imgs
-        ) { paths ->
+            "pointsofinterest/" + newId, newPointOfInterest.imgs) { paths ->
             if (paths.isNotEmpty()) {
                 val pointOfInterestToCloud = hashMapOf(
+                    "id" to newId,
                     "userID" to newPointOfInterest.userId,
                     "name" to newPointOfInterest.name,
                     "description" to newPointOfInterest.description,
@@ -119,7 +117,7 @@ class FirebaseGeoDataService {
                     "votesForRemoval" to newPointOfInterest.votesForRemoval,
                     "isBeingRemoved" to newPointOfInterest.isBeingRemoved
                 )
-                db.collection("GeoDataPointsOfInterest").document(newPointOfInterest.name)
+                db.collection("GeoDataPointsOfInterest").document(newId)
                     .set(pointOfInterestToCloud)
                     .addOnCompleteListener { result ->
                         onResult(result.exception)
@@ -129,10 +127,11 @@ class FirebaseGeoDataService {
     }
 
     fun addCategoryToFirestore(newCategory: Category, onResult: (Throwable?) -> Unit) {
-        //val db = Firebase.firestore
-        uploadImages("categories/" + newCategory.name, listOf(newCategory.img)) { paths ->
+        val newId = UUID.randomUUID().toString()
+        uploadImages("categories/" + newId, listOf(newCategory.img)) { paths ->
             if (paths.isNotEmpty()) {
                 val categoryToCloud = hashMapOf(
+                    "id" to newId,
                     "userID" to newCategory.userId,
                     "name" to newCategory.name,
                     "description" to newCategory.description,
@@ -142,7 +141,7 @@ class FirebaseGeoDataService {
                     "votesForRemoval" to newCategory.votesForRemoval,
                     "isBeingRemoved" to newCategory.isBeingRemoved
                 )
-                db.collection("GeoDataCategories").document(newCategory.name).set(categoryToCloud)
+                db.collection("GeoDataCategories").document(newId).set(categoryToCloud)
                     .addOnCompleteListener { result ->
                         onResult(result.exception)
                     }
@@ -151,13 +150,11 @@ class FirebaseGeoDataService {
     }
 
     fun updateLocationToFirestore(
-        currentLocationName: String,
+        locationId: String,
         updatedLocation: Location?,
         onResult: (Throwable?) -> Unit
     ) {
-        //val db = Firebase.firestore
-        val document = db.collection("GeoDataLocations").document(currentLocationName)
-
+        val document = db.collection("GeoDataLocations").document(locationId)
         db.runTransaction { transaction ->
             val doc = transaction.get(document)
             if (doc.exists()) {
@@ -184,9 +181,6 @@ class FirebaseGeoDataService {
                         updatedLocation?.pointsOfInterest
                     )
                 }
-                /*if (data?.get("imgs") != updatedLocation?.imgs) {
-                    transaction.update(document, "imgs", updatedLocation?.imgs)
-                }*/
                 if (data?.get("votesForApproval") != updatedLocation?.votesForApproval) {
                     transaction.update(
                         document,
@@ -219,18 +213,13 @@ class FirebaseGeoDataService {
     }
 
     fun updatePointOfInterestToFirestore(
-        currentPointOfInterestName: String,
+        pointOfInterestId: String,
         updatedPointOfInterest: PointOfInterest?,
         onResult: (Throwable?) -> Unit
     ) {
-        //val db = Firebase.firestore
-        Log.d("FirebaseGeoDataService","currentPointOfInterestName = "+currentPointOfInterestName)
-        val document = db.collection("GeoDataPointsOfInterest").document(currentPointOfInterestName)
-        Log.d("FirebaseGeoDataService","document = "+document.toString())
-
+        val document = db.collection("GeoDataPointsOfInterest").document(pointOfInterestId)
         db.runTransaction { transaction ->
             val doc = transaction.get(document)
-            Log.d("FirebaseGeoDataService","doc = "+doc.exists())
             if (doc.exists()) {
                 val data = doc.data
                 if (data?.get("name") != updatedPointOfInterest?.name) {
@@ -258,9 +247,6 @@ class FirebaseGeoDataService {
                 if (data?.get("category") != updatedPointOfInterest?.category) {
                     transaction.update(document, "category", updatedPointOfInterest?.category)
                 }
-                /*if (data?.get("imgs") != updatedPointOfInterest?.imgs) {
-                    transaction.update(document, "imgs", updatedPointOfInterest?.imgs)
-                }*/
                 if (data?.get("classification") != updatedPointOfInterest?.classification) {
                     transaction.update(
                         document,
@@ -312,13 +298,11 @@ class FirebaseGeoDataService {
     }
 
     fun updateCategoryToFirestore(
-        currentCategoryName: String,
+        categoryId: String,
         updatedCategory: Category?,
         onResult: (Throwable?) -> Unit
     ) {
-        //val db = Firebase.firestore
-        val document = db.collection("GeoDataCategories").document(currentCategoryName)
-
+        val document = db.collection("GeoDataCategories").document(categoryId)
         db.runTransaction { transaction ->
             val doc = transaction.get(document)
             if (doc.exists()) {
@@ -329,9 +313,6 @@ class FirebaseGeoDataService {
                 if (data?.get("description") != updatedCategory?.description) {
                     transaction.update(document, "description", updatedCategory?.description)
                 }
-                /*if (data?.get("img") != updatedCategory?.img) {
-                    transaction.update(document, "img", updatedCategory?.img)
-                }*/
                 if (data?.get("votesForApproval") != updatedCategory?.votesForApproval) {
                     transaction.update(
                         document,
@@ -371,7 +352,7 @@ class FirebaseGeoDataService {
         folder: String,
         imgsToUpload: List<String>,
         onResult: (List<String>) -> Unit
-    ) { //https://firebase.google.com/docs/storage/android/upload-files
+    ) {
         val ref = Firebase.storage.reference.child(folder)
         val returnPaths: MutableList<String> = mutableListOf()
         imgsToUpload.forEachIndexed { index, img ->
@@ -409,30 +390,33 @@ class FirebaseGeoDataService {
     }
 
     fun removeLocationFromFirestore(
-        locationName: String,
+        locationId: String,
         onResult: (Throwable?) -> Unit
     ) {
         //val db = Firebase.firestore
-        val v = db.collection("GeoDataLocations").document(locationName)
+        val v = db.collection("GeoDataLocations").document(locationId)
         v.delete().addOnCompleteListener { onResult(it.exception) }
+        //TODO: apagar imagens
     }
 
     fun removePointsOfInterestFromFirestore(
-        pointOfInterestName: String,
+        pointOfInterestId: String,
         onResult: (Throwable?) -> Unit
     ) {
         //val db = Firebase.firestore
-        val v = db.collection("GeoDataPointsOfInterest").document(pointOfInterestName)
+        val v = db.collection("GeoDataPointsOfInterest").document(pointOfInterestId)
         v.delete().addOnCompleteListener { onResult(it.exception) }
+        //TODO: apagar imagens
     }
 
     fun removeCategoryFromFirestore(
-        categoryName: String,
+        categoryId: String,
         onResult: (Throwable?) -> Unit
     ) {
         //val db = Firebase.firestore
-        val v = db.collection("GeoDataCategories").document(categoryName)
+        val v = db.collection("GeoDataCategories").document(categoryId)
         v.delete().addOnCompleteListener { onResult(it.exception) }
+        //TODO: apagar imagens
     }
 
 }

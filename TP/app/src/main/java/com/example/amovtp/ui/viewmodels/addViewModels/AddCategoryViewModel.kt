@@ -27,16 +27,16 @@ class AddCategoryViewModel(
         onResult: (String) -> Unit
     ){
         val tempCategories = geoData.categories
-        val tempUserId = userData.localUser.value.userId
+        val currentUserId = userData.localUser.value.userId
 
         if (tempCategories.value.any { it.name == name }) {
             onResult(Consts.ERROR_EXISTING_NAME)
             return
-        }else if (tempUserId.isBlank()) {
+        }else if (currentUserId.isBlank()) {
             onResult(Consts.ERROR_NEED_LOGIN)
             return
         }
-        geoData.addCategory(tempUserId, name, description, img)
+        geoData.addCategory(currentUserId, name, description, img)
         {exception ->
             val message = if (exception == null) Consts.SUCCESS else exception.toString()
             onResult(message)

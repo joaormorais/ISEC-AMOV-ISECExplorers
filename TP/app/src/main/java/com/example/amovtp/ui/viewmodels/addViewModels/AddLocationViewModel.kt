@@ -39,22 +39,20 @@ class AddLocationViewModel(
     ){
 
         val tempLocations = geoData.locations
-        val tempUserId = userData.localUser.value.userId
+        val currentUserId = userData.localUser.value.userId
 
         if (tempLocations.value.any { it.name == name }) {
             onResult(Consts.ERROR_EXISTING_NAME)
-            return
         }else if (tempLocations.value.any { it.lat == lat && it.long == long }) {
             onResult(Consts.ERROR_EXISTING_LOCATION)
-            return
-        }else if (tempUserId.isBlank()) {
+        }else if (currentUserId.isBlank()) {
             onResult(Consts.ERROR_NEED_LOGIN)
-            return
-        }
-        geoData.addLocation(tempUserId, name, description, lat, long, isManualCoords, imgs) // TODO: metter aqui parenteses e mandar o erro para a UI (return erro)
-        {exception ->
-            val message = if (exception == null) Consts.SUCCESS else exception.toString()
-            onResult(message)
+        }else{
+            geoData.addLocation(currentUserId, name, description, lat, long, isManualCoords, imgs) // TODO: metter aqui parenteses e mandar o erro para a UI (return erro)
+            {exception ->
+                val message = if (exception == null) Consts.SUCCESS else exception.toString()
+                onResult(message)
+            }
         }
     }
 

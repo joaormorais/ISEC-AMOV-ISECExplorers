@@ -129,59 +129,59 @@ class PointsOfInterestViewModel(
         }
     }
 
-    fun findVoteForApprovedPointOfInterestByUser(pointOfInterestName: String): Boolean {
-        return userData.localUser.value.pointsOfInterestApproved.any { it == pointOfInterestName }
+    fun findVoteForApprovedPointOfInterestByUser(pointOfInterestId: String): Boolean {
+        return userData.localUser.value.pointsOfInterestApproved.any { it == pointOfInterestId }
     }
 
-    fun voteForApprovalPointOfInterestByUser(pointOfInterestName: String) {
-        geoData.voteForApprovalPointOfInterest(pointOfInterestName)
-        userData.addPointOfInterestApproved(pointOfInterestName)
-        if (geoData.pointsOfInterest.value.find { it.name == pointOfInterestName }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
-            geoData.approvePointOfInterest(pointOfInterestName)
-        geoData.updatePointOfInterest(pointOfInterestName)
-        userData.editLocalUser()
+    fun voteForApprovalPointOfInterestByUser(pointOfInterestId: String) {
+        geoData.voteForApprovalPointOfInterest(pointOfInterestId)
+        userData.addPointOfInterestApproved(pointOfInterestId)
+        if (geoData.pointsOfInterest.value.find { it.id == pointOfInterestId }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
+            geoData.approvePointOfInterest(pointOfInterestId)
+        geoData.updatePointOfInterest(pointOfInterestId)
+        userData.updateLocalUser()
     }
 
-    fun removeVoteForApprovalPointOfInterestByUser(pointOfInterestName: String) {
-        geoData.removeVoteForApprovalPointOfInterest(pointOfInterestName)
-        userData.removePointOfInterestApproved(pointOfInterestName)
-        geoData.updatePointOfInterest(pointOfInterestName)
-        userData.editLocalUser()
+    fun removeVoteForApprovalPointOfInterestByUser(pointOfInterestId: String) {
+        geoData.removeVoteForApprovalPointOfInterest(pointOfInterestId)
+        userData.removePointOfInterestApproved(pointOfInterestId)
+        geoData.updatePointOfInterest(pointOfInterestId)
+        userData.updateLocalUser()
     }
 
-    fun findClassificationFromUser(pointOfInterestName: String): Long {
+    fun findClassificationFromUser(pointOfInterestId: String): Long {
 
-        return if (userData.localUser.value.pointsOfInterestClassified.keys.contains(pointOfInterestName))
-            userData.localUser.value.pointsOfInterestClassified.getValue(pointOfInterestName)
+        return if (userData.localUser.value.pointsOfInterestClassified.keys.contains(pointOfInterestId))
+            userData.localUser.value.pointsOfInterestClassified.getValue(pointOfInterestId)
         else
             Consts.NO_START_CLASSIFICATION
 
     }
 
-    fun addClassificationToPointByUser(pointOfInterestName: String, classification: Long) {
-        if (userData.localUser.value.pointsOfInterestClassified.containsKey(pointOfInterestName)) {
-            removeClassificationToPointByUser(pointOfInterestName)
+    fun addClassificationToPointByUser(pointOfInterestId: String, classification: Long) {
+        if (userData.localUser.value.pointsOfInterestClassified.containsKey(pointOfInterestId)) {
+            removeClassificationToPointByUser(pointOfInterestId)
         }
-        geoData.addClassificationToPoint(pointOfInterestName, classification)
-        geoData.incrementNumberOfClassifications(pointOfInterestName)
-        userData.addPointOfInterestClassified(pointOfInterestName, classification)
-        geoData.updatePointOfInterest(pointOfInterestName)
-        userData.editLocalUser()
+        geoData.addClassificationToPoint(pointOfInterestId, classification)
+        geoData.incrementNumberOfClassifications(pointOfInterestId)
+        userData.addPointOfInterestClassified(pointOfInterestId, classification)
+        geoData.updatePointOfInterest(pointOfInterestId)
+        userData.updateLocalUser()
     }
 
-    fun removeClassificationToPointByUser(pointOfInterestName: String) {
+    fun removeClassificationToPointByUser(pointOfInterestId: String) {
         geoData.removeClassificationToPoint(
-            pointOfInterestName,
-            findClassificationFromUser(pointOfInterestName)
+            pointOfInterestId,
+            findClassificationFromUser(pointOfInterestId)
         )
-        geoData.decrementNumberOfClassifications(pointOfInterestName)
-        userData.removePointOfInterestClassified(pointOfInterestName)
-        geoData.updatePointOfInterest(pointOfInterestName)
-        userData.editLocalUser()
+        geoData.decrementNumberOfClassifications(pointOfInterestId)
+        userData.removePointOfInterestClassified(pointOfInterestId)
+        geoData.updatePointOfInterest(pointOfInterestId)
+        userData.updateLocalUser()
     }
 
-    fun calculateMediaClassification(pointOfInterestName: String): Double {
-        val tempPoint = geoData.pointsOfInterest.value.find { it.name == pointOfInterestName }
+    fun calculateMediaClassification(pointOfInterestId: String): Double {
+        val tempPoint = geoData.pointsOfInterest.value.find { it.id == pointOfInterestId }
         return tempPoint!!.classification.toDouble().div(tempPoint.nClassifications)
     }
 

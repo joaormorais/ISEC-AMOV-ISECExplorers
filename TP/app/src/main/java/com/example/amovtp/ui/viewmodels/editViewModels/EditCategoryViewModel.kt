@@ -22,8 +22,8 @@ class EditCategoryViewModel(
     private val userData: UserData
 ) : ViewModel() {
 
-    fun getCurrentCategory(currentCategory: String): Category? {
-        return geoData.categories.value.find { it.name == currentCategory }
+    fun getCurrentEditingCategory(currentCategory: String): Category? {
+        return geoData.categories.value.find { it.id == currentCategory }
     }
 
     fun isEditCategoryValid(
@@ -32,36 +32,45 @@ class EditCategoryViewModel(
         fillNameError: String,
         fillDescriptionError: String,
         errorMessage: (String) -> Unit
-    ) {
-
-        if (name.isBlank())
+    ): Boolean {
+        if (name.isBlank()) {
             errorMessage(fillNameError)
-        else if (description.isBlank())
+            return false
+        } else if (description.isBlank()) {
             errorMessage(fillDescriptionError)
-
-        errorMessage("")
+            return false
+        }
+        return true
     }
 
     fun editCategory(
-        currentName: String,
+        categoryId: String,
         name: String,
-        description: String
-    ): String {
-        val tempCategories = geoData.categories
-        val tempUserId = userData.localUser.value.userId
+        description: String,
+        onResult: (String) -> Unit
+    ) {
+        val currentUserId = userData.localUser.value.userId
+        val filteredCategories = geoData.categories.value.filter { it.id != categoryId }
 
-        if (tempCategories.value.any { it.name == name })
-            return Consts.ERROR_EXISTING_NAME
-        else if (tempUserId.isBlank())
-            return Consts.ERROR_NEED_LOGIN
+        if (filteredCategories.any { it.name == name })
+            onResult(Consts.ERROR_EXISTING_NAME)
+        else if (currentUserId.isBlank())
+            onResult(Consts.ERROR_NEED_LOGIN)
+        else {
+            val currentCategoryName = geoData.categories.value.find { it.id == categoryId }?.name
+            geoData.pointsOfInterest.value.forEachIndexed { index, pointOfInterest ->
+                if(pointOfInterest.category == currentCategoryName){
+                    geoData.changeCategoryOfPoint(pointOfInterest.id,name)
+                    geoData.updatePointOfInterest(pointOfInterest.id)
+                }
+            }
 
-        geoData.editCategory(currentName, name, description)
-        geoData.updateCategory(
-            currentName,
-            name
-        ) // TODO: meter aqui parenteses e mandar o erro para a UI (return erro)
-
-        return Consts.SUCCESS
+            geoData.editCategory(categoryId, name, description)
+            geoData.updateCategory(categoryId) //TODO: meter aqui parenteses e mandar o erro para a UI (return erro) Sandra
+            userData.removeVotesApprovalForCategory(categoryId)
+            userData.updateLocalUser()
+            onResult(Consts.SUCCESS)
+        }
     }
 
 }
