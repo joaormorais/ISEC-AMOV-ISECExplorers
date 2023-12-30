@@ -313,7 +313,7 @@ fun LocationsScreen(
                                                         )
                                                     }
                                                 }
-                                            }*/ // TODO: duvida defesa --> porque que com o mesmo botao, nao atualiza a UI
+                                            }*/
                                             if (!isApprovedByUser) {
                                                 Spacer(modifier.height(8.dp))
                                                 Button(
