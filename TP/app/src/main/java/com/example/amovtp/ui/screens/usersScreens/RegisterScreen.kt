@@ -107,7 +107,6 @@ fun RegisterScreen(
                     ) {
                         registerViewModel.register(email,password){exception ->
                             if(exception!=null){
-                                //TODO: mostrar aqui a excecao
                                 Log.d("RegisterScreen",
                                     "exception recebida = ${exception.message}")
                                 errorMessage = exception.message
@@ -138,7 +137,6 @@ fun isRegisterValid(
     errorMessage: (String) -> Unit
 ): Boolean {
 
-    //TODO: dividir em dois popups -> fazer um para o nome e depois pw
     if (email.isBlank()){
         errorMessage(emailNeeded)
         return false

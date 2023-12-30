@@ -72,10 +72,54 @@ class AddPointOfInterestViewModel(
             location,
             category,
             imgs
-        )// TODO: metter aqui parenteses e mandar o erro para a UI (return erro)
+        )
         { exception ->
             val message = if (exception == null) Consts.SUCCESS else exception.toString()
             onResult(message)
         }
+    }
+
+    fun isAddPointOfInterestValid(
+        name: String,
+        description: String,
+        lat: Double?,
+        long: Double?,
+        selectedLocations: List<String>,
+        selectedCategory: String,
+        imgsGallery: List<String>,
+        imgsCamera: List<String>,
+        fillNameError: String,
+        fillDescriptionError: String,
+        fillCoordinatesError: String,
+        fillImagesError: String,
+        fillLocationError: String,
+        fillCategoryError: String,
+        errorMessage: (String) -> Unit
+    ): Boolean {
+        if (name.isBlank()) {
+            errorMessage(fillNameError)
+            return false
+        }
+        if (description.isBlank()) {
+            errorMessage(fillDescriptionError)
+            return false
+        }
+        if (lat == null || long == null) {
+            errorMessage(fillCoordinatesError)
+            return false
+        }
+        if (selectedLocations.isEmpty()) {
+            errorMessage(fillLocationError)
+            return false
+        }
+        if (selectedCategory.isBlank()) {
+            errorMessage(fillCategoryError)
+            return false
+        }
+        if (imgsGallery.isEmpty() && imgsCamera.isEmpty()) {
+            errorMessage(fillImagesError)
+            return false
+        }
+        return true
     }
 }

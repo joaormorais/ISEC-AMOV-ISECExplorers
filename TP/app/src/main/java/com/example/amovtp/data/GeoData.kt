@@ -242,7 +242,6 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 false
             )
         ) {
-            //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
                 exception ->
             onResult(exception)
         }
@@ -282,7 +281,6 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 false
             )
         ) {
-            //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
                 exception ->
             onResult(exception)
         }
@@ -317,7 +315,6 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 false
             )
         ) {
-            //TODO: sandra receber o popup e enviar para a VM (se a exception for null é porque deu sucesso)
                 exception ->
             onResult(exception)
         }

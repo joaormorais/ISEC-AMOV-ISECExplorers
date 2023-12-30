@@ -43,4 +43,28 @@ class AddCategoryViewModel(
         }
 
     }
+
+    fun isAddCategoryValid(
+        name: String,
+        description: String,
+        image: String,
+        fillNameError : String,
+        fillDescriptionError : String,
+        fillImageError: String,
+        errorMessage: (String) -> Unit
+    ): Boolean{
+        if(name.isBlank()){
+            errorMessage(fillNameError)
+            return false
+        }
+        if (description.isBlank()){
+            errorMessage(fillDescriptionError)
+            return false
+        }
+        if(image.isEmpty()){
+            errorMessage(fillImageError)
+            return false
+        }
+        return true
+    }
 }

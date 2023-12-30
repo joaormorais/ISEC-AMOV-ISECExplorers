@@ -115,7 +115,6 @@ fun LoginScreen(
                                     ) {
                                         loginViewModel.login(email, password) { exception ->
                                             if (exception != null) {
-                                                //TODO: Mostrar aqui a excecao
                                                 Log.d(
                                                     "LoginScreen",
                                                     "exception recebida =  ${exception.message}")
@@ -178,7 +177,6 @@ fun isLoginValid(
     errorMessage: (String) -> Unit
 ): Boolean {
 
-    //TODO: 2 popups diferentes
     if (email.isBlank()){
         errorMessage(emailNeeded)
         return false

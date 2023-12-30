@@ -49,6 +49,7 @@ fun AddCategoryScreen(
     val fillDescriptionError = stringResource(R.string.invalid_description)
     val fillImageError = stringResource(R.string.invalid_images)
     val nameExistsError = stringResource(R.string.error_existing_name)
+    val loginNeededError = stringResource(R.string.error_you_have_to_login)
 
     LaunchedEffect(showSnackBar) {
         if (showSnackBar) {
@@ -95,7 +96,7 @@ fun AddCategoryScreen(
                 Button(
                     colors = ButtonDefaults.buttonColors(containerColor = Consts.CONFIRMATION_COLOR, contentColor = Color.Black),
                     onClick = {
-                        val validationResult = isAddCategoryValid(
+                        val validationResult = addCategoryViewModel.isAddCategoryValid(
                             name,
                             description,
                             image,
@@ -108,7 +109,6 @@ fun AddCategoryScreen(
 
                         if (validationResult) {
 
-                            //TODO: receber os erros e mostrar na toast (sandra)
                             addCategoryViewModel.addCategory(
                                 name,
                                 description,
@@ -123,7 +123,10 @@ fun AddCategoryScreen(
                                         showSnackBar = true
                                         errorMessage = nameExistsError
                                     }
-
+                                    Consts.ERROR_NEED_LOGIN ->{
+                                        showSnackBar=true
+                                        errorMessage=loginNeededError
+                                    }
                                     else -> {
                                         showSnackBar = true
                                         errorMessage = resultMessage
@@ -147,26 +150,3 @@ fun AddCategoryScreen(
     }
 }
 
-fun isAddCategoryValid( //TODO: passar esta função para a viewModel (Sandra)
-    name: String,
-    description: String,
-    image: String,
-    fillNameError : String,
-    fillDescriptionError : String,
-    fillImageError: String,
-    errorMessage: (String) -> Unit
-): Boolean{
-    if(name.isBlank()){
-        errorMessage(fillNameError)
-        return false
-    }
-    if (description.isBlank()){
-        errorMessage(fillDescriptionError)
-        return false
-    }
-    if(image.isEmpty()){
-        errorMessage(fillImageError)
-        return false
-    }
-    return true
-}
