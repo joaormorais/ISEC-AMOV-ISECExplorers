@@ -21,7 +21,7 @@
     <string name="add_point">Add point of interest</string>
     <string name="camera_image">Add image with camera</string>
     <string name="gallery_image">Add image with gallery</string>
-    <string name="description_solo">Description:</string>
+    <string name="description_solo">Description</string>
     <string name="defaultvalue">defaultValue</string>
     <string name="all_categories">All categories</string>
     <string name="all_locations">All Locations</string>
@@ -76,4 +76,6 @@
     <string name="remove">Remove</string>
     <string name="error_you_have_to_login">Error: You have to login!</string>
     <string name="edit_location">Edit Location</string>
+    <string name="used_location">This locations is being used!</string>
+    <string name="used_category">This category is being used!</string>
 </resources>

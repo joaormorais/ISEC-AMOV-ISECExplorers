@@ -19,6 +19,8 @@ class Consts {
         const val ORDER_BY_NAME: String = "ORDER_BY_NAME"
         const val ORDER_BY_DISTANCE: String = "ORDER_BY_DISTANCE"
         const val ORDER_BY_CATEGORY: String = "ORDER_BY_CATEGORY"
+        const val USED_LOCATION: String = "USED_LOCATION"
+        const val USED_CATEGORY: String = "USED_CATEGORY"
         const val VOTES_NEEDED_FOR_APPROVAL: Long = 2
         const val NO_START_CLASSIFICATION: Long = 0
         const val ONE_STAR_CLASSIFICATION: Long = 1

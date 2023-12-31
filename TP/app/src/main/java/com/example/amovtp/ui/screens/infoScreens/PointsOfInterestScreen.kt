@@ -437,7 +437,6 @@ fun PointsOfInterestScreen(
                                                 Spacer(modifier.height(8.dp))
                                                 Button(
                                                     onClick = {
-                                                        //isVotedByUser = false
                                                         pointsOfInterestViewModel.removeVoteForApprovalPointOfInterestByUser(
                                                             it.id
                                                         )

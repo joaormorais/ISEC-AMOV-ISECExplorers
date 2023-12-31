@@ -178,7 +178,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         )
     }
 
-    /* ------------------------  Update info to Firestore (Start) ------------------------ */
+    /* ------------------------  Update and delete info to Firestore (Start) ------------------------ */
 
     fun updateLocation(
         locationId: String,
@@ -186,6 +186,16 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         firebaseGeoDataService.updateLocationToFirestore(
             locationId,
             _locations.value.find { it.id == locationId }) {
+        }
+    }
+
+    fun deleteLocation(
+        locationId: String,
+    ) {
+        firebaseGeoDataService.deleteLocationFromFirestore(
+            locationId,
+            _locations.value.find { it.id==locationId }!!.imgs
+        ) {
         }
     }
 
@@ -207,9 +217,18 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         }
     }
 
-    /* ------------------------  Update info to Firestore (End) ------------------------ */
+    fun deleteCategory(
+        categoryId: String,
+    ) {
+        firebaseGeoDataService.deleteCategoryFromFirestore(
+            categoryId
+        ) {
+        }
+    }
 
-    /* ------------------------  Add, remove, and edit info (Start) ------------------------ */
+    /* ------------------------  Update and delete info to Firestore (End) ------------------------ */
+
+    /* ------------------------  Add and edit info (Start) ------------------------ */
 
     fun addLocation(
         userId: String,
@@ -238,8 +257,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 0L,
                 false
             )
-        ) {
-                exception ->
+        ) { exception ->
             onResult(exception)
         }
 
@@ -277,8 +295,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 0L,
                 false
             )
-        ) {
-                exception ->
+        ) { exception ->
             onResult(exception)
         }
 
@@ -311,8 +328,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 0L,
                 false
             )
-        ) {
-                exception ->
+        ) { exception ->
             onResult(exception)
         }
 
@@ -363,10 +379,10 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         val pointToChange = _pointsOfInterest.value.find { it.id == pointOfInterestId }
         val indexToChange = pointToChange?.locations?.indexOfFirst { it == currentLocationName }
         if (indexToChange != null)
-            pointToChange.locations.set(indexToChange,newLocationName)
+            pointToChange.locations.set(indexToChange, newLocationName)
     }
 
-    /* ------------------------  Add, remove, and edit info (End) ------------------------ */
+    /* ------------------------  Add and edit info (End) ------------------------ */
 
     /* ------------------------  Location approval (Start) ------------------------ */
     fun voteForApprovalLocation(locationId: String) {

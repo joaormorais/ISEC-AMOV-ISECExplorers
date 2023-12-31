@@ -64,6 +64,18 @@ fun CategoriesScreen(
         localUserUI = localUserDM.value
     })
 
+    // snackbar
+    val snackbarHostState = remember { SnackbarHostState() }
+    var showSnackBar by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val unkownError = stringResource(R.string.unknown_error)
+    val usedCategory = stringResource(R.string.used_category)
+    LaunchedEffect(showSnackBar) {
+        if (showSnackBar) {
+            snackbarHostState.showSnackbar(errorMessage ?: unkownError)
+            showSnackBar = false
+        }
+    }
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -225,8 +237,8 @@ fun CategoriesScreen(
                                     Spacer(modifier.height(8.dp))
                                 }
                                 if (localUserUI.userId != "")
-                                    if (localUserUI.userId == it.userId){
-                                    Spacer(modifier.height(8.dp))
+                                    if (localUserUI.userId == it.userId) {
+                                        Spacer(modifier.height(8.dp))
                                         Row {
                                             Button(
                                                 onClick = { navController?.navigate("EditCategory?itemName=${it.id}") },
@@ -242,7 +254,14 @@ fun CategoriesScreen(
                                             }
                                             Button(
                                                 onClick = {
-
+                                                    categoriesViewModel.removeCategory(it.id) { resultMessage ->
+                                                        when (resultMessage) {
+                                                            Consts.USED_CATEGORY -> {
+                                                                showSnackBar = true
+                                                                errorMessage = usedCategory
+                                                            }
+                                                        }
+                                                    }
                                                 },
                                             ) {
                                                 Row {
@@ -255,7 +274,7 @@ fun CategoriesScreen(
                                                 }
                                             }
                                         }
-                                }
+                                    }
                             }
                         }
                 }

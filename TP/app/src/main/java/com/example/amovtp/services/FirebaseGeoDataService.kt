@@ -66,7 +66,7 @@ class FirebaseGeoDataService {
 
     fun addLocationToFirestore(newLocation: Location, onResult: (Throwable?) -> Unit) {
         val newId = UUID.randomUUID().toString()
-        uploadImages("locations/" + newId, newLocation.imgs) { paths ->
+        uploadImages("locations/$newId", newLocation.imgs) { paths ->
             if (paths.isNotEmpty()) {
                 val locationToCloud = hashMapOf(
                     "id" to newId,
@@ -97,7 +97,8 @@ class FirebaseGeoDataService {
     ) {
         val newId = UUID.randomUUID().toString()
         uploadImages(
-            "pointsofinterest/" + newId, newPointOfInterest.imgs) { paths ->
+            "pointsofinterest/$newId", newPointOfInterest.imgs
+        ) { paths ->
             if (paths.isNotEmpty()) {
                 val pointOfInterestToCloud = hashMapOf(
                     "id" to newId,
@@ -128,7 +129,7 @@ class FirebaseGeoDataService {
 
     fun addCategoryToFirestore(newCategory: Category, onResult: (Throwable?) -> Unit) {
         val newId = UUID.randomUUID().toString()
-        uploadImages("categories/" + newId, listOf(newCategory.img)) { paths ->
+        uploadImages("categories/$newId", listOf(newCategory.img)) { paths ->
             if (paths.isNotEmpty()) {
                 val categoryToCloud = hashMapOf(
                     "id" to newId,
@@ -292,7 +293,7 @@ class FirebaseGeoDataService {
                     FirebaseFirestoreException.Code.UNAVAILABLE
                 )
         }.addOnCompleteListener { result ->
-            Log.d("FirebaseGeoDataService","result.exception = "+result.exception)
+            Log.d("FirebaseGeoDataService", "result.exception = " + result.exception)
             onResult(result.exception)
         }
     }
@@ -348,6 +349,39 @@ class FirebaseGeoDataService {
         }
     }
 
+    //https://groups.google.com/g/firebase-talk/c/aG7GSR7kVtw
+    fun deleteLocationFromFirestore(
+        locationId: String,
+        imagesPath: List<String>,
+        onResult: (String) -> Unit
+    ) {
+        db.collection("GeoDataLocations").document(locationId).delete()
+            .addOnSuccessListener { onResult("DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener { e -> onResult("Error deleting document: $e") }
+
+        Firebase.storage.reference.child("locations/$locationId").listAll().addOnSuccessListener { listResult ->
+            listResult.items.forEach {
+                it.delete()
+                    .addOnSuccessListener { onResult("Image successfully deleted!") }
+                    .addOnFailureListener { e -> onResult("Error deleting image: $e") }
+            }
+        }
+
+    }
+
+    fun deleteCategoryFromFirestore(
+        categoryId: String,
+        onResult: (String) -> Unit
+    ) {
+        db.collection("GeoDataCategories").document(categoryId).delete()
+            .addOnSuccessListener { onResult("DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener { e -> onResult("Error deleting document: $e") }
+
+        Firebase.storage.reference.child("categories/$categoryId/img1").delete()
+            .addOnSuccessListener { onResult("Image successfully deleted!") }
+            .addOnFailureListener { e -> onResult("Error deleting image: $e") }
+    }
+
     fun uploadImages(
         folder: String,
         imgsToUpload: List<String>,
@@ -387,36 +421,6 @@ class FirebaseGeoDataService {
                 onResult(emptyList())
             }
         }
-    }
-
-    fun removeLocationFromFirestore(
-        locationId: String,
-        onResult: (Throwable?) -> Unit
-    ) {
-        //val db = Firebase.firestore
-        val v = db.collection("GeoDataLocations").document(locationId)
-        v.delete().addOnCompleteListener { onResult(it.exception) }
-        //TODO: apagar imagens
-    }
-
-    fun removePointsOfInterestFromFirestore(
-        pointOfInterestId: String,
-        onResult: (Throwable?) -> Unit
-    ) {
-        //val db = Firebase.firestore
-        val v = db.collection("GeoDataPointsOfInterest").document(pointOfInterestId)
-        v.delete().addOnCompleteListener { onResult(it.exception) }
-        //TODO: apagar imagens
-    }
-
-    fun removeCategoryFromFirestore(
-        categoryId: String,
-        onResult: (Throwable?) -> Unit
-    ) {
-        //val db = Firebase.firestore
-        val v = db.collection("GeoDataCategories").document(categoryId)
-        v.delete().addOnCompleteListener { onResult(it.exception) }
-        //TODO: apagar imagens
     }
 
 }

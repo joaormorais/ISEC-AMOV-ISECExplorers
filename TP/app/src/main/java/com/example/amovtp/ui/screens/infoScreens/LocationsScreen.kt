@@ -31,6 +31,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -84,6 +85,19 @@ fun LocationsScreen(
     LaunchedEffect(key1 = localUserDM.value, block = {
         localUserUI = localUserDM.value
     })
+
+    // snackbar
+    val snackbarHostState = remember { SnackbarHostState() }
+    var showSnackBar by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val unkownError = stringResource(R.string.unknown_error)
+    val usedLocation = stringResource(R.string.used_location)
+    LaunchedEffect(showSnackBar) {
+        if (showSnackBar) {
+            snackbarHostState.showSnackbar(errorMessage ?: unkownError)
+            showSnackBar = false
+        }
+    }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -322,7 +336,10 @@ fun LocationsScreen(
                                                             it.id
                                                         )
                                                         isLocationApproved = it.isApproved
-                                                        isApprovedByUser = locationsViewModel.findVoteForApprovedLocationByUser(it.id)
+                                                        isApprovedByUser =
+                                                            locationsViewModel.findVoteForApprovedLocationByUser(
+                                                                it.id
+                                                            )
                                                     },
                                                 ) {
                                                     Row {
@@ -342,7 +359,10 @@ fun LocationsScreen(
                                                             it.id
                                                         )
                                                         isLocationApproved = it.isApproved
-                                                        isApprovedByUser = locationsViewModel.findVoteForApprovedLocationByUser(it.id)
+                                                        isApprovedByUser =
+                                                            locationsViewModel.findVoteForApprovedLocationByUser(
+                                                                it.id
+                                                            )
                                                     },
                                                 ) {
                                                     Row {
@@ -375,7 +395,14 @@ fun LocationsScreen(
                                             }
                                             Button(
                                                 onClick = {
-
+                                                    locationsViewModel.removeLocation(it.id) { resultMessage ->
+                                                        when (resultMessage) {
+                                                            Consts.USED_LOCATION -> {
+                                                                showSnackBar = true
+                                                                errorMessage = usedLocation
+                                                            }
+                                                        }
+                                                    }
                                                 },
                                             ) {
                                                 Row {
@@ -389,6 +416,7 @@ fun LocationsScreen(
                                             }
                                         }
                                     }
+                                Spacer(modifier.height(8.dp))
                             }
                         }
                 }

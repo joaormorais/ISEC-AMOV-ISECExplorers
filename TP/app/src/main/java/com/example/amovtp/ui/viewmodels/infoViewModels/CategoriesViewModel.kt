@@ -39,7 +39,7 @@ class CategoriesViewModel(
     fun voteForApprovalCategoryByUser(categoryId: String) {
         geoData.voteForApprovalCategory(categoryId)
         userData.addCategoryApproved(categoryId)
-        if (geoData.categories.value.find { it.id == categoryId }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL )
+        if (geoData.categories.value.find { it.id == categoryId }?.votesForApproval!! >= Consts.VOTES_NEEDED_FOR_APPROVAL)
             geoData.approveCategory(categoryId)
         geoData.updateCategory(categoryId)
         userData.updateLocalUser()
@@ -50,6 +50,20 @@ class CategoriesViewModel(
         userData.removeCategoryApproved(categoryId)
         geoData.updateCategory(categoryId)
         userData.updateLocalUser()
+    }
+
+    fun removeCategory(categoryId: String, onResult: (String) -> Unit) {
+        var isCatBeingUsed = false
+        val categoryName = geoData.categories.value.find { it.id == categoryId }?.name
+        geoData.pointsOfInterest.value.forEachIndexed { index, pointOfInterest ->
+            if (pointOfInterest.category == categoryName)
+                isCatBeingUsed = true
+        }
+        if (!isCatBeingUsed) {
+            geoData.deleteCategory(categoryId)
+            onResult(Consts.SUCCESS)
+        } else
+            onResult(Consts.USED_CATEGORY)
     }
 
 }

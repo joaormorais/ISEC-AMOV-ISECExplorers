@@ -95,4 +95,12 @@ class LocationsViewModel(
         userData.updateLocalUser()
     }
 
+    fun removeLocation(locationId: String, onResult: (String) -> Unit) {
+        if (geoData.locations.value.find { it.id == locationId }?.pointsOfInterest!!.isEmpty()) {
+            geoData.deleteLocation(locationId)
+            onResult(Consts.SUCCESS)
+        } else
+            onResult(Consts.USED_LOCATION)
+    }
+
 }

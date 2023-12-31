@@ -20,7 +20,7 @@
     <string name="add_point">Adicionar ponto de interesse</string>
     <string name="camera_image">Adicionar imagem através da camera</string>
     <string name="gallery_image">Adicionar imagem através da galeria</string>
-    <string name="description_solo">Descrição:</string>
+    <string name="description_solo">Descrição</string>
     <string name="defaultvalue">defaultValue</string>
     <string name="all_categories">Todas as categorias</string>
     <string name="all_locations">Todas as localizações</string>
@@ -77,4 +77,6 @@
     <string name="remove">Remover</string>
     <string name="error_you_have_to_login">Erro: Precisa de estar autenticado!</string>
     <string name="edit_location">Editar localização</string>
+    <string name="used_location">Esta localização está a ser usada!</string>
+    <string name="used_category">Esta categoria está a ser usada!</string>
 </resources>
