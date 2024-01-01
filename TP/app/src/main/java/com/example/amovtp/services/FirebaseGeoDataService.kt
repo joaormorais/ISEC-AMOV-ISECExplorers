@@ -79,9 +79,7 @@ class FirebaseGeoDataService {
                     "pointsOfInterest" to newLocation.pointsOfInterest,
                     "imgs" to paths,
                     "votesForApproval" to newLocation.votesForApproval,
-                    "isApproved" to newLocation.isApproved,
-                    "votesForRemoval" to newLocation.votesForRemoval,
-                    "isBeingRemoved" to newLocation.isBeingRemoved
+                    "isApproved" to newLocation.isApproved
                 )
                 db.collection("GeoDataLocations").document(newId).set(locationToCloud)
                     .addOnCompleteListener { result ->
@@ -138,9 +136,7 @@ class FirebaseGeoDataService {
                     "description" to newCategory.description,
                     "img" to paths[0],
                     "votesForApproval" to newCategory.votesForApproval,
-                    "isApproved" to newCategory.isApproved,
-                    "votesForRemoval" to newCategory.votesForRemoval,
-                    "isBeingRemoved" to newCategory.isBeingRemoved
+                    "isApproved" to newCategory.isApproved
                 )
                 db.collection("GeoDataCategories").document(newId).set(categoryToCloud)
                     .addOnCompleteListener { result ->
@@ -191,16 +187,6 @@ class FirebaseGeoDataService {
                 }
                 if (data?.get("isApproved") != updatedLocation?.isApproved) {
                     transaction.update(document, "isApproved", updatedLocation?.isApproved)
-                }
-                if (data?.get("votesForRemoval") != updatedLocation?.votesForRemoval) {
-                    transaction.update(
-                        document,
-                        "votesForRemoval",
-                        updatedLocation?.votesForRemoval
-                    )
-                }
-                if (data?.get("isBeingRemoved") != updatedLocation?.isBeingRemoved) {
-                    transaction.update(document, "isBeingRemoved", updatedLocation?.isBeingRemoved)
                 }
                 null
             } else
@@ -323,20 +309,6 @@ class FirebaseGeoDataService {
                 }
                 if (data?.get("isApproved") != updatedCategory?.isApproved) {
                     transaction.update(document, "isApproved", updatedCategory?.isApproved)
-                }
-                if (data?.get("votesForRemoval") != updatedCategory?.votesForRemoval) {
-                    transaction.update(
-                        document,
-                        "votesForRemoval",
-                        updatedCategory?.votesForRemoval
-                    )
-                }
-                if (data?.get("isBeingRemoved") != updatedCategory?.isBeingRemoved) {
-                    transaction.update(
-                        document,
-                        "isBeingRemoved",
-                        updatedCategory?.isBeingRemoved
-                    )
                 }
                 null
             } else

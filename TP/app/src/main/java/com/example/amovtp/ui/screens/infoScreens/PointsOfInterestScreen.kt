@@ -75,7 +75,7 @@ import org.osmdroid.views.overlay.Marker
 @Composable
 fun PointsOfInterestScreen(
     pointsOfInterestViewModel: PointsOfInterestViewModel,
-    itemId: String,
+    itemName: String,
     navController: NavHostController?,
     modifier: Modifier = Modifier
 ) {
@@ -115,10 +115,10 @@ fun PointsOfInterestScreen(
     })
 
     // info for the filter of a unnique location
-    LaunchedEffect(key1 = itemId) { //TODO: ver se de facto é preciso um LaunchedEffet, ou não
-        if (itemId != Consts.DEFAULT_VALUE) {
-            pointsOfInterestUI = pointsOfInterestViewModel.getPointsFromLocation(itemId)
-            val tempLoc = locations.find { it.id == itemId }
+    LaunchedEffect(key1 = itemName) { //TODO: ver se de facto é preciso um LaunchedEffet, ou não
+        if (itemName != Consts.DEFAULT_VALUE) {
+            pointsOfInterestUI = pointsOfInterestViewModel.getPointsFromLocation(itemName)
+            val tempLoc = locations.find { it.name == itemName }
             geoPoint = GeoPoint(tempLoc!!.lat, tempLoc.long)
         }
     }
@@ -191,7 +191,7 @@ fun PointsOfInterestScreen(
 
                     DropdownMenuFilters(
                         pointsOfInterestViewModel = pointsOfInterestViewModel,
-                        itemIdForLocation = itemId,
+                        itemIdForLocation = itemName,
                         itemsLocations = locations,
                         itemPicked = { itemPicked ->
                             pointsOfInterestUI =
@@ -598,7 +598,7 @@ fun PointsOfInterestScreen(
                                 if (localUserUI.userId == it.userId) {
                                     Spacer(modifier.height(8.dp))
                                     Button(
-                                        onClick = { navController?.navigate("EditPointOfInterest?itemName=${it.id}") },
+                                        onClick = { navController?.navigate("EditPointOfInterest?itemId=${it.id}") },
                                     ) {
                                         Row {
                                             Text(stringResource(R.string.edit))

@@ -283,7 +283,7 @@ fun MainScreen(
 
                     composable(Screens.POINTS_OF_INTEREST.route,
                         arguments = listOf(
-                            navArgument("itemId") {
+                            navArgument("itemName") {
                                 type = NavType.StringType
                                 defaultValue = Consts.DEFAULT_VALUE
                                 nullable = false
@@ -291,7 +291,7 @@ fun MainScreen(
                         )
                     ) {
 
-                        val itemId = it.arguments?.getString("itemId")
+                        val itemId = it.arguments?.getString("itemName")
                         pointsOfInterestViewModel =
                             viewModel(
                                 factory = PointsOfInterestViewModelFactory(

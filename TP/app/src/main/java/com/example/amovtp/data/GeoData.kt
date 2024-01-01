@@ -18,9 +18,7 @@ data class Location(
     var pointsOfInterest: List<String>,
     val imgs: List<String>,
     var votesForApproval: Long,
-    var isApproved: Boolean,
-    var votesForRemoval: Long,
-    var isBeingRemoved: Boolean,
+    var isApproved: Boolean
 )
 
 /**
@@ -33,9 +31,7 @@ data class Category(
     var description: String,
     val img: String,
     var votesForApproval: Long,
-    var isApproved: Boolean,
-    var votesForRemoval: Long,
-    var isBeingRemoved: Boolean,
+    var isApproved: Boolean
 )
 
 /**
@@ -98,9 +94,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                                         pointsOfInterest = i["pointsOfInterest"] as List<String>,
                                         imgs = paths,
                                         votesForApproval = i["votesForApproval"] as Long,
-                                        isApproved = i["isApproved"] as Boolean,
-                                        votesForRemoval = i["votesForRemoval"] as Long,
-                                        isBeingRemoved = i["isBeingRemoved"] as Boolean
+                                        isApproved = i["isApproved"] as Boolean
                                     )
                                 )
                             }
@@ -163,9 +157,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                                         description = i["description"] as String,
                                         img = paths[0],
                                         votesForApproval = i["votesForApproval"] as Long,
-                                        isApproved = i["isApproved"] as Boolean,
-                                        votesForRemoval = i["votesForRemoval"] as Long,
-                                        isBeingRemoved = i["isBeingRemoved"] as Boolean
+                                        isApproved = i["isApproved"] as Boolean
                                     )
                                 )
                             }
@@ -253,8 +245,6 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 mutableListOf(),
                 imgs,
                 0L,
-                false,
-                0L,
                 false
             )
         ) { exception ->
@@ -323,8 +313,6 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                 name,
                 description,
                 img,
-                0L,
-                false,
                 0L,
                 false
             )

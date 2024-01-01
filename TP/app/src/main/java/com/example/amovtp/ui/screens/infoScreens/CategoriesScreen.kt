@@ -241,7 +241,7 @@ fun CategoriesScreen(
                                         Spacer(modifier.height(8.dp))
                                         Row {
                                             Button(
-                                                onClick = { navController?.navigate("EditCategory?itemName=${it.id}") },
+                                                onClick = { navController?.navigate("EditCategory?itemId=${it.id}") },
                                             ) {
                                                 Row {
                                                     Text(stringResource(R.string.edit))

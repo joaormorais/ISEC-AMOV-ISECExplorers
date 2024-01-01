@@ -176,7 +176,7 @@ fun LocationsScreen(
                             contentColor = Color.White
                         ),
                     onClick = {
-                        navController?.navigate("PointsOfInterest?itemName=${it.id}")
+                        navController?.navigate("PointsOfInterest?itemName=${it.name}")
                     }
                 ) {
 
@@ -382,7 +382,7 @@ fun LocationsScreen(
                                         Spacer(modifier.height(8.dp))
                                         Row {
                                             Button(
-                                                onClick = { navController?.navigate("EditLocation?itemName=${it.id}") },
+                                                onClick = { navController?.navigate("EditLocation?itemId=${it.id}") },
                                             ) {
                                                 Row {
                                                     Text(stringResource(R.string.edit))
