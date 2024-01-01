@@ -136,7 +136,7 @@ class FirebaseGeoDataService {
                     "userID" to newCategory.userId,
                     "name" to newCategory.name,
                     "description" to newCategory.description,
-                    "img" to paths,
+                    "img" to paths[0],
                     "votesForApproval" to newCategory.votesForApproval,
                     "isApproved" to newCategory.isApproved,
                     "votesForRemoval" to newCategory.votesForRemoval,

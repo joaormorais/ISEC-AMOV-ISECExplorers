@@ -152,7 +152,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                     catsMapList.map { i ->
                         firebaseGeoDataService.downloadImages(
                             "categories/" + i["id"],
-                            i["img"] as List<String>
+                            listOf(i["img"]) as List<String>
                         ) { paths ->
                             if (paths.isNotEmpty()) {
                                 newCategories.add(
