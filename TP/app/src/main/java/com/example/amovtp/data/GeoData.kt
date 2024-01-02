@@ -15,7 +15,7 @@ data class Location(
     var lat: Double,
     var long: Double,
     var isManualCoords: Boolean,
-    var pointsOfInterest: List<String>,
+    var pointsOfInterest: MutableList<String>,
     val imgs: List<String>,
     var votesForApproval: Long,
     var isApproved: Boolean
@@ -40,12 +40,12 @@ data class Category(
 data class PointOfInterest(
     var id: String,
     val userId: String,
-    val name: String,
-    val description: String,
-    val lat: Double,
-    val long: Double,
-    val isManualCoords: Boolean,
-    val locations: MutableList<String>,
+    var name: String,
+    var description: String,
+    var lat: Double,
+    var long: Double,
+    var isManualCoords: Boolean,
+    var locations: MutableList<String>,
     var category: String,
     val imgs: List<String>,
     var classification: Long,
@@ -91,7 +91,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
                                         lat = i["lat"] as Double,
                                         long = i["long"] as Double,
                                         isManualCoords = i["isManualCoords"] as Boolean,
-                                        pointsOfInterest = i["pointsOfInterest"] as List<String>,
+                                        pointsOfInterest = i["pointsOfInterest"] as MutableList<String>,
                                         imgs = paths,
                                         votesForApproval = i["votesForApproval"] as Long,
                                         isApproved = i["isApproved"] as Boolean
@@ -186,7 +186,7 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
     ) {
         firebaseGeoDataService.deleteLocationFromFirestore(
             locationId,
-            _locations.value.find { it.id==locationId }!!.imgs
+            _locations.value.find { it.id == locationId }!!.imgs
         ) {
         }
     }
@@ -291,9 +291,8 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
 
         for (i in _locations.value)
             if (locations.any { i.name == it }) {
-                val newLocation = i
-                newLocation.pointsOfInterest = newLocation.pointsOfInterest + name
-                firebaseGeoDataService.updateLocationToFirestore(i.id, newLocation) {}
+                i.pointsOfInterest.add(name)
+                firebaseGeoDataService.updateLocationToFirestore(i.id, i) {}
             }
 
     }
@@ -340,6 +339,63 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         tempLocation?.isApproved = false
     }
 
+    fun changeLocationOfPoint(
+        pointOfInterestId: String,
+        currentLocationName: String,
+        newLocationName: String
+    ) {
+        val pointToChange = _pointsOfInterest.value.find { it.id == pointOfInterestId }
+        val indexToChange = pointToChange?.locations?.indexOfFirst { it == currentLocationName }
+        if (indexToChange != null)
+            pointToChange.locations[indexToChange] = newLocationName
+    }
+
+    fun editPointOfInterest(
+        pointOfInterestId: String,
+        newName: String,
+        newDescription: String,
+        newLat: Double,
+        newLong: Double,
+        newIsManual: Boolean,
+        newLocations: MutableList<String>,
+        newCategory: String,
+    ) {
+        val tempPointOfInterest = _pointsOfInterest.value.find { it.id == pointOfInterestId }
+        tempPointOfInterest?.name = newName
+        tempPointOfInterest?.description = newDescription
+        tempPointOfInterest?.lat = newLat
+        tempPointOfInterest?.long = newLong
+        tempPointOfInterest?.isManualCoords = newIsManual
+        tempPointOfInterest?.locations = newLocations
+        tempPointOfInterest?.category = newCategory
+        tempPointOfInterest?.votesForApproval = 0
+        tempPointOfInterest?.isApproved = false
+    }
+
+    fun changePointsOfInterestNameOfLocation(
+        locationId: String,
+        currentPointOfInterestName: String,
+        newPointOfInterestName: String
+    ) {
+        val locationToChange = _locations.value.find { it.id == locationId }
+        val indexToChange =
+            locationToChange?.pointsOfInterest?.indexOfFirst { it == currentPointOfInterestName }
+        if (indexToChange != null)
+            locationToChange.pointsOfInterest[indexToChange] = newPointOfInterestName
+    }
+
+    fun changePointsOfInterestArrayOfLocation(
+        locationId: String,
+        currentPointOfInterestName: String,
+        isAdding: Boolean
+    ) {
+        val locationToChange = _locations.value.find { it.id == locationId }
+        if(isAdding)
+            locationToChange?.pointsOfInterest?.add(currentPointOfInterestName)
+        else
+            locationToChange?.pointsOfInterest?.remove(currentPointOfInterestName)
+    }
+
     fun editCategory(
         categoryId: String,
         newName: String,
@@ -357,17 +413,6 @@ class GeoData(private val firebaseGeoDataService: FirebaseGeoDataService) {
         newCategoryName: String
     ) {
         _pointsOfInterest.value.find { it.id == pointOfInterestId }?.category = newCategoryName
-    }
-
-    fun changeLocationOfPoint(
-        pointOfInterestId: String,
-        currentLocationName: String,
-        newLocationName: String
-    ) {
-        val pointToChange = _pointsOfInterest.value.find { it.id == pointOfInterestId }
-        val indexToChange = pointToChange?.locations?.indexOfFirst { it == currentLocationName }
-        if (indexToChange != null)
-            pointToChange.locations.set(indexToChange, newLocationName)
     }
 
     /* ------------------------  Add and edit info (End) ------------------------ */

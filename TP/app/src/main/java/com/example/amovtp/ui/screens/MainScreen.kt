@@ -388,7 +388,8 @@ fun MainScreen(
                         editPointOfInterestViewModel =
                             viewModel(
                                 factory = EditPointOfInterestViewModelFactory(
-                                    app.geoData
+                                    app.geoData,
+                                    app.userData
                                 )
                             )
                         EditPointOfInterestScreen(

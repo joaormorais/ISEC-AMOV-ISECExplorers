@@ -22,8 +22,8 @@ class EditLocationViewModel(
     private val userData: UserData
 ) : ViewModel() {
 
-    fun getCurrentEditingLocation(currentLocation: String): Location? {
-        return geoData.locations.value.find { it.id == currentLocation }
+    fun getCurrentEditingLocation(currentLocationId: String): Location? {
+        return geoData.locations.value.find { it.id == currentLocationId }
     }
 
     fun isEditLocationValid(
@@ -31,7 +31,6 @@ class EditLocationViewModel(
         description: String,
         lat: Double?,
         long: Double?,
-        isManualCoords: Boolean,
         fillNameError: String,
         fillDescriptionError: String,
         fillCoordinatesError: String,
@@ -45,7 +44,7 @@ class EditLocationViewModel(
             errorMessage(fillDescriptionError)
             return false
         }
-        if (!isManualCoords && (lat == null && long == null)) {
+        if (lat == null || long == null) {
             errorMessage(fillCoordinatesError)
             return false
         }

@@ -116,7 +116,6 @@ fun EditLocationScreen(
                             description,
                             lat,
                             long,
-                            isManual!!,
                             fillNameError,
                             fillDescriptionError,
                             fillCoordinatesError
