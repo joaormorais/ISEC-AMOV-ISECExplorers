@@ -115,7 +115,7 @@ fun PointsOfInterestScreen(
     })
 
     // info for the filter of a unnique location
-    LaunchedEffect(key1 = itemName) { //TODO: ver se de facto é preciso um LaunchedEffet, ou não
+    LaunchedEffect(key1 = itemName) {
         if (itemName != Consts.DEFAULT_VALUE) {
             pointsOfInterestUI = pointsOfInterestViewModel.getPointsFromLocation(itemName)
             val tempLoc = locations.find { it.name == itemName }

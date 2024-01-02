@@ -115,9 +115,6 @@ fun LoginScreen(
                                     ) {
                                         loginViewModel.login(email, password) { exception ->
                                             if (exception != null) {
-                                                Log.d(
-                                                    "LoginScreen",
-                                                    "exception recebida =  ${exception.message}")
                                                 errorMessage = exception.message
                                                 showSnackBar = true
                                             } else
@@ -147,7 +144,7 @@ fun LoginScreen(
                     modifier = modifier.padding(4.dp)
                 ) {
                     Text(
-                        text = "seguir sem login",
+                        text = stringResource(R.string.use_app_without_login),
                         modifier = modifier.padding(16.dp)
                     )
                 }

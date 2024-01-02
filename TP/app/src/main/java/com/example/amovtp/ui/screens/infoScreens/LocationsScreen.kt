@@ -156,7 +156,6 @@ fun LocationsScreen(
                         )
                     )
                 }
-                //TODO: o botao de remove é do mesmo genero do isApprovedByUser
 
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),

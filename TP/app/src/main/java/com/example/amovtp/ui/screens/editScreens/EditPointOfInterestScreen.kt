@@ -158,7 +158,6 @@ fun EditPointOfInterestScreen(
                         ) {
                             locationList.value.forEach { location ->
 
-                                //TODO: terminar + pintar o fundo
                                 var isLocationPicked by remember { mutableStateOf(selectedLocations?.contains(location.name)) }
 
                                 DropdownMenuItem(

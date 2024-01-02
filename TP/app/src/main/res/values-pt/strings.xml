@@ -79,4 +79,5 @@
     <string name="edit_location">Editar localização</string>
     <string name="used_location">Esta localização está a ser usada!</string>
     <string name="used_category">Esta categoria está a ser usada!</string>
+    <string name="use_app_without_login">Seguir sem autenticação</string>
 </resources>

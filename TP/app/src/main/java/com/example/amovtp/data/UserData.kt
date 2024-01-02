@@ -76,7 +76,6 @@ class UserData(private val firebaseUserDataService: FirebaseUserDataService) {
 
     fun updateLocalUser() {
         firebaseUserDataService.updateLocalUserToFirestore(_localUser.value) {
-            //TODO: tratar a exception
         }
     }
 

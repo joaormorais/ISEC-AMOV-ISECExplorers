@@ -26,7 +26,7 @@ class Consts {
         const val ONE_STAR_CLASSIFICATION: Long = 1
         const val TWO_STAR_CLASSIFICATION: Long = 2
         const val THREE_STAR_CLASSIFICATION: Long = 3
-        val NOT_APPROVED_COLOR: Color = Color(255, 135, 70, 255)
+        val NOT_APPROVED_COLOR: Color = Color(255, 130, 130, 255)
         val CONFIRMATION_COLOR: Color = Color(15, 100, 0, 255)
         val WARNING_COLOR: Color = Color(135, 0, 0, 255)
     }
