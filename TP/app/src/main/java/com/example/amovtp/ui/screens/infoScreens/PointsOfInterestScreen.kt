@@ -595,21 +595,22 @@ fun PointsOfInterestScreen(
                                         )
                                     }
                                 }
-                                if (localUserUI.userId == it.userId) {
-                                    Spacer(modifier.height(8.dp))
-                                    Button(
-                                        onClick = { navController?.navigate("EditPointOfInterest?itemId=${it.id}") },
-                                    ) {
-                                        Row {
-                                            Text(stringResource(R.string.edit))
-                                            Icon(
-                                                Icons.Rounded.Edit,
-                                                "Edit",
-                                                modifier = modifier.padding(start = 8.dp)
-                                            )
+                                if (localUserUI.userId != "")
+                                    if (localUserUI.userId == it.userId) {
+                                        Spacer(modifier.height(8.dp))
+                                        Button(
+                                            onClick = { navController?.navigate("EditPointOfInterest?itemId=${it.id}") },
+                                        ) {
+                                            Row {
+                                                Text(stringResource(R.string.edit))
+                                                Icon(
+                                                    Icons.Rounded.Edit,
+                                                    "Edit",
+                                                    modifier = modifier.padding(start = 8.dp)
+                                                )
+                                            }
                                         }
                                     }
-                                }
                                 Spacer(modifier.height(8.dp))
                             }
                         }
