@@ -221,13 +221,11 @@ fun AddPointOfInterestScreen(
                 }
                 Spacer(modifier = modifier.height(8.dp))
                 GalleryImage(imagesPathChanged = { newImgs ->
-                    val uniqueImgs = newImgs.filter { !imgsGallery.contains(it) }
-                    imgsGallery = uniqueImgs
+                    imgsGallery = newImgs
                 })
                 Spacer(modifier = modifier.height(8.dp))
                 CameraImage(imagesPathChanged = { newImgs ->
-                    val uniqueImgs = newImgs.filter { !imgsCamera.contains(it) }
-                    imgsCamera = uniqueImgs
+                    imgsCamera = newImgs
                 })
 
 
