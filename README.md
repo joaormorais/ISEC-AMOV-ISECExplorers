@@ -32,7 +32,8 @@ Image translator: https://translate.yandex.com/ocr
 ● User manual
 
 ![Captura de ecrã 2024-01-15 165913](https://github.com/joaormorais/ISEC-AMOV-ISECExplorers/assets/72463113/3944c5f0-fb73-48b2-ba8b-9222a9b6cca5)
-![Captura de ecrã 2024-01-15 165913](https://github.com/joaormorais/ISEC-AMOV-ISECExplorers/assets/72463113/c025e86a-43a9-417f-8dea-253608967309)
+![Captura de ecrã 2024-01-15 165913](https://github.com/joaormorais/ISEC-AMOV-ISECExplorers/assets/72463113/ad4f1fa6-fc82-423f-821b-ca72b88a43a9)
+![Captura de ecrã 2024-01-15 165913](https://github.com/joaormorais/ISEC-AMOV-ISECExplorers/assets/72463113/fa78b78a-81cb-4816-bf62-4aa8ddd059eb)
 
 Image translator: https://translate.yandex.com/ocr
 
